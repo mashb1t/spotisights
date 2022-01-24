@@ -39,10 +39,11 @@ while (true) {
 
     $statsd->increment('request.successful.count,type=' . $type, $delta);
     $statsd->timing('request.successful.time,type=' . $type, $time);
+    $statsd->set('request.successful.set,genre=' . $type . ' artist=' . $type, $time);
 
     $requestsSent += $delta;
     ++$ops;
 
-    usleep(random_int(5, 55) * 1000);
+    usleep(random_int(5, 10) * 1000);
     echo '.';
 }

@@ -1,34 +1,64 @@
 version: '3'
 services:
+#  influxdb:
+#    image: influxdb:latest
+#    restart: unless-stopped
+#    volumes:
+#      # Mount for influxdb data directory and configuration
+#      - influxdb2_data:/var/lib/influxdb2:rw
+#    ports:
+#      - "8086:8086"
+#    # Use the influx cli to set up an influxdb instance.
+#  influxdb_cli:
+#    links:
+#      - influxdb
+#    image: influxdb:latest
+#    #    volumes:
+#    #      # Mount for influxdb data directory and configuration
+#    #      - influxdb2_data:/var/lib/influxdb2:rw
+#    environment:
+#      # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
+#      - DOCKER_INFLUXDB_INIT_MODE=setup
+#      - DOCKER_INFLUXDB_INIT_USERNAME=myusername
+#      - DOCKER_INFLUXDB_INIT_PASSWORD=passwordpasswordpassword
+#      - DOCKER_INFLUXDB_INIT_ORG=myorg
+#      - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
+#      - DOCKER_INFLUXDB_INIT_RETENTION=2w
+#      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
+#    entrypoint: [ "./entrypoint.sh" ]
+#    restart: on-failure:20
+#    depends_on:
+#      - influxdb
+
   telegraf:
     image: telegraf:1.18-alpine
     volumes:
-    - ./telegraf/etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./telegraf/etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
       - influxdb
     links:
       - influxdb
     ports:
-    - '127.0.0.1:8125:8125/udp'
+      - '127.0.0.1:8125:8125/udp'
 
   influxdb:
     image: influxdb:1.8-alpine
     env_file: configuration.env
     ports:
-      - '127.0.0.1:8086:8086'
+      - '8086:8086'
     volumes:
       - ./:/imports
       - influxdb_data:/var/lib/influxdb
 
   grafana:
-    image: grafana/grafana:8.0.2
+    image: grafana/grafana:latest
     depends_on:
       - influxdb
     env_file: configuration.env
     links:
       - influxdb
     ports:
-      - '127.0.0.1:3000:3000'
+      - '3000:3000'
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
@@ -37,3 +67,4 @@ services:
 volumes:
   grafana_data: {}
   influxdb_data: {}
+  influxdb2_data: {}
