@@ -9,7 +9,7 @@ $client = new InfluxDB2\Client([
     "token" => "admin",
     "bucket" => "influx",
     "org" => "my-org",
-    "precision" => InfluxDB2\Model\WritePrecision::MS,
+    "precision" => InfluxDB2\Model\WritePrecision::NS,
 ]);
 $writeApi = $client->createWriteApi();
 
@@ -31,9 +31,8 @@ foreach ($recentTracks as $recentTrack) {
         $point = InfluxDB2\Point::measurement('spotify')
             ->addField('artists',$artists)
             ->addField('song',$track->name)
-            ->addField('duration_ms', (float)$track->duration_ms);
-        // TODO fix timestamp logging, currently not working (v1 upgrade to v2?)
-//            ->time((new DateTime($recentTrack->played_at))->getTimestamp());
+            ->addField('duration_ms', (float)$track->duration_ms)
+            ->time((new DateTime($recentTrack->played_at)));
         var_dump($point->toLineProtocol());
         $writeApi->write($point);
     } catch (Exception $exception) {
@@ -41,6 +40,7 @@ foreach ($recentTracks as $recentTrack) {
         continue;
     }
 
+    $writeApi->close();
 }
 
 echo 'done';
