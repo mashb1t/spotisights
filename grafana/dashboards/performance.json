@@ -78,7 +78,7 @@
           },
           "groupBy": [],
           "measurement": "spotify",
-          "orderByTime": "ASC",
+          "orderByTime": "DESC",
           "policy": "default",
           "refId": "A",
           "resultFormat": "table",

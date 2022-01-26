@@ -1,0 +1,14 @@
+{
+    "require": {
+        "league/statsd": "^1.5",
+        "ext-pcntl": "*",
+        "influxdata/influxdb-client-php": "^2.5",
+        "jwilsson/spotify-web-api-php": "^5.0",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "App\\" : "App"
+        }
+    }
+}
