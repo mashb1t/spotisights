@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx-dev:8.0
+FROM webdevops/php-nginx-dev:8.1
 
 RUN mkdir /app/sessions
 
