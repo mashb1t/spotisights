@@ -8,19 +8,15 @@ It uses a PHP Script for fetching data from the Spotify API and saves it to Infl
 
 It is advised to use a PHP website serving tool of your choice, such as [Laravel Valet].
 
-1. Copy ``configuration.env.dist`` to ``configuration.env`` and change the credentials
-1. Copy ``php/.env.dist`` to ``php/env`` and change the credentials
-2. Run ``docker-compose up -d`` to provision Grafana and InfluxDB
+1. Copy ``config/*.env.dist`` to ``config/*.env`` and change the credentials
+2. Run ``docker-compose up -d`` to provision Grafana, InfluxDB and PHP (via Nginx)
 3. Log in to the [Spotify Developer] website
-4. Set up a new Spotify App, save client id and client secret on your local machine
-5. Set up static website serving by using ``cd php && valet link spotisights``
-6. (optional) Make your connection secure by executing ``valet secure``
-7. Edit your Spotify App and add the callback URL ``https://spotisights.test/callback.php`` (http when not securing the connection)
+4. Set up a new Spotify App, add the callback URL ``http://localhost:8080/callback.php`` and add client id and client secret to ``php.env``
 
 ## Data Flow
 
-1. Call https://spotisights.test/ and follow the displayed auth flow (technical reference: [Authorization Code Flow])
-2. app.php will be called which collects recent tracks fron the logged in user, saves them to InfluxDB and prompts "done" when finished
+1. Call http://localhost:8080/ and follow the displayed auth flow (technical reference: [Authorization Code Flow])
+2. app.php is called and collects recent tracks fron the authorized user, saves them to InfluxDB and prompts "done" when finished
 3. Open Grafana at http://localhost:3000/ and navigate to the Dashboard "spotisights" (http://localhost:3000/?orgId=1&search=open)
 
 ## Auth

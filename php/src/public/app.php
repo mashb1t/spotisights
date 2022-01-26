@@ -1,24 +1,21 @@
 <?php
 
-use App\SessionHandler as SessionHandlerAlias;
+use App\SessionHandler;
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
-$username = $_ENV['USERNAME'];
+$username = getenv('USERNAME');
 
 $client = new InfluxDB2\Client([
-    'url' => $_ENV['INFLUXDB_URL'],
-    'token' => $_ENV['INFLUXDB_TOKEN'],
-    'bucket' => $_ENV['INFLUXDB_BUCKET'],
-    'org' => $_ENV['INFLUXDB_ORG'],
+    'url' => getenv('INFLUXDB_URL'),
+    'token' => getenv('INFLUXDB_TOKEN'),
+    'bucket' => getenv('INFLUXDB_BUCKET'),
+    'org' => getenv('INFLUXDB_ORG'),
     'precision' => InfluxDB2\Model\WritePrecision::NS,
 ]);
 $writeApi = $client->createWriteApi();
 
-$session = SessionHandlerAlias::loadSession($username);
+$session = SessionHandler::loadSession($username);
 
 $options = [
     'auto_refresh' => true,
@@ -56,6 +53,6 @@ foreach ($recentTracks as $recentTrack) {
 
 $writeApi->close();
 
-SessionHandlerAlias::saveSession($session, $username);
+SessionHandler::saveSession($session, $username);
 
 echo 'done';

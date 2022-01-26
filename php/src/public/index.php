@@ -1,9 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+require '../vendor/autoload.php';
 
 $session = \App\SessionHandler::getSession();
 
@@ -15,7 +12,7 @@ $options = [
     'state' => $state,
 ];
 
-\App\SessionHandler::saveSession($session, $_ENV['USERNAME']);
+\App\SessionHandler::saveSession($session, getenv('USERNAME'));
 
 header('Location: ' . $session->getAuthorizeUrl($options));
 die();

@@ -1,15 +1,12 @@
 <?php
 
-require 'vendor/autoload.php';
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+require '../vendor/autoload.php';
 
 $state = $_GET['state'];
 
 // Fetch the stored state value from somewhere. A session for example
 
-$username = $_ENV['USERNAME'];
+$username = getenv('USERNAME');
 $session = \App\SessionHandler::loadSession($username);
 //$storedState = \App\SessionHandler::getStateFromSession($username);
 

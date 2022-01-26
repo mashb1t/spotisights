@@ -6,14 +6,14 @@ use SpotifyWebAPI\Session;
 
 class SessionHandler
 {
-    const BASE_FILEPATH = 'sessions';
+    const BASE_FILEPATH = '..' . DIRECTORY_SEPARATOR . 'sessions';
 
     public static function getSession(): Session
     {
         return new Session(
-            $_ENV['SPOTIFY_CLIENT_ID'],
-            $_ENV['SPOTIFY_CLIENT_SECRET'],
-            $_ENV['SPOTIFY_REDIRECT_URL'],
+            getenv('SPOTIFY_CLIENT_ID'),
+            getenv('SPOTIFY_CLIENT_SECRET'),
+            getenv('SPOTIFY_REDIRECT_URL'),
         );
     }
 
