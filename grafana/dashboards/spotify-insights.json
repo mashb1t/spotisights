@@ -486,8 +486,8 @@
         ]
     },
     "timezone": "",
-    "title": "Spotify Insights",
-    "uid": "spotify-insights",
+    "title": "SpotiSights - Spotify Insights",
+    "uid": "spotisights",
     "version": 2,
     "weekStart": ""
 }
