@@ -1,74 +1,5 @@
 version: '3'
 services:
-#  influxdb:
-#    image: influxdb:latest
-#    volumes:
-#      # Mount for influxdb data directory and configuration
-#      - ./influxdb2:/var/lib/influxdb2:rw
-#    ports:
-#      - "8086:8086"
-#    # Use the influx cli to set up an influxdb instance.
-#  influxdb_cli:
-#    links:
-#      - influxdb
-#    image: influxdb:latest
-##    volumes:
-#      # Mount for influxdb data directory and configuration
-##      - ./influxdb2:/var/lib/influxdb2:rw
-##        - ./ssl/influxdb-selfsigned.crt:/etc/ssl/influxdb-selfsigned.crt:rw
-##        - ./ssl/influxdb-selfsigned.key:/etc/ssl/influxdb-selfsigned.key:rw
-#    environment:
-#      # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
-#      - DOCKER_INFLUXDB_INIT_MODE=setup
-#      - DOCKER_INFLUXDB_INIT_USERNAME=myusername
-#      - DOCKER_INFLUXDB_INIT_PASSWORD=passwordpasswordpassword
-#      - DOCKER_INFLUXDB_INIT_ORG=myorg
-#      - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
-#      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
-##        - INFLUXD_TLS_CERT=/etc/ssl/influxdb-selfsigned.crt
-##        - INFLUXD_TLS_KEY=/etc/ssl/influxdb-selfsigned.key
-#    entrypoint: [ "./entrypoint.sh" ]
-#    restart: on-failure:10
-#    depends_on:
-#      - influxdb
-
-#  influxdb:
-#    image: influxdb:latest
-#    restart: unless-stopped
-#    volumes:
-#      # Mount for influxdb data directory and configuration
-#      - ./influx:/var/lib/influxdb2:rw
-#    ports:
-#      - "8086:8086"
-#    # Use the influx cli to set up an influxdb instance.
-#  influxdb_cli:
-#    links:
-#      - influxdb
-#    image: influxdb:latest
-#    #    volumes:
-#    #      # Mount for influxdb data directory and configuration
-#    #      - influxdb2_data:/var/lib/influxdb2:rw
-#    environment:
-#      # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
-#      - DOCKER_INFLUXDB_INIT_MODE=setup
-#      - DOCKER_INFLUXDB_INIT_USERNAME=myusername
-#      - DOCKER_INFLUXDB_INIT_PASSWORD=passwordpasswordpassword
-#      - DOCKER_INFLUXDB_INIT_ORG=myorg
-#      - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
-#      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
-#    entrypoint: [ "./entrypoint.sh" ]
-#    restart: on-failure:20
-#    depends_on:
-#      - influxdb
-
-#
-#  influxdb:
-#    image: influxdb:2.1-alpine
-#    env_file: configuration.env
-#    ports:
-#      - '8086:8086'
-#    volumes:
-#      - influxdb_data:/var/lib/influxdb
 
   influxdb:
     image: influxdb:1.8-alpine
@@ -78,24 +9,6 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb
 
-#  influxdb2:
-#    image: quay.io/influxdb/influxdb:v2.0.4
-#    container_name: influxdb
-#    volumes:
-#      - ./influxdbv2:/root/.influxdbv2
-#    ports:
-#      - "8086:8086"
-#
-#  influxdb_cli:
-#    links:
-#      - influxdb
-#    image: quay.io/influxdb/influxdb:v2.0.4
-#    entrypoint: influx setup --bucket test_bucket -t test_token -o test_org --username=test_username --password=test_password --host=http://influxdb:8086 -f
-#
-#    restart: on-failure:20
-#    depends_on:
-#      - influxdb
-
   grafana:
     image: grafana/grafana:latest
     depends_on:
@@ -103,7 +16,6 @@ services:
     env_file: configuration.env
     links:
       - influxdb
-#      - influxdb2
     ports:
       - '3000:3000'
     volumes:
@@ -112,6 +24,5 @@ services:
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
 
 volumes:
-  grafana_data: {}
-  influxdb_data: {}
-  influxdb2_data: {}
+  grafana_data: { }
+  influxdb_data: { }
