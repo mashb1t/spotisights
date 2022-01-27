@@ -1,10 +1,13 @@
 <?php
 
+use App\Factory;
 use App\SessionHandler;
 
 require '../vendor/autoload.php';
 
-$username = getenv('USERNAME');
+session_start();
+
+$username = $_SESSION['username'];
 
 $client = new InfluxDB2\Client([
     'url' => getenv('INFLUXDB_URL'),
@@ -17,11 +20,7 @@ $writeApi = $client->createWriteApi();
 
 $session = SessionHandler::loadSession($username);
 
-$options = [
-    'auto_refresh' => true,
-];
-
-$api = new SpotifyWebAPI\SpotifyWebAPI($options, $session);
+$api = Factory::getSpotifyWebAPI($session);
 
 $recentTracks = $api->getMyRecentTracks(['limit' => 50])->items;
 
@@ -39,9 +38,9 @@ foreach ($recentTracks as $recentTrack) {
 
     try {
         $point = InfluxDB2\Point::measurement('spotisights')
-            ->addTag('user',$username)
-            ->addField('artists',$artists)
-            ->addField('song',$track->name)
+            ->addTag('user', $username)
+            ->addField('artists', $artists)
+            ->addField('song', $track->name)
             ->addField('duration_ms', (float)$track->duration_ms)
             ->time((new DateTime($recentTrack->played_at)));
         $writeApi->write($point);

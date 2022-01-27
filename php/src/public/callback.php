@@ -1,25 +1,30 @@
 <?php
 
+use App\Factory;
+use App\SessionHandler;
+
 require '../vendor/autoload.php';
+
+session_start();
 
 $state = $_GET['state'];
 
-// Fetch the stored state value from somewhere. A session for example
+// check state integrity
+if ($state !== $_SESSION['state']) {
+    die('State mismatch');
+}
 
-$username = getenv('USERNAME');
-$session = \App\SessionHandler::loadSession($username);
-//$storedState = \App\SessionHandler::getStateFromSession($username);
 
-// TODO add state check
-//if ($state !== $storedState) {
-//    // The state returned isn't the same as the one we've stored, we shouldn't continue
-//    die('State mismatch');
-//}
-
-// Request a access token using the code from Spotify
+$session = Factory::getSession();
 $session->requestAccessToken($_GET['code']);
-$session = \App\SessionHandler::saveSession($session, $username);
 
-// Send the user along and fetch some data!
+// set refreshToken to redirect directly from index to app without redirect to spotify
+$_SESSION['refreshToken'] = $session->getRefreshToken();
+
+// todo add exception handling
+$api = Factory::getSpotifyWebAPI($session);
+$_SESSION['username'] = $api->me()->id;
+
+SessionHandler::saveSession($session, $_SESSION['username']);
 header('Location: app.php');
 die();

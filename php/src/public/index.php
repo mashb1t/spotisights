@@ -1,18 +1,29 @@
 <?php
 
+use App\Factory;
+
 require '../vendor/autoload.php';
 
-$session = \App\SessionHandler::getSession();
+session_start();
 
-$state = $session->generateState();
+if (isset($_SESSION['refreshToken'])) {
+    header('Location: app.php');
+    die();
+}
+
+$session = Factory::getSession();
+
+// only generate state once
+$_SESSION['state'] = $_SESSION['state'] ?? $session->generateState();
+
 $options = [
     'scope' => [
-        'user-read-recently-played',
+        'user-read-recently-played', // used for statistic collection in getMyRecentTracks()
+        'user-read-private', // used for reading username in me()
+        'user-read-email',  // currently not used, but required for me()
     ],
-    'state' => $state,
+    'state' => $_SESSION['state'],
 ];
-
-\App\SessionHandler::saveSession($session, getenv('USERNAME'));
 
 header('Location: ' . $session->getAuthorizeUrl($options));
 die();

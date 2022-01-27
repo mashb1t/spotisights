@@ -23,6 +23,13 @@ It is advised to use a PHP website serving tool of your choice, such as [Laravel
 
 This app implements the [Authorization Code Flow] of Spotify with [Refresh Tokens] by using file sessions.
 
+### API Scopes
+
+| scope                     | reason                           | api endpoint         |
+|---------------------------|----------------------------------|----------------------|
+| user-read-recently-played | used for statistic collection    | getMyRecentTracks()  |
+| user-read-private         | used for reading username        | me()                 |
+| user-read-email           | currently not used, but required | me()                 |
 
 ## References
 
