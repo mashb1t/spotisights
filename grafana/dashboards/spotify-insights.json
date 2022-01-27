@@ -22,10 +22,1237 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643233796573,
+    "iteration": 1643309124277,
     "links": [],
     "liveNow": false,
     "panels": [
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 30,
+            "panels": [],
+            "title": "totals",
+            "type": "row"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "fixedColor": "green",
+                        "mode": "fixed"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 3,
+                "w": 3,
+                "x": 0,
+                "y": 1
+            },
+            "id": 32,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "duration_ms"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "count"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "total songs",
+            "type": "stat"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 4
+            },
+            "id": 27,
+            "maxDataPoints": 10,
+            "options": {
+                "displayMode": "gradient",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [
+                        {
+                            "params": [
+                                "artists"
+                            ],
+                            "type": "tag"
+                        }
+                    ],
+                    "measurement": "track_history",
+                    "orderByTime": "DESC",
+                    "policy": "default",
+                    "query": "SELECT sum(\"duration_ms\")  / 1000 AS \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/) AND $timeFilter GROUP BY \"artists\" ORDER BY time DESC SLIMIT 10",
+                    "rawQuery": false,
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "duration_ms"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "sum"
+                            },
+                            {
+                                "params": [
+                                    " / 1000"
+                                ],
+                                "type": "math"
+                            },
+                            {
+                                "params": [
+                                    "duration"
+                                ],
+                                "type": "alias"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "most time listened to by artist",
+            "transformations": [
+                {
+                    "id": "labelsToFields",
+                    "options": {
+                        "valueLabel": "artists"
+                    }
+                }
+            ],
+            "type": "bargauge"
+        },
+        {
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 12
+            },
+            "id": 22,
+            "title": "summary by time period",
+            "type": "row"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 0,
+                "y": 13
+            },
+            "id": 8,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "tempo"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg BPM",
+            "type": "stat"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 2,
+                "y": 13
+            },
+            "id": 12,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "acousticness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg acousticness",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 4,
+                "y": 13
+            },
+            "id": 11,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "danceability"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg danceability",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 6,
+                "y": 13
+            },
+            "id": 14,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "energy"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg energy",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 8,
+                "y": 13
+            },
+            "id": 15,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "instrumentalness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg instrumentalness",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 10,
+                "y": 13
+            },
+            "id": 16,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "liveness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg liveness",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 12,
+                "y": 13
+            },
+            "id": 17,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "speechiness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg speechiness",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 14,
+                "y": 13
+            },
+            "id": 18,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "valence"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg valence",
+            "type": "gauge"
+        },
+        {
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 4,
+                "w": 2,
+                "x": 16,
+                "y": 13
+            },
+            "id": 23,
+            "options": {
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "valence"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "avg valence",
+            "type": "gauge"
+        },
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 17
+            },
+            "id": 20,
+            "panels": [],
+            "title": "general",
+            "type": "row"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "percentunit"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 18
+            },
+            "id": 25,
+            "options": {
+                "displayMode": "basic",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.3.4",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT mean(\"danceability\"), mean(\"energy\") FROM \"track_history\" WHERE $timeFilter",
+                    "rawQuery": false,
+                    "refId": "A",
+                    "resultFormat": "table",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "danceability"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg danceability"
+                                ],
+                                "type": "alias"
+                            }
+                        ],
+                        [
+                            {
+                                "params": [
+                                    "energy"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg energy"
+                                ],
+                                "type": "alias"
+                            }
+                        ],
+                        [
+                            {
+                                "params": [
+                                    "instrumentalness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg instrumentalness"
+                                ],
+                                "type": "alias"
+                            }
+                        ],
+                        [
+                            {
+                                "params": [
+                                    "acousticness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg acousticness"
+                                ],
+                                "type": "alias"
+                            }
+                        ],
+                        [
+                            {
+                                "params": [
+                                    "speechiness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg speechiness"
+                                ],
+                                "type": "alias"
+                            }
+                        ],
+                        [
+                            {
+                                "params": [
+                                    "liveness"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg liveness"
+                                ],
+                                "type": "alias"
+                            }
+                        ],
+                        [
+                            {
+                                "params": [
+                                    "valence"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            },
+                            {
+                                "params": [
+                                    "avg valence"
+                                ],
+                                "type": "alias"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "title": "averages",
+            "type": "bargauge"
+        },
+        {
+            "cards": {},
+            "color": {
+                "cardColor": "#b4ff00",
+                "colorScale": "sqrt",
+                "colorScheme": "interpolateOranges",
+                "exponent": 0.5,
+                "mode": "spectrum"
+            },
+            "dataFormat": "timeseries",
+            "description": "",
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 25
+            },
+            "heatmap": {},
+            "hideZeroBuckets": false,
+            "highlightCards": true,
+            "id": 9,
+            "legend": {
+                "show": false
+            },
+            "pluginVersion": "8.3.4",
+            "reverseYBuckets": false,
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "tempo"
+                                ],
+                                "type": "field"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "BPM by time",
+            "tooltip": {
+                "show": true,
+                "showHistogram": false
+            },
+            "type": "heatmap",
+            "xAxis": {
+                "show": true
+            },
+            "yAxis": {
+                "format": "short",
+                "logBase": 1,
+                "show": true
+            },
+            "yBucketBound": "auto"
+        },
         {
             "fieldConfig": {
                 "defaults": {
@@ -51,13 +1278,26 @@
                         ]
                     }
                 },
-                "overrides": []
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "Time"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.width",
+                                "value": 255
+                            }
+                        ]
+                    }
+                ]
             },
             "gridPos": {
-                "h": 18,
+                "h": 14,
                 "w": 24,
                 "x": 0,
-                "y": 0
+                "y": 33
             },
             "id": 6,
             "options": {
@@ -68,7 +1308,8 @@
                     ],
                     "show": false
                 },
-                "showHeader": true
+                "showHeader": true,
+                "sortBy": []
             },
             "pluginVersion": "8.3.4",
             "targets": [
@@ -78,28 +1319,14 @@
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "groupBy": [],
-                    "measurement": "spotisights",
+                    "measurement": "spotisights4",
                     "orderByTime": "DESC",
                     "policy": "default",
+                    "query": "SELECT \"user\",\"artists\",\"song\",\"duration_ms\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC",
+                    "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
                     "select": [
-                        [
-                            {
-                                "params": [
-                                    "artists"
-                                ],
-                                "type": "field"
-                            }
-                        ],
-                        [
-                            {
-                                "params": [
-                                    "song"
-                                ],
-                                "type": "field"
-                            }
-                        ],
                         [
                             {
                                 "params": [
@@ -114,15 +1341,21 @@
                             "key": "user",
                             "operator": "=~",
                             "value": "/^$user$/"
+                        },
+                        {
+                            "condition": "AND",
+                            "key": "artists",
+                            "operator": "=~",
+                            "value": "/^$artist$/"
                         }
                     ]
                 }
             ],
-            "title": "Panel Title",
+            "title": "history",
             "type": "table"
         }
     ],
-    "refresh": "1m",
+    "refresh": "5m",
     "schemaVersion": 34,
     "style": "dark",
     "tags": [],
@@ -131,20 +1364,50 @@
             {
                 "current": {
                     "selected": true,
-                    "text": "mash1t",
-                    "value": "mash1t"
+                    "text": [
+                        "All"
+                    ],
+                    "value": [
+                        "$__all"
+                    ]
                 },
-                "definition": "SHOW TAG VALUES WITH KEY = \"user\"",
+                "definition": "SHOW TAG VALUES WITH KEY = \"user\" ",
                 "hide": 0,
-                "includeAll": false,
-                "multi": false,
+                "includeAll": true,
+                "label": "User",
+                "multi": true,
                 "name": "user",
                 "options": [],
-                "query": "SHOW TAG VALUES WITH KEY = \"user\"",
+                "query": "SHOW TAG VALUES WITH KEY = \"user\" ",
                 "refresh": 1,
                 "regex": "",
                 "skipUrlSync": false,
-                "sort": 0,
+                "sort": 5,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": true,
+                    "text": [
+                        "All"
+                    ],
+                    "value": [
+                        "$__all"
+                    ]
+                },
+                "definition": "SHOW TAG VALUES WITH KEY = \"artists\" ",
+                "description": "",
+                "hide": 0,
+                "includeAll": true,
+                "label": "Artist",
+                "multi": true,
+                "name": "artist",
+                "options": [],
+                "query": "SHOW TAG VALUES WITH KEY = \"artists\" ",
+                "refresh": 1,
+                "regex": "/(?:,\\s)?([^,]+)(?:,\\s)?/g",
+                "skipUrlSync": false,
+                "sort": 5,
                 "type": "query"
             }
         ]
@@ -181,6 +1444,6 @@
     "timezone": "",
     "title": "SpotiSights - Spotify Insights",
     "uid": "spotisights",
-    "version": 7,
+    "version": 9,
     "weekStart": ""
 }
