@@ -2,16 +2,15 @@
 
 This project displays (soon to be sexy) Spotify Insights via Grafana.
 
-It uses a PHP Script for fetching data from the Spotify API and saves it to InfluxDB.
+It uses PHP Scripts for fetching data from the Spotify API and uses InfluxDB as data storage.
 
 ## Setup
 
-It is advised to use a PHP website serving tool of your choice, such as [Laravel Valet].
-
 1. Copy ``config/*.env.dist`` to ``config/*.env`` and change the credentials
-2. Run ``docker-compose up -d`` to provision Grafana, InfluxDB and PHP (via Nginx)
-3. Log in to the [Spotify Developer] website
-4. Set up a new Spotify App, add the callback URL ``http://localhost:8080/callback.php`` and add client id and client secret to ``php.env``
+2. Run ``composer install`` in ``php/src`` to make sure vendor exists for volume mount
+3. Run ``docker-compose up -d`` to provision Grafana, InfluxDB and PHP (via Nginx)
+4. Log in to the [Spotify Developer] website
+5. Set up a new Spotify App, add the callback URL ``http://localhost:8080/callback.php`` and add client id and client secret to ``php.env``
 
 ## Data Flow
 
