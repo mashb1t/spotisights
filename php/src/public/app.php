@@ -2,8 +2,12 @@
 
 use App\Factory;
 use App\SessionHandler;
+use InfluxDB2\WriteType;
 
 require '../vendor/autoload.php';
+
+//  must be less than or equal to 50 to prevent spotify api errors
+const BATCH_SIZE = 50;
 
 session_start();
 
@@ -17,13 +21,17 @@ $client = new InfluxDB2\Client([
     'org' => getenv('INFLUXDB_ORG'),
     'precision' => InfluxDB2\Model\WritePrecision::NS,
 ]);
-$writeApi = $client->createWriteApi();
+
+$writeApi = $client->createWriteApi([
+    'writeType' => WriteType::BATCHING,
+    'batchSize' => BATCH_SIZE,
+]);
 
 $session = SessionHandler::loadSession($username);
 
 $api = Factory::getSpotifyWebAPI($session);
 
-$recentTracks = $api->getMyRecentTracks(['limit' => 50])->items;
+$recentTracks = $api->getMyRecentTracks(['limit' => BATCH_SIZE])->items;
 
 // todo add cache for track audio features (redis?)
 // todo prepare data for heatmap of liveability bpm etc.
