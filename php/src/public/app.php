@@ -7,6 +7,7 @@ require '../vendor/autoload.php';
 
 session_start();
 
+// todo make sure session stays active OR (better) use this in async cronjob to run for all file sessions
 $username = $_SESSION['username'];
 
 $client = new InfluxDB2\Client([
@@ -24,8 +25,9 @@ $api = Factory::getSpotifyWebAPI($session);
 
 $recentTracks = $api->getMyRecentTracks(['limit' => 50])->items;
 
-// todo add cache for tracks
-// todo add song infos such as genre, bpm, liveliness score etc.
+// todo add cache for track audio features (redis?)
+// todo prepare data for heatmap of liveability bpm etc.
+// todo add counter for song amount
 
 foreach ($recentTracks as $recentTrack) {
     $track = $recentTrack->track;
@@ -37,11 +39,26 @@ foreach ($recentTracks as $recentTrack) {
     $artists = implode(', ', $artists);
 
     try {
-        $point = InfluxDB2\Point::measurement('spotisights')
+        // todo cache audio features for a track (e.g. redis for a month)
+        $songInfos = $api->getAudioFeatures($track->id);
+
+        $point = InfluxDB2\Point::measurement('track_history')
             ->addTag('user', $username)
-            ->addField('artists', $artists)
-            ->addField('song', $track->name)
-            ->addField('duration_ms', (float)$track->duration_ms)
+            ->addTag('artists', $artists)
+            ->addTag('song', $track->name)
+            ->addField('duration_ms', (int)$track->duration_ms)
+            ->addField('danceability', (float)$songInfos->danceability)
+            ->addField('energy', (float)$songInfos->energy)
+            ->addField('key', (int)$songInfos->key)
+//            ->addField('loudness', (float)$songInfos->loudness)
+//            ->addField('mode', (float)$songInfos->mode)
+            ->addField('speechiness', (float)$songInfos->speechiness)
+            ->addField('acousticness', (float)$songInfos->acousticness)
+            ->addField('instrumentalness', (float)$songInfos->instrumentalness)
+            ->addField('liveness', (float)$songInfos->liveness)
+            ->addField('valence', (float)$songInfos->valence)
+            ->addField('tempo', round((float)$songInfos->tempo))
+//            ->addField('type', (int)$songInfos->type)
             ->time((new DateTime($recentTrack->played_at)));
         $writeApi->write($point);
     } catch (Exception $exception) {
