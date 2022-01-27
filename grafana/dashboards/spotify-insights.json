@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643309124277,
+    "iteration": 1643309124279,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1404,7 +1404,7 @@
                 "name": "artist",
                 "options": [],
                 "query": "SHOW TAG VALUES WITH KEY = \"artists\" ",
-                "refresh": 1,
+                "refresh": 2,
                 "regex": "/(?:,\\s)?([^,]+)(?:,\\s)?/g",
                 "skipUrlSync": false,
                 "sort": 5,
