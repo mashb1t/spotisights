@@ -29,7 +29,15 @@ $recentTracks = $api->getMyRecentTracks(['limit' => 50])->items;
 // todo prepare data for heatmap of liveability bpm etc.
 // todo add counter for song amount
 
+$trackIds = [];
 foreach ($recentTracks as $recentTrack) {
+    $trackIds[] = $recentTrack->track->id;
+}
+
+//https://developer.spotify.com/console/get-audio-features-several-tracks/
+$audioFeatures = $api->getMultipleAudioFeatures($trackIds);
+
+foreach ($recentTracks as $index => $recentTrack) {
     $track = $recentTrack->track;
 
     $artists = [];
@@ -40,25 +48,26 @@ foreach ($recentTracks as $recentTrack) {
 
     try {
         // todo cache audio features for a track (e.g. redis for a month)
-        $songInfos = $api->getAudioFeatures($track->id);
+        // order if $audioFeatures matches order of $recentTrack
+        $audioFeature = $audioFeatures->audio_features[$index];
 
         $point = InfluxDB2\Point::measurement('track_history')
             ->addTag('user', $username)
             ->addTag('artists', $artists)
             ->addTag('song', $track->name)
             ->addField('duration_ms', (int)$track->duration_ms)
-            ->addField('danceability', (float)$songInfos->danceability)
-            ->addField('energy', (float)$songInfos->energy)
-            ->addField('key', (int)$songInfos->key)
-//            ->addField('loudness', (float)$songInfos->loudness)
-//            ->addField('mode', (float)$songInfos->mode)
-            ->addField('speechiness', (float)$songInfos->speechiness)
-            ->addField('acousticness', (float)$songInfos->acousticness)
-            ->addField('instrumentalness', (float)$songInfos->instrumentalness)
-            ->addField('liveness', (float)$songInfos->liveness)
-            ->addField('valence', (float)$songInfos->valence)
-            ->addField('tempo', round((float)$songInfos->tempo))
-//            ->addField('type', (int)$songInfos->type)
+            ->addField('danceability', (float)$audioFeature->danceability)
+            ->addField('energy', (float)$audioFeature->energy)
+            ->addField('key', (int)$audioFeature->key)
+//            ->addField('loudness', (float)$audioFeature->loudness)
+//            ->addField('mode', (float)$audioFeature->mode)
+            ->addField('speechiness', (float)$audioFeature->speechiness)
+            ->addField('acousticness', (float)$audioFeature->acousticness)
+            ->addField('instrumentalness', (float)$audioFeature->instrumentalness)
+            ->addField('liveness', (float)$audioFeature->liveness)
+            ->addField('valence', (float)$audioFeature->valence)
+            ->addField('tempo', round((float)$audioFeature->tempo))
+//            ->addField('type', (int)$audioFeature->type)
             ->time((new DateTime($recentTrack->played_at)));
         $writeApi->write($point);
     } catch (Exception $exception) {
@@ -71,4 +80,4 @@ $writeApi->close();
 
 SessionHandler::saveSession($session, $username);
 
-echo 'done';
+echo 'done 1';
