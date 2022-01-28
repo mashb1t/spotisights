@@ -9,11 +9,11 @@ COPY ./src/composer.lock /app/composer.lock
 
 RUN composer install -d /app
 
+COPY ./cronjobs /cronjobs
+RUN crontab /cronjobs/docker-cron
+
 COPY ./src/app /app/app
 COPY ./src/public /app/public
 COPY ./src/scripts /app/scripts
-
-COPY ./cronjobs /cronjobs
-RUN crontab /cronjobs/docker-cron
 
 WORKDIR /app
