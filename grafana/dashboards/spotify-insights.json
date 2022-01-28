@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643399420550,
+    "iteration": 1643412141972,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1926,7 +1926,7 @@
             "type": "table"
         }
     ],
-    "refresh": "5m",
+    "refresh": "",
     "schemaVersion": 34,
     "style": "dark",
     "tags": [],
@@ -2015,6 +2015,6 @@
     "timezone": "",
     "title": "SpotiSights - Spotify Insights",
     "uid": "spotisights",
-    "version": 26,
+    "version": 5,
     "weekStart": ""
 }
