@@ -8,6 +8,7 @@ use SpotifyWebAPI\Session;
 class SessionHandler
 {
     const BASE_FILEPATH = __DIR__ . '/../../sessions';
+    const SESSION_FILE_SUFFIX = '.txt';
 
     public function __construct(
         protected Factory $factory
@@ -24,14 +25,14 @@ class SessionHandler
         ]);
 
         return (bool)file_put_contents(
-            static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . '.txt',
+            static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX,
             $content
         );
     }
 
     public function loadSession(string $username): Session
     {
-        $content = file_get_contents(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . '.txt');
+        $content = file_get_contents(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
         $content = json_decode($content, true);
 
         $session = $this->factory->getSession();
