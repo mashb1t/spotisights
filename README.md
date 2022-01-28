@@ -1,8 +1,8 @@
 # SpotiSights - Spotify Insights
 
-This project displays (soon to be sexy) Spotify Insights via Grafana.
+This project displays (soon to be sexy) Spotify statistics for multiple users via Grafana.
 
-It uses PHP Scripts for fetching data from the Spotify API and uses InfluxDB as data storage.
+It uses PHP Scripts for data collection from the Spotify API and InfluxDB as data storage.
 
 ## Setup
 
