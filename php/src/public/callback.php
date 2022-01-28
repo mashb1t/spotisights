@@ -1,9 +1,8 @@
 <?php
 
 use App\Factory;
-use App\SessionHandler;
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
@@ -14,17 +13,20 @@ if ($state !== $_SESSION['state']) {
     die('State mismatch');
 }
 
+$factory = new Factory();
 
-$session = Factory::getSession();
+$session = $factory->getSession();
+$spotifyWebAPI = $factory->getSpotifyWebAPI($session);
+$sessionHandler = $factory->getSessionHandler();
+
 $session->requestAccessToken($_GET['code']);
 
 // set refreshToken to redirect directly from index to app without redirect to spotify
 $_SESSION['refreshToken'] = $session->getRefreshToken();
 
 // todo add exception handling
-$api = Factory::getSpotifyWebAPI($session);
-$_SESSION['username'] = $api->me()->id;
+$_SESSION['username'] = $spotifyWebAPI->me()->id;
 
-SessionHandler::saveSession($session, $_SESSION['username']);
-header('Location: app.php');
-die();
+$sessionHandler->saveSession($session, $_SESSION['username']);
+
+echo 'all set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest!';

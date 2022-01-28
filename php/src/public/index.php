@@ -2,16 +2,13 @@
 
 use App\Factory;
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
-if (isset($_SESSION['refreshToken'])) {
-    header('Location: app.php');
-    die();
-}
+$factory = new Factory();
 
-$session = Factory::getSession();
+$session = $factory->getSession();
 
 // only generate state once
 $_SESSION['state'] = $_SESSION['state'] ?? $session->generateState();

@@ -1,14 +1,19 @@
 <?php
 
-namespace App;
+namespace App\Session;
 
+use App\Factory;
 use SpotifyWebAPI\Session;
 
 class SessionHandler
 {
-    const BASE_FILEPATH = '..' . DIRECTORY_SEPARATOR . 'sessions';
+    const BASE_FILEPATH = __DIR__ . '/../../sessions';
 
-    public static function saveSession(Session $session, string $username): bool
+    public function __construct(
+        protected Factory $factory
+    ) {}
+
+    public function saveSession(Session $session, string $username): bool
     {
         $accessToken = $session->getAccessToken();
         $refreshToken = $session->getRefreshToken();
@@ -24,12 +29,12 @@ class SessionHandler
         );
     }
 
-    public static function loadSession(string $username): Session
+    public function loadSession(string $username): Session
     {
         $content = file_get_contents(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . '.txt');
         $content = json_decode($content, true);
 
-        $session = Factory::getSession();
+        $session = $this->factory->getSession();
         $session->setAccessToken($content['accessToken']);
         $session->setRefreshToken($content['refreshToken']);
 
