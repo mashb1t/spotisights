@@ -29,4 +29,20 @@ $_SESSION['username'] = $spotifyWebAPI->me()->id;
 
 $sessionHandler->saveSession($session, $_SESSION['username']);
 
-echo 'all set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest!';
+$dashboardUrl =getenv('GRAFANA_DASHBOARD_URL');
+
+if (!$dashboardUrl) {
+    echo 'All set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest!';
+    die();
+}
+
+?>
+<html lang="en-us">
+<head>
+    <meta http-equiv="refresh" content="3;url=<?= $dashboardUrl ?>">
+</head>
+<body>
+    <p>All set up for user <?= $_SESSION['username'] ?>, let the cronjob do the rest!</p>
+    <p>Redirecting to dashboard...</p>
+</body>
+</html>
