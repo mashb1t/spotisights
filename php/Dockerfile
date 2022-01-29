@@ -1,19 +1,33 @@
-FROM webdevops/php-nginx-dev:8.1
+FROM composer AS composer
 
-RUN mkdir /app/sessions
+# copying the source directory and install the dependencies with composer
+COPY ./src/composer.json ./composer.json
+COPY ./src/composer.lock ./composer.lock
 
-COPY ./entrypoint.d /entrypoint.d
+# run composer install to install the dependencies
+RUN composer install \
+  --optimize-autoloader \
+  --no-interaction \
+  --no-progress
 
-COPY ./src/composer.json /app/composer.json
-COPY ./src/composer.lock /app/composer.lock
+# continue stage build with the desired image and copy the source including the
+# dependencies downloaded by composer
+FROM trafex/php-nginx:2.4.0
 
-RUN composer install -d /app
+COPY ./image-files /
 
-COPY ./cronjobs /cronjobs
-RUN crontab /cronjobs/docker-cron
+COPY --chown=nginx --from=composer /app /var/www/html
 
-COPY ./src/app /app/app
-COPY ./src/public /app/public
-COPY ./src/scripts /app/scripts
+WORKDIR /var/www/html
 
-WORKDIR /app
+RUN mkdir ./sessions
+
+COPY ./src/app ./app
+COPY ./src/public ./public
+COPY ./src/scripts ./scripts
+
+USER root
+
+RUN cat /cronjobs/docker-cron > /etc/crontabs/root
+
+USER nobody

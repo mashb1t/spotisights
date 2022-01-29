@@ -1,8 +1,10 @@
 version: '3'
 services:
 
+  # todo upgrade to influxdb2
   influxdb:
-    image: influxdb:1.8-alpine
+    #image: influxdb:1.8-alpine
+    image: mendhak/arm32v6-influxdb
     env_file: config/influxdb.env
     volumes:
       - influxdb_data:/var/lib/influxdb
@@ -30,20 +32,14 @@ services:
       - influxdb
     env_file: config/php.env
     ports:
-      - '8080:80'
+      - '8080:8080'
 #      - '8443:443'
     volumes:
-      - ./php/src:/app:rw,cached
-    environment:
-      - WEB_DOCUMENT_ROOT=/app/public
-      - PHP_DISPLAY_ERRORS=1
-      - PHP_MEMORY_LIMIT=2048M
-#      - PHP_MAX_EXECUTION_TIME=-1
-#      - XDEBUG_MODE=debug
-#      - XDEBUG_START_WITH_REQUEST=yes
-#      - XDEBUG_CLIENT_PORT=9000
-#      - XDEBUG_CLIENT_HOST=docker.local
-#      - XDEBUG_MAX_NESTING_LEVEL=1000
+      - ./php/src/app:/var/www/html/app:rw,cached
+      - ./php/src/public:/var/www/html/public:rw,cached
+      - ./php/src/scripts:/var/www/html/scripts:rw,cached
+      - ./php/src/sessions:/var/www/html/sessions:rw,cached
+      - ./php/src/vendor:/var/www/html/vendor:r,cached
 
 volumes:
   grafana_data: { }

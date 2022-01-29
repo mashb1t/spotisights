@@ -762,9 +762,6 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "ext-pcntl": "*"
-    },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
 }

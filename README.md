@@ -43,3 +43,6 @@ This app implements the [Authorization Code Flow] of Spotify with [Refresh Token
 [Laravel Valet]: https://laravel.com/docs/master/valet
 [Refresh Tokens]: https://github.com/jwilsson/spotify-web-api-php/blob/main/docs/examples/refreshing-access-tokens.md
 [Spotify Developer]: https://developer.spotify.com/dashboard/
+
+
+crond -b -L /docker.stdout

@@ -1,0 +1,1 @@
+0 * * * * root . /var/www/html/environment; /usr/bin/php -d memory_limit=256M /var/www/html/scripts/fetchTrackHistory.php >> /docker.stdout 2>&1
