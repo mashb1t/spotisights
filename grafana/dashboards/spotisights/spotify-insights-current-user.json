@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643511831747,
+    "iteration": 1643564055156,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1543,7 +1543,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT mean(\"danceability\") AS \"avg danceability\", mean(\"energy\") AS \"avg energy\", mean(\"instrumentalness\") AS \"avg instrumentalness\", mean(\"acousticness\") AS \"avg acousticness\", mean(\"speechiness\") AS \"avg speechiness\", mean(\"liveness\") AS \"avg liveness\", mean(\"valence\") AS \"avg valence\" FROM \"track_history\" WHERE (\"artists\" =~ /$artist/) AND $timeFilter",
+                    "query": "SELECT mean(\"danceability\") AS \"avg danceability\", mean(\"energy\") AS \"avg energy\", mean(\"instrumentalness\") AS \"avg instrumentalness\", mean(\"acousticness\") AS \"avg acousticness\", mean(\"speechiness\") AS \"avg speechiness\", mean(\"liveness\") AS \"avg liveness\", mean(\"valence\") AS \"avg valence\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -1885,9 +1885,10 @@
         "list": [
             {
                 "current": {
+                    "isNone": true,
                     "selected": false,
-                    "text": "mash1t",
-                    "value": "mash1t"
+                    "text": "None",
+                    "value": ""
                 },
                 "definition": "SHOW TAG VALUES WITH KEY = \"user\"  WHERE \"user\" =~ /^${__user.login}$/",
                 "hide": 2,
