@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643399420550,
+    "iteration": 1643499728028,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1926,7 +1926,7 @@
             "type": "table"
         }
     ],
-    "refresh": "5m",
+    "refresh": "",
     "schemaVersion": 34,
     "style": "dark",
     "tags": [],
@@ -1934,22 +1934,19 @@
         "list": [
             {
                 "current": {
-                    "selected": true,
-                    "text": [
-                        "All"
-                    ],
-                    "value": [
-                        "$__all"
-                    ]
+                    "isNone": true,
+                    "selected": false,
+                    "text": "None",
+                    "value": ""
                 },
-                "definition": "SHOW TAG VALUES WITH KEY = \"user\" ",
-                "hide": 0,
-                "includeAll": true,
+                "definition": "SHOW TAG VALUES WITH KEY = \"user\"  WHERE \"user\" =~ /^${__user.login}$/",
+                "hide": 2,
+                "includeAll": false,
                 "label": "User",
-                "multi": true,
+                "multi": false,
                 "name": "user",
                 "options": [],
-                "query": "SHOW TAG VALUES WITH KEY = \"user\" ",
+                "query": "SHOW TAG VALUES WITH KEY = \"user\"  WHERE \"user\" =~ /^${__user.login}$/",
                 "refresh": 1,
                 "regex": "",
                 "skipUrlSync": false,
@@ -2013,8 +2010,8 @@
         ]
     },
     "timezone": "",
-    "title": "SpotiSights - Spotify Insights",
+    "title": "Current User",
     "uid": "spotisights",
-    "version": 26,
+    "version": 1,
     "weekStart": ""
 }

@@ -41,4 +41,12 @@ class SessionHandler
 
         return $session;
     }
+
+    /**
+     * @return Factory
+     */
+    public function sessionExists(string $username): bool
+    {
+        return file_exists(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
+    }
 }

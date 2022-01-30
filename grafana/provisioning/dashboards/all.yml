@@ -1,11 +1,19 @@
 apiVersion: 1
 
 providers:
-- name: 'default'
+- name: 'spotisights-admin'
   orgId: 1
-  folder: ''
+  folder: 'SpotiSights - Admin'
+  type: file
+  disableDeletion: false
+  updateIntervalSeconds: 3 #how often Grafana will scan for changed dashboards.
+  options:
+    path: /var/lib/grafana/dashboards/spotisights-admin
+- name: 'spotisights'
+  orgId: 1
+  folder: 'SpotiSights'
   type: file
   disableDeletion: false
   updateIntervalSeconds: 3 #how often Grafana will scan for changed dashboards
   options:
-    path: /var/lib/grafana/dashboards
+    path: /var/lib/grafana/dashboards/spotisights
