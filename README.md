@@ -7,11 +7,11 @@ It uses PHP Scripts for data collection from the Spotify API and InfluxDB as dat
 ## Setup
 
 1. Copy ``config/*.env.dist`` to ``config/*.env`` and change the credentials
-2. Run ``composer install`` in ``php/src`` to make sure vendor exists for volume mount
-3. Run ``docker-compose up -d`` to provision Grafana, InfluxDB and PHP (via Nginx)
+2. Run ``composer install`` in ``php/src`` to make sure vendor exists for volume mount (only dev environment)
+3. Run ``docker-compose up -d`` to provision Grafana, InfluxDB and PHP+Nginx
 4. Log in to the [Spotify Developer] website
 5. Set up a new Spotify App, add the callback URL ``http://localhost:8080/callback.php`` and add client id and client secret to ``php.env``
-
+6. Log in to Grafana and remove the permission "View" on dashboard "Current User" (navigate settings > permissions > click on group "SpotiSights" > remove role "Viewer" from board)
 ## Data Flow
 
 1. Call http://localhost:8080/ and follow the displayed auth flow (technical reference: [Authorization Code Flow])
