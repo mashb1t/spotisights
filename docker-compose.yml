@@ -5,7 +5,7 @@ services:
     image: influxdb:1.8-alpine
     env_file: config/influxdb.env
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - influxdb_data:/var/lib/influxdb:rw,delegated
 
   grafana:
     image: grafana/grafana:8.3.4
@@ -17,7 +17,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana_data:/var/lib/grafana:rw,delegated
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
 
