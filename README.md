@@ -1,9 +1,14 @@
 # SpotiSights - Spotify Insights
 
-This project displays (soon to be sexy) Spotify statistics for multiple users via Grafana.
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fspotisights.mashb1t.de)](https://spotisights.mashb1t.de)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![License](https://img.shields.io/github/license/mashb1t/spotisights)](https://github.com/mashb1t/spotisights/blob/master/LICENSE)
+
+This project displays Spotify statistics for multiple users via Grafana.
 
 It uses PHP Scripts for data collection from the Spotify API and InfluxDB as data storage.
 
+![](https://raw.githubusercontent.com/mashb1t/spotisights/master/images/spotisights-current-user.png)
 
 ## Setup
 
@@ -15,12 +20,16 @@ It uses PHP Scripts for data collection from the Spotify API and InfluxDB as dat
 6. Log in to Grafana and remove the permission "View" on dashboard "Current User" (navigate settings > permissions > click on group "SpotiSights" > remove role "Viewer" from board)
 
 
-## Data Flow
+## Data Flow / User setup
 
-1. Call http://localhost:8080/ and follow the displayed auth flow (technical reference: [Authorization Code Flow])
-2. app.php is called and collects recent tracks fron the authorized user, saves them to InfluxDB and prompts "done" when finished
-3. Open Grafana at http://localhost:3000/ and navigate to the Dashboard "spotisights" (http://localhost:3000/?orgId=1&search=open)
-
+1. Admin: add user email to permitted users in your Spotify app
+2. User: Call http://localhost:8080/ and follow the displayed auth flow (technical reference: see auth section)
+3. User: initial crawl is executed for new users on first successful connection (**pulls max. 50 last listened tracks**)
+4. Admin: find username by new session name in file system / username in admin dashboard 
+5. Admin: create user with email, username = Spotify username and "Viewer" permissions (default)
+6. Cronjob: collects recent tracks fron the authorized user and saves them to InfluxDB (**interval defined in docker-cron**)
+7. User: Log in to Grafana at http://localhost:3000/ and navigate to the Dashboard "spotisights" (http://localhost:3000/?orgId=1&search=open)
+8. User: There should be a dashboard called "Current User" whch only shows data for the current user
 
 ## Auth
 
@@ -86,3 +95,7 @@ This most likely has to do with libseccomp2 not being compatible.
 [Laravel Valet]: https://laravel.com/docs/master/valet
 [Refresh Tokens]: https://github.com/jwilsson/spotify-web-api-php/blob/main/docs/examples/refreshing-access-tokens.md
 [Spotify Developer]: https://developer.spotify.com/dashboard/
+
+## License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
