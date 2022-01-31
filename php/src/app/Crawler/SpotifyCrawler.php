@@ -21,7 +21,7 @@ class SpotifyCrawler implements CrawlerInterface
     ) {
     }
 
-    public function initialSetup(?string $username = null, ?array $params = []): bool
+    public function initialSetup(?string $username = null, ?array $params = []): CrawlerResultEnum
     {
         $spotifySession = $this->factory->getSpotifySession();
 
@@ -29,7 +29,7 @@ class SpotifyCrawler implements CrawlerInterface
         $session = $spotifySession->getUnderlyingObject();
 
         if ($username && $this->sessionHandler->sessionExists($username)) {
-            return true;
+            return CrawlerResultEnum::SESSION_ALREADY_EXISTS;
         }
 
         $accessTokenCreated = false;
@@ -38,7 +38,7 @@ class SpotifyCrawler implements CrawlerInterface
         } catch (SpotifyWebAPIException $exception) {
         } finally {
             if (!$accessTokenCreated) {
-                return false;
+                return CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR;
                 // todo return specific state from enum
 //                header('refresh:5;url=index.php');
 //                die('Access token could not be created, redirecting to login...');
@@ -53,7 +53,7 @@ class SpotifyCrawler implements CrawlerInterface
 
         $this->sessionHandler->saveSession($spotifySession, $username);
 
-        return true;
+        return CrawlerResultEnum::SESSION_SETUP_SUCCESS;
     }
 
     /**
@@ -77,6 +77,7 @@ class SpotifyCrawler implements CrawlerInterface
      */
     protected function crawlTrackHistoryAndAudioFeatures(string $username, SpotifyWebAPI $spotifyWebApi): void
     {
+        // TODO add "after" instead of limit if last crawl was last hour
         $recentTracks = $spotifyWebApi->getMyRecentTracks(['limit' => Factory::BATCH_SIZE])->items;
 
         $trackIds = [];

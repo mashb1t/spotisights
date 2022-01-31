@@ -8,5 +8,5 @@ interface CrawlerInterface
 
     public function getType(): string;
 
-    public function initialSetup(?string $username = null, ?array $params = []): bool;
+    public function initialSetup(?string $username = null, ?array $params = []): CrawlerResultEnum;
 }
