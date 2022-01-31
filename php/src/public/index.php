@@ -1,5 +1,7 @@
 <?php
 
+// currently exclusively authorizes spotify
+
 use App\Factory;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -8,7 +10,8 @@ session_start();
 
 $factory = new Factory();
 
-$session = $factory->getSession();
+$spotifySession = $factory->getSpotifySession();
+$session = $spotifySession->getUnderlyingObject();
 
 // only generate state once
 $_SESSION['state'] = $_SESSION['state'] ?? $session->generateState();

@@ -2,8 +2,11 @@
 
 namespace App;
 
-use App\Crawler\TrackHistoryCrawler;
+use App\Crawler\CrawlerInterface;
+use App\Crawler\SpotifyCrawler;
 use App\Session\SessionHandler;
+use App\Session\SessionInterface;
+use App\Session\SpotifySession;
 use DateTime;
 use Exception;
 use InfluxDB2\Client;
@@ -20,12 +23,14 @@ class Factory
     // must be less than or equal to 50 to prevent spotify api errors
     const BATCH_SIZE = 50;
 
-    public function getSession(): Session
+    public function getSpotifySession(): SessionInterface
     {
-        return new Session(
-            getenv('SPOTIFY_CLIENT_ID'),
-            getenv('SPOTIFY_CLIENT_SECRET'),
-            getenv('SPOTIFY_REDIRECT_URL'),
+        return new SpotifySession(
+            new Session(
+                getenv('SPOTIFY_CLIENT_ID'),
+                getenv('SPOTIFY_CLIENT_SECRET'),
+                getenv('SPOTIFY_REDIRECT_URL'),
+            )
         );
     }
 
@@ -93,16 +98,26 @@ class Factory
         ]);
     }
 
-    public function getTrackHistoryCrawler(Session $session): TrackHistoryCrawler
-    {
-        $writeApi = $this->getInfluxDBWriteApi();
-        $spotifyWebApi = $this->getSpotifyWebAPI($session);
-
-        return new TrackHistoryCrawler($writeApi, $spotifyWebApi, $this);
-    }
-
     #[Pure] public function getSessionHandler(): SessionHandler
     {
         return new SessionHandler($this);
+    }
+
+    /**
+     * @return CrawlerInterface[]
+     */
+    public function getActiveCrawlers(): array
+    {
+        return [
+            $this->getSpotifyCrawler(),
+        ];
+    }
+
+    protected function getSpotifyCrawler(): SpotifyCrawler
+    {
+        $writeApi = $this->getInfluxDBWriteApi();
+        $sessionHandler = $this->getSessionHandler();
+
+        return new SpotifyCrawler($writeApi, $sessionHandler, $this);
     }
 }

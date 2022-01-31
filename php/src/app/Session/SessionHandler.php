@@ -14,7 +14,7 @@ class SessionHandler
         protected Factory $factory
     ) {}
 
-    public function saveSession(Session $session, string $username): bool
+    public function saveSession(SessionInterface $session, string $username): bool
     {
         $accessToken = $session->getAccessToken();
         $refreshToken = $session->getRefreshToken();
@@ -30,21 +30,18 @@ class SessionHandler
         );
     }
 
-    public function loadSession(string $username): Session
+    public function loadSession(string $username): SessionInterface
     {
         $content = file_get_contents(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
         $content = json_decode($content, true);
 
-        $session = $this->factory->getSession();
+        $session = $this->factory->getSpotifySession();
         $session->setAccessToken($content['accessToken']);
         $session->setRefreshToken($content['refreshToken']);
 
         return $session;
     }
 
-    /**
-     * @return Factory
-     */
     public function sessionExists(string $username): bool
     {
         return file_exists(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);

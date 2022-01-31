@@ -1,7 +1,6 @@
 <?php
 
 use App\Factory;
-use SpotifyWebAPI\SpotifyWebAPIException;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -19,45 +18,45 @@ if (!$state || $state !== $sessionState || !$code) {
 }
 
 $factory = new Factory();
+$dashboardUrl = getenv('GRAFANA_DASHBOARD_URL');
 
-$session = $factory->getSession();
-$spotifyWebAPI = $factory->getSpotifyWebAPI($session);
-$sessionHandler = $factory->getSessionHandler();
+$crawlers = $factory->getActiveCrawlers();
 
-$accessTokenCreated = false;
-try {
-    $accessTokenCreated = $session->requestAccessToken($code);
-} catch (SpotifyWebAPIException $exception) {
-} finally {
-    if (!$accessTokenCreated) {
-        header('refresh:5;url=index.php');
-        die('Access token could not be created, redirecting to login...');
+$crawlerInitialSetup = [];
+$crawlerResult = [];
+
+foreach ($crawlers as $crawler) {
+
+    $username = $_SESSION[$crawler->getType() . '_username'] ?? null;
+
+    $initialSetupResult = $crawler->initialSetup($username, ['code' => $code]);
+    $crawlerInitialSetup[$crawler->getType()] = $initialSetupResult;
+
+    // TODO change condition with enum code "user set up" to not always crawl
+    if ($initialSetupResult) {
+        try {
+            // read new username from session if now set by initial setup
+            $crawler->crawlAll($_SESSION[$crawler->getType() . '_username']);
+            $crawlerResult[$crawler->getType()] = true;
+        } catch (Exception $e) {
+            die($e->getMessage());
+//            $crawlerResult[$crawler::class] = false;
+        }
     }
 }
 
-// set refreshToken to redirect directly from index to app without redirect to spotify
-$_SESSION['refreshToken'] = $session->getRefreshToken();
-
-// todo add exception handling
-$_SESSION['username'] = $spotifyWebAPI->me()->id;
-
-$dashboardUrl = getenv('GRAFANA_DASHBOARD_URL');
-
-if (!$sessionHandler->sessionExists($_SESSION['username'])) {
-    $sessionHandler->saveSession($session, $_SESSION['username']);
-
-    $trackHistoryCrawler = $factory->getTrackHistoryCrawler($session);
-    $trackHistoryCrawler->crawl($_SESSION['username']);
-
+// TODO use unspecific code here
+// check if every initial setup went fine
+if (!in_array(false, $crawlerInitialSetup, true)) {
     // todo idea: create new grafana user via API https://grafana.com/docs/grafana/latest/http_api/admin/#global-users and display password once?
 
     header("refresh:5;url=$dashboardUrl");
-    die('All set up for user ' . $_SESSION['username'] . ', redirecting to dashboard...');
+    die('All set up for user ' . $_SESSION['spotify_username'] . ', redirecting to dashboard...');
 }
 
 if (!$dashboardUrl) {
-    die('All set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest!');
+    die('All set up for user ' . $_SESSION['spotify_username'] . ', let the cronjob do the rest!');
 }
 
 header("refresh:5;url=$dashboardUrl");
-die('All set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest! Redirecting to dashboard...');
+die('All set up for user ' . $_SESSION['spotify_username'] . ', let the cronjob do the rest! Redirecting to dashboard...');
