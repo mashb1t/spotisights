@@ -6,24 +6,24 @@ use App\Session\SessionHandler;
 require __DIR__ . '/../vendor/autoload.php';
 
 function printSpacer() {
-    printLn('—---------------------------------------------------------------');
+    printLine('—---------------------------------------------------------------');
 }
 
-function printLn(?string $line = '') {
+function printLine(?string $line = '') {
     echo "$line\n";
 }
 
-printLn('starting fetchTrackHistory');
+printLine('starting fetchTrackHistory');
 
 $files = glob(SessionHandler::BASE_FILEPATH  . '/*' . SessionHandler::SESSION_FILE_SUFFIX);
 $fileCount = count($files);
 
-printLn("found $fileCount user(s)");
+printLine("found $fileCount user(s)");
 
 printSpacer();
 
 if ($fileCount === 0) {
-    printLn('done');
+    printLine('done');
     exit;
 }
 
@@ -31,28 +31,24 @@ foreach ($files as $filename) {
 
     $username = basename($filename, SessionHandler::SESSION_FILE_SUFFIX);
 
-    println("user $username");
+    printLine("user $username");
 
     $factory = new Factory();
-    $sessionHandler = $factory->getSessionHandler();
 
-    $session = $sessionHandler->loadSession($username);
+    $crawlers = $factory->getActiveCrawlers();
 
-    $trackHistoryCrawler = $factory->getTrackHistoryCrawler($session);
-
-    try {
-        println('TrackHistoryCrawler start');
-        $trackHistoryCrawler->crawl($username);
-        println('TrackHistoryCrawler end');
-    } catch (Exception $exception) {
-        println($exception->getMessage());
+    foreach ($crawlers as $crawler) {
+        try {
+            printLine($crawler::class . ' start');
+            $crawler->crawlAll($username);
+            printLine($crawler::class . ' end');
+        } catch (Exception $exception) {
+            printLine($exception->getMessage());
+        }
     }
 
-    $session = $sessionHandler->saveSession($session, $username);
-
-    println("user $username crawled successfully");
-
+    printLine("user $username crawled successfully");
     printSpacer();
 }
 
-printLn('done');
+printLine('done');
