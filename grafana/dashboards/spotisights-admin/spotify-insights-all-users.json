@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643580161393,
+    "iteration": 1643673500547,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -61,7 +61,7 @@
             },
             "gridPos": {
                 "h": 3,
-                "w": 3,
+                "w": 4,
                 "x": 0,
                 "y": 1
             },
@@ -137,14 +137,15 @@
                                 "value": null
                             }
                         ]
-                    }
+                    },
+                    "unit": "dtdhms"
                 },
                 "overrides": []
             },
             "gridPos": {
                 "h": 3,
-                "w": 3,
-                "x": 3,
+                "w": 4,
+                "x": 4,
                 "y": 1
             },
             "id": 41,
@@ -173,7 +174,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000 / 60 as \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/)",
+                    "query": "SELECT sum(\"duration_ms\") /1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -206,7 +207,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened",
+            "title": "total time listened",
             "type": "stat"
         },
         {
@@ -262,8 +263,8 @@
             },
             "gridPos": {
                 "h": 6,
-                "w": 18,
-                "x": 6,
+                "w": 16,
+                "x": 8,
                 "y": 1
             },
             "id": 42,
@@ -334,7 +335,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened",
+            "title": "total minutes listened by period",
             "transformations": [
                 {
                     "id": "organize",
@@ -371,7 +372,7 @@
             },
             "gridPos": {
                 "h": 3,
-                "w": 3,
+                "w": 4,
                 "x": 0,
                 "y": 4
             },
@@ -447,14 +448,15 @@
                                 "value": null
                             }
                         ]
-                    }
+                    },
+                    "unit": "dtdhms"
                 },
                 "overrides": []
             },
             "gridPos": {
                 "h": 3,
-                "w": 3,
-                "x": 3,
+                "w": 4,
+                "x": 4,
                 "y": 4
             },
             "id": 33,
@@ -483,7 +485,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000 / 60 as \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
+                    "query": "SELECT sum(\"duration_ms\") /1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -516,7 +518,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened by period",
+            "title": "total time listened by period",
             "type": "stat"
         },
         {
@@ -2052,7 +2054,7 @@
             },
             {
                 "current": {
-                    "selected": false,
+                    "selected": true,
                     "text": [
                         "All"
                     ],
@@ -2109,6 +2111,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 8,
+    "version": 15,
     "weekStart": ""
 }
