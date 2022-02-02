@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643580161393,
+    "iteration": 1643838170756,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -137,7 +137,8 @@
                                 "value": null
                             }
                         ]
-                    }
+                    },
+                    "unit": "dtdhms"
                 },
                 "overrides": []
             },
@@ -173,7 +174,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000 / 60 as \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/)",
+                    "query": "SELECT sum(\"duration_ms\") /1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -334,7 +335,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened",
+            "title": "total minutes listened by period",
             "transformations": [
                 {
                     "id": "organize",
@@ -447,7 +448,8 @@
                                 "value": null
                             }
                         ]
-                    }
+                    },
+                    "unit": "dtdhms"
                 },
                 "overrides": []
             },
@@ -483,7 +485,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000 / 60 as \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
+                    "query": "SELECT sum(\"duration_ms\") /1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -1739,17 +1741,8 @@
                         "mode": "thresholds"
                     },
                     "custom": {
-                        "axisLabel": "",
-                        "axisPlacement": "auto",
-                        "axisSoftMin": 0,
-                        "fillOpacity": 80,
-                        "gradientMode": "none",
-                        "hideFrom": {
-                            "legend": false,
-                            "tooltip": false,
-                            "viz": false
-                        },
-                        "lineWidth": 1
+                        "align": "auto",
+                        "displayMode": "auto"
                     },
                     "mappings": [],
                     "thresholds": {
@@ -1774,20 +1767,14 @@
             "id": 37,
             "maxDataPoints": 10,
             "options": {
-                "barWidth": 0.96,
-                "groupWidth": 0.7,
-                "legend": {
-                    "calcs": [],
-                    "displayMode": "hidden",
-                    "placement": "right"
+                "footer": {
+                    "fields": "",
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": false
                 },
-                "orientation": "vertical",
-                "showValue": "auto",
-                "stacking": "none",
-                "tooltip": {
-                    "mode": "single"
-                },
-                "xTickLabelRotation": -90
+                "showHeader": true
             },
             "pluginVersion": "8.3.4",
             "targets": [
@@ -1796,12 +1783,19 @@
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
-                    "groupBy": [],
+                    "groupBy": [
+                        {
+                            "params": [
+                                "artists"
+                            ],
+                            "type": "tag"
+                        }
+                    ],
                     "hide": false,
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT \"duration_ms\",\"track\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
+                    "query": "SELECT \"duration_ms\",\"track\",\"artists\" FROM \"track_history\" WHERE \"track\" != '' AND (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -1836,6 +1830,12 @@
                             "key": "user",
                             "operator": "=~",
                             "value": "/^$user$/"
+                        },
+                        {
+                            "condition": "AND",
+                            "key": "artists",
+                            "operator": "!=",
+                            "value": "select tag value"
                         }
                     ]
                 }
@@ -1849,8 +1849,13 @@
                             "Time": {
                                 "aggregations": []
                             },
+                            "artisis": {
+                                "aggregations": [],
+                                "operation": "groupby"
+                            },
                             "artists": {
-                                "aggregations": []
+                                "aggregations": [],
+                                "operation": "groupby"
                             },
                             "duration": {
                                 "aggregations": [
@@ -1890,10 +1895,33 @@
                     }
                 },
                 {
+                    "id": "calculateField",
+                    "options": {
+                        "alias": "track, artist",
+                        "mode": "reduceRow",
+                        "reduce": {
+                            "include": [
+                                "track",
+                                "artists"
+                            ],
+                            "reducer": "allValues"
+                        },
+                        "replaceFields": false
+                    }
+                },
+                {
                     "id": "organize",
                     "options": {
-                        "excludeByName": {},
-                        "indexByName": {},
+                        "excludeByName": {
+                            "artists": true,
+                            "track": true
+                        },
+                        "indexByName": {
+                            "artists": 1,
+                            "duration_ms (count)": 3,
+                            "track": 0,
+                            "track, artist": 2
+                        },
                         "renameByName": {
                             "artists": "",
                             "duration (sum)": "minutes",
@@ -1903,7 +1931,7 @@
                     }
                 }
             ],
-            "type": "barchart"
+            "type": "table"
         },
         {
             "collapsed": false,
@@ -2052,7 +2080,7 @@
             },
             {
                 "current": {
-                    "selected": false,
+                    "selected": true,
                     "text": [
                         "All"
                     ],
@@ -2060,7 +2088,7 @@
                         "$__all"
                     ]
                 },
-                "definition": "SHOW TAG VALUES WITH KEY = \"artists\" ",
+                "definition": "SELECT DISTINCT(\"artists\") FROM (SELECT \"artists\",\"duration_ms\" FROM \"track_history\" WHERE \"user\" =~ /^$user$/ AND $timeFilter)",
                 "description": "",
                 "hide": 0,
                 "includeAll": true,
@@ -2068,7 +2096,7 @@
                 "multi": true,
                 "name": "artist",
                 "options": [],
-                "query": "SHOW TAG VALUES WITH KEY = \"artists\" ",
+                "query": "SELECT DISTINCT(\"artists\") FROM (SELECT \"artists\",\"duration_ms\" FROM \"track_history\" WHERE \"user\" =~ /^$user$/ AND $timeFilter)",
                 "refresh": 2,
                 "regex": "/(?:,\\s)?([^,]+)(?:,\\s)?/g",
                 "skipUrlSync": false,
@@ -2109,6 +2137,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 8,
+    "version": 19,
     "weekStart": ""
 }
