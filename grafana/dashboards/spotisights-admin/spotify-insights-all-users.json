@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643838170756,
+    "iteration": 1643840894204,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -2079,6 +2079,7 @@
                 "type": "query"
             },
             {
+                "allValue": ".*",
                 "current": {
                     "selected": true,
                     "text": [
@@ -2137,6 +2138,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 19,
+    "version": 4,
     "weekStart": ""
 }
