@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1643783927988,
+    "iteration": 1643838731527,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -174,7 +174,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000 / 60 as \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/)",
+                    "query": "SELECT sum(\"duration_ms\") /1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -485,7 +485,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000 / 60 as \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
+                    "query": "SELECT sum(\"duration_ms\") /1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -2076,7 +2076,7 @@
             },
             {
                 "current": {
-                    "selected": false,
+                    "selected": true,
                     "text": [
                         "All"
                     ],
@@ -2084,7 +2084,7 @@
                         "$__all"
                     ]
                 },
-                "definition": "SHOW TAG VALUES WITH KEY = \"artists\" ",
+                "definition": "SELECT DISTINCT(\"artists\") FROM (SELECT \"artists\",\"duration_ms\" FROM \"track_history\" WHERE \"user\" =~ /^$user$/ AND $timeFilter)",
                 "description": "",
                 "hide": 0,
                 "includeAll": true,
@@ -2092,7 +2092,7 @@
                 "multi": true,
                 "name": "artist",
                 "options": [],
-                "query": "SHOW TAG VALUES WITH KEY = \"artists\" ",
+                "query": "SELECT DISTINCT(\"artists\") FROM (SELECT \"artists\",\"duration_ms\" FROM \"track_history\" WHERE \"user\" =~ /^$user$/ AND $timeFilter)",
                 "refresh": 2,
                 "regex": "/(?:,\\s)?([^,]+)(?:,\\s)?/g",
                 "skipUrlSync": false,
@@ -2133,6 +2133,6 @@
     "timezone": "",
     "title": "Current User",
     "uid": "spotisights",
-    "version": 37,
+    "version": 39,
     "weekStart": ""
 }
