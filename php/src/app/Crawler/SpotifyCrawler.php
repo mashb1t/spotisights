@@ -34,7 +34,7 @@ class SpotifyCrawler implements CrawlerInterface
         /** @var Session $session */
         $session = $spotifySession->getUnderlyingObject();
 
-        if ($username && $this->sessionHandler->sessionExists($username)) {
+        if ($username && $this->sessionHandler->sessionExists(ServiceEnum::SPOTIFY, $username)) {
             return CrawlerResultEnum::SESSION_ALREADY_EXISTS;
         }
 
@@ -100,7 +100,7 @@ class SpotifyCrawler implements CrawlerInterface
             // order of $audioFeatures matches order of $recentTrack
             $audioFeature = $audioFeatures->audio_features[$index];
 
-            $point = $this->factory->getTrackHistoryPoint($username, $audioFeature, $recentTrack);
+            $point = $this->factory->getTrackHistoryPoint($username, ServiceEnum::SPOTIFY->value, $audioFeature, $recentTrack);
             $this->writeApi->write($point);
         }
 

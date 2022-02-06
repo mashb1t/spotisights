@@ -63,15 +63,11 @@ class Factory
     }
 
     /**
-     * @param mixed $username
-     * @param mixed $audioFeature
-     * @param mixed $recentTrack
-     *
-     * @return Point
      * @throws Exception
      */
     public function getTrackHistoryPoint(
-        mixed $username,
+        string $username,
+        string $service,
         mixed $audioFeature,
         mixed $recentTrack
     ): Point {

@@ -15,41 +15,44 @@ function printLine(?string $line = '')
     echo "$line\n";
 }
 
-printLine('starting fetchTrackHistory');
+$factory = new Factory();
+$crawlers = $factory->getActiveCrawlers();
+$crawlerCount = count($crawlers);
 
-$files = glob(SessionHandler::BASE_FILEPATH . '/*' . SessionHandler::SESSION_FILE_SUFFIX);
-$fileCount = count($files);
-
-printLine("found $fileCount user(s)");
+printLine("found $crawlerCount active service(s): " . implode(', ', array_keys($crawlers)));
 
 printSpacer();
 
-if ($fileCount === 0) {
+if ($crawlerCount === 0) {
     printLine('done');
     exit;
 }
 
-foreach ($files as $filename) {
+foreach ($crawlers as $service => $crawler) {
+    $sessionFiles = glob(
+        SessionHandler::BASE_FILEPATH . DIRECTORY_SEPARATOR . $service . DIRECTORY_SEPARATOR . '*' . SessionHandler::SESSION_FILE_SUFFIX
+    );
+    $sessionFileCount = count($sessionFiles);
 
-    $username = basename($filename, SessionHandler::SESSION_FILE_SUFFIX);
+    printLine("found $sessionFileCount $service session(s)");
 
-    printLine("user $username");
+    foreach ($sessionFiles as $index => $sessionFile) {
+        $username = basename($sessionFile, SessionHandler::SESSION_FILE_SUFFIX);
 
-    $factory = new Factory();
+        // show index +1 in outputs
+        $index++;
 
-    $crawlers = $factory->getActiveCrawlers();
-
-    foreach ($crawlers as $crawler) {
         try {
-            printLine($crawler::class . ' start');
+            printLine("$index/$sessionFileCount: crawling user \"$username\"");
             $crawler->crawlAll($username);
-            printLine($crawler::class . ' end');
+
         } catch (Exception $exception) {
-            printLine($exception->getMessage());
+            printLine("$index/$sessionFileCount: exception while crawling $username, message: " . $exception->getMessage());
         }
     }
 
-    printLine("user $username crawled successfully");
+    printLine('done');
+
     printSpacer();
 }
 

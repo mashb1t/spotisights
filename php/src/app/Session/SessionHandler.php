@@ -5,6 +5,7 @@ namespace App\Session;
 use App\Enums\ServiceEnum;
 use App\Factory;
 use Exception;
+use JetBrains\PhpStorm\Pure;
 
 class SessionHandler
 {
@@ -63,8 +64,8 @@ class SessionHandler
         return $session;
     }
 
-    public function sessionExists(string $username): bool
+    #[Pure] public function sessionExists(ServiceEnum $service, string $username): bool
     {
-        return file_exists(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
+        return file_exists($this->getFilepath($service->value, $username));
     }
 }
