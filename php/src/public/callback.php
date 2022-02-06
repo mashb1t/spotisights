@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\CrawlerResultEnum;
+use App\Enums\ServiceEnum;
 use App\Factory;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -21,32 +22,35 @@ if (!$state || $state !== $sessionState || !$code) {
 $factory = new Factory();
 $crawlers = $factory->getActiveCrawlers();
 
+$serviceNameSpotify = ServiceEnum::SPOTIFY->value;
 $crawlerInitialSetup = [];
 $crawlerResult = [];
 
-// TODO split up into multiple callback urls per service
-foreach ($crawlers as $crawler) {
-    $username = $_SESSION[$crawler->getType() . '_username'] ?? null;
+$crawler = $crawlers[$serviceNameSpotify];
 
-    $initialSetupResult = $crawler->initialSetup($username, ['code' => $code]);
-    $crawlerInitialSetup[$crawler->getType()] = $initialSetupResult;
+$username = $_SESSION[$crawler->getType() . '_username'] ?? null;
 
-    if ($initialSetupResult == CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR) {
-        $_SESSION['logged_in'][$crawler->getType()] = false;
-        header('refresh:5;url=index.php');
-        die(CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR->value);
-    } else if ($crawlerInitialSetup == CrawlerResultEnum::SESSION_SETUP_SUCCESS) {
-        try {
-            // read new username from session if now set by initial setup
-            $crawler->crawlAll($_SESSION[$crawler->getType() . '_username']);
-            $crawlerResult[$crawler->getType()] = true;
-        } catch (Exception $exception) {
-            $crawlerResult[$crawler->getType()] = CrawlerResultEnum::CRAWL_FAILED;
-            die($exception->getMessage());
-        }
+// do initial crawl
+// TODO extract to separate method/class
+$initialSetupResult = $crawler->initialSetup($username, ['code' => $code]);
+$crawlerInitialSetup[$crawler->getType()] = $initialSetupResult;
+
+if ($initialSetupResult == CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR) {
+    $_SESSION['logged_in'][$crawler->getType()] = false;
+    header('refresh:5;url=index.php');
+    die(CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR->value);
+} else if ($crawlerInitialSetup == CrawlerResultEnum::SESSION_SETUP_SUCCESS) {
+    try {
+        // read new username from session if now set by initial setup
+        $crawler->crawlAll($_SESSION[$crawler->getType() . '_username']);
+        $crawlerResult[$crawler->getType()] = true;
+    } catch (Exception $exception) {
+        $crawlerResult[$crawler->getType()] = CrawlerResultEnum::CRAWL_FAILED;
+        die($exception->getMessage());
     }
-
-    $_SESSION['logged_in'][$crawler->getType()] = true;
 }
+
+$_SESSION['logged_in'][$crawler->getType()] = true;
+
 header('Location: index.php');
 die();

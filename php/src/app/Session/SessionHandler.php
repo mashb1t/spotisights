@@ -34,6 +34,15 @@ class SessionHandler
         return (bool)file_put_contents($filepath, $content);
     }
 
+    protected function getFilepath(string $service, string $username): string
+    {
+        return implode(DIRECTORY_SEPARATOR, [
+            static::BASE_FILEPATH,
+            $service,
+            $username . static::SESSION_FILE_SUFFIX,
+        ]);
+    }
+
     /**
      * @throws Exception
      */
@@ -57,14 +66,5 @@ class SessionHandler
     public function sessionExists(string $username): bool
     {
         return file_exists(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
-    }
-
-    protected function getFilepath(string $service, string $username): string
-    {
-        return implode(DIRECTORY_SEPARATOR, [
-            static::BASE_FILEPATH,
-            $service,
-            $username . static::SESSION_FILE_SUFFIX,
-        ]);
     }
 }

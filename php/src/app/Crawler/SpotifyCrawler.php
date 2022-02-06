@@ -21,6 +21,12 @@ class SpotifyCrawler implements CrawlerInterface
     ) {
     }
 
+    /**
+     * @param string|null $username
+     * @param array|null  $params array key 'code' => used for requesting the access token authorization code flow
+     *
+     * @return CrawlerResultEnum
+     */
     public function initialSetup(?string $username = null, ?array $params = []): CrawlerResultEnum
     {
         $spotifySession = $this->factory->getSpotifySession();
@@ -51,6 +57,11 @@ class SpotifyCrawler implements CrawlerInterface
         $this->sessionHandler->saveSession($spotifySession, $username);
 
         return CrawlerResultEnum::SESSION_SETUP_SUCCESS;
+    }
+
+    public function getType(): string
+    {
+        return ServiceEnum::SPOTIFY->value;
     }
 
     /**
@@ -94,10 +105,5 @@ class SpotifyCrawler implements CrawlerInterface
         }
 
         $this->writeApi->close();
-    }
-
-    public function getType(): string
-    {
-        return ServiceEnum::SPOTIFY->value;
     }
 }

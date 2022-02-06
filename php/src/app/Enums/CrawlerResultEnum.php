@@ -2,7 +2,8 @@
 
 namespace App\Enums;
 
-enum CrawlerResultEnum: string {
+enum CrawlerResultEnum: string
+{
     case SESSION_ALREADY_EXISTS = 'user already exists';
     case SESSION_ACCESS_TOKEN_ERROR = 'error while fetching access token';
     case SESSION_SETUP_SUCCESS = 'initial setup success';

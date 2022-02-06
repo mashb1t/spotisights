@@ -5,17 +5,19 @@ use App\Session\SessionHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-function printSpacer() {
+function printSpacer()
+{
     printLine('—---------------------------------------------------------------');
 }
 
-function printLine(?string $line = '') {
+function printLine(?string $line = '')
+{
     echo "$line\n";
 }
 
 printLine('starting fetchTrackHistory');
 
-$files = glob(SessionHandler::BASE_FILEPATH  . '/*' . SessionHandler::SESSION_FILE_SUFFIX);
+$files = glob(SessionHandler::BASE_FILEPATH . '/*' . SessionHandler::SESSION_FILE_SUFFIX);
 $fileCount = count($files);
 
 printLine("found $fileCount user(s)");

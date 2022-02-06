@@ -99,6 +99,33 @@ class Factory
     }
 
     /**
+     * @return CrawlerInterface[]
+     */
+    public function getActiveCrawlers(): array
+    {
+        $crawlers = [
+            ServiceEnum::SPOTIFY->value => $this->getSpotifyCrawler(),
+        ];
+
+        $activeCrawlers = [];
+        foreach (explode(',', getenv('ACTIVE_SERVICES')) as $activeService) {
+            if (isset($crawlers[$activeService])) {
+                $activeCrawlers[$activeService] = $crawlers[$activeService];
+            }
+        }
+
+        return $activeCrawlers;
+    }
+
+    protected function getSpotifyCrawler(): SpotifyCrawler
+    {
+        $writeApi = $this->getInfluxDBWriteApi();
+        $sessionHandler = $this->getSessionHandler();
+
+        return new SpotifyCrawler($writeApi, $sessionHandler, $this);
+    }
+
+    /**
      * @return WriteApi
      */
     public function getInfluxDBWriteApi(): WriteApi
@@ -120,32 +147,5 @@ class Factory
     #[Pure] public function getSessionHandler(): SessionHandler
     {
         return new SessionHandler($this);
-    }
-
-    /**
-     * @return CrawlerInterface[]
-     */
-    public function getActiveCrawlers(): array
-    {
-        $crawlers = [
-            ServiceEnum::SPOTIFY->value => $this->getSpotifyCrawler(),
-        ];
-
-        $activeCrawlers = [];
-        foreach (explode(',', getenv('ACTIVE_SERVICES')) as $activeService) {
-            if (isset($crawlers[$activeService])) {
-                $activeCrawlers[] = $crawlers[$activeService];
-            }
-        }
-
-        return $activeCrawlers;
-    }
-
-    protected function getSpotifyCrawler(): SpotifyCrawler
-    {
-        $writeApi = $this->getInfluxDBWriteApi();
-        $sessionHandler = $this->getSessionHandler();
-
-        return new SpotifyCrawler($writeApi, $sessionHandler, $this);
     }
 }

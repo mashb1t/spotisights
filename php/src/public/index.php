@@ -93,7 +93,9 @@ session_start();
 
 <?php if (isset($_SESSION['logged_in']) && count($_SESSION['logged_in']) > 0): ?>
     <div class="container">
-        <button type="button" class="btn btn-primary" onclick="location.href='<?= getenv('GRAFANA_DASHBOARD_URL') ?>';">Show Statistics</button>
+        <button type="button" class="btn btn-primary" onclick="location.href='<?= getenv('GRAFANA_DASHBOARD_URL') ?>';">
+            Show Statistics
+        </button>
     </div>
 <?php endif; ?>
 </body>

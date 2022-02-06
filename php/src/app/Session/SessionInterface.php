@@ -2,8 +2,6 @@
 
 namespace App\Session;
 
-use App\Enums\ServiceEnum;
-
 interface SessionInterface
 {
     public function getUnderlyingObject(): mixed;

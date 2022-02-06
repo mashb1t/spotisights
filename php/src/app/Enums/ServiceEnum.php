@@ -2,6 +2,7 @@
 
 namespace App\Enums;
 
-enum ServiceEnum: string {
+enum ServiceEnum: string
+{
     case SPOTIFY = 'spotify';
 }
