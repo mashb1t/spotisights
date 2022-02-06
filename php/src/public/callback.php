@@ -23,6 +23,10 @@ $factory = new Factory();
 $crawlers = $factory->getActiveCrawlers();
 
 $serviceNameSpotify = ServiceEnum::SPOTIFY->value;
+if (!isset($crawlers[$serviceNameSpotify])) {
+    die ("Service $serviceNameSpotify is not active!");
+}
+
 $crawlerInitialSetup = [];
 $crawlerResult = [];
 
