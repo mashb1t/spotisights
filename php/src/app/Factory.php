@@ -80,6 +80,7 @@ class Factory
         return Point::measurement('track_history')
             ->addTag('user', $username)
             ->addTag('artists', $artists)
+            ->addTag('service', $service)
             ->addField('track', $recentTrack->track->name)
             ->addField('duration_ms', (int)$recentTrack->track->duration_ms)
             ->addField('danceability', (float)$audioFeature->danceability)
