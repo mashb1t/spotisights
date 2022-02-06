@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1644174875909,
+    "iteration": 1644186530415,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1478,7 +1478,8 @@
                 "logBase": 1,
                 "show": true
             },
-            "yBucketBound": "auto"
+            "yBucketBound": "auto",
+            "yBucketSize": 10
         },
         {
             "collapsed": false,
@@ -2015,7 +2016,7 @@
                     "measurement": "track_history",
                     "orderByTime": "DESC",
                     "policy": "default",
-                    "query": "SELECT \"user\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"seconds\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
+                    "query": "SELECT \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"seconds\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -2159,6 +2160,6 @@
     "timezone": "",
     "title": "Current User",
     "uid": "spotisights",
-    "version": 4,
+    "version": 11,
     "weekStart": ""
 }

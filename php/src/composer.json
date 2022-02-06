@@ -16,7 +16,6 @@
         "league/statsd": "^1.5",
         "ext-pcntl": "*",
         "influxdata/influxdb-client-php": "^2.5",
-        "jwilsson/spotify-web-api-php": "^5.0",
-        "influxdb/influxdb-php": "^1.15"
+        "jwilsson/spotify-web-api-php": "^5.0"
     }
 }

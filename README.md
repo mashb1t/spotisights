@@ -1,7 +1,6 @@
 # SpotiSights - Spotify Insights
 
 [![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fspotisights.mashb1t.de)](https://spotisights.mashb1t.de)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License](https://img.shields.io/github/license/mashb1t/spotisights)](https://github.com/mashb1t/spotisights/blob/master/LICENSE)
 
 This project displays Spotify statistics for multiple users via Grafana.
