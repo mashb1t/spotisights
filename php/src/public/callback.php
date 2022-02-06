@@ -1,7 +1,8 @@
 <?php
 
+use App\Enums\CrawlerResultEnum;
+use App\Enums\ServiceEnum;
 use App\Factory;
-use SpotifyWebAPI\SpotifyWebAPIException;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -19,45 +20,39 @@ if (!$state || $state !== $sessionState || !$code) {
 }
 
 $factory = new Factory();
+$crawlers = $factory->getActiveCrawlers();
 
-$session = $factory->getSession();
-$spotifyWebAPI = $factory->getSpotifyWebAPI($session);
-$sessionHandler = $factory->getSessionHandler();
+$serviceNameSpotify = ServiceEnum::SPOTIFY->value;
+if (!isset($crawlers[$serviceNameSpotify])) {
+    die ("Service $serviceNameSpotify is not active!");
+}
 
-$accessTokenCreated = false;
-try {
-    $accessTokenCreated = $session->requestAccessToken($code);
-} catch (SpotifyWebAPIException $exception) {
-} finally {
-    if (!$accessTokenCreated) {
-        header('refresh:5;url=index.php');
-        die('Access token could not be created, redirecting to login...');
+$crawlerInitialSetup = [];
+$crawlerResult = [];
+
+$crawler = $crawlers[$serviceNameSpotify];
+
+$username = $_SESSION[$crawler->getType() . '_username'] ?? null;
+
+// do initial crawl
+// TODO extract to separate method/class
+$initialSetupResult = $crawler->initialSetup($username, ['code' => $code]);
+
+if ($initialSetupResult === CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR) {
+    $_SESSION['logged_in'][$crawler->getType()] = false;
+    header('refresh:5;url=index.php');
+    die(CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR->value);
+} else if ($initialSetupResult === CrawlerResultEnum::SESSION_SETUP_SUCCESS) {
+    try {
+        // read new username from session if now set by initial setup
+        $crawler->crawlAll($_SESSION[$crawler->getType() . '_username']);
+    } catch (Exception $exception) {
+        $crawlerResult[$crawler->getType()] = CrawlerResultEnum::CRAWL_FAILED;
+        die($exception->getMessage());
     }
 }
 
-// set refreshToken to redirect directly from index to app without redirect to spotify
-$_SESSION['refreshToken'] = $session->getRefreshToken();
+$_SESSION['logged_in'][$crawler->getType()] = true;
 
-// todo add exception handling
-$_SESSION['username'] = $spotifyWebAPI->me()->id;
-
-$dashboardUrl = getenv('GRAFANA_DASHBOARD_URL');
-
-if (!$sessionHandler->sessionExists($_SESSION['username'])) {
-    $sessionHandler->saveSession($session, $_SESSION['username']);
-
-    $trackHistoryCrawler = $factory->getTrackHistoryCrawler($session);
-    $trackHistoryCrawler->crawl($_SESSION['username']);
-
-    // todo idea: create new grafana user via API https://grafana.com/docs/grafana/latest/http_api/admin/#global-users and display password once?
-
-    header("refresh:5;url=$dashboardUrl");
-    die('All set up for user ' . $_SESSION['username'] . ', redirecting to dashboard...');
-}
-
-if (!$dashboardUrl) {
-    die('All set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest!');
-}
-
-header("refresh:5;url=$dashboardUrl");
-die('All set up for user ' . $_SESSION['username'] . ', let the cronjob do the rest! Redirecting to dashboard...');
+header('Location: index.php');
+die();

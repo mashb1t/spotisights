@@ -2,8 +2,10 @@
 
 namespace App\Session;
 
+use App\Enums\ServiceEnum;
 use App\Factory;
-use SpotifyWebAPI\Session;
+use Exception;
+use JetBrains\PhpStorm\Pure;
 
 class SessionHandler
 {
@@ -12,9 +14,10 @@ class SessionHandler
 
     public function __construct(
         protected Factory $factory
-    ) {}
+    ) {
+    }
 
-    public function saveSession(Session $session, string $username): bool
+    public function saveSession(SessionInterface $session, string $username): bool
     {
         $accessToken = $session->getAccessToken();
         $refreshToken = $session->getRefreshToken();
@@ -24,29 +27,45 @@ class SessionHandler
             'refreshToken' => $refreshToken,
         ]);
 
-        return (bool)file_put_contents(
-            static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX,
-            $content
-        );
+        $filepath = $this->getFilepath($session->getType(), $username);
+        if (!is_dir(dirname($filepath))) {
+            mkdir(dirname($filepath), 0775, true);
+        }
+
+        return (bool)file_put_contents($filepath, $content);
     }
 
-    public function loadSession(string $username): Session
+    protected function getFilepath(string $service, string $username): string
     {
-        $content = file_get_contents(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
+        return implode(DIRECTORY_SEPARATOR, [
+            static::BASE_FILEPATH,
+            $service,
+            $username . static::SESSION_FILE_SUFFIX,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function loadSession(ServiceEnum $service, string $username): SessionInterface
+    {
+        $content = file_get_contents($this->getFilepath($service->value, $username));
+
+        if (!$content) {
+            throw new Exception('File not found');
+        }
+
         $content = json_decode($content, true);
 
-        $session = $this->factory->getSession();
+        $session = $this->factory->getSpotifySession();
         $session->setAccessToken($content['accessToken']);
         $session->setRefreshToken($content['refreshToken']);
 
         return $session;
     }
 
-    /**
-     * @return Factory
-     */
-    public function sessionExists(string $username): bool
+    #[Pure] public function sessionExists(ServiceEnum $service, string $username): bool
     {
-        return file_exists(static::BASE_FILEPATH . DIRECTORY_SEPARATOR . $username . static::SESSION_FILE_SUFFIX);
+        return file_exists($this->getFilepath($service->value, $username));
     }
 }

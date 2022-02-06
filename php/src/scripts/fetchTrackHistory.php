@@ -5,54 +5,55 @@ use App\Session\SessionHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-function printSpacer() {
-    printLn('—---------------------------------------------------------------');
+function printSpacer()
+{
+    printLine('—---------------------------------------------------------------');
 }
 
-function printLn(?string $line = '') {
+function printLine(?string $line = '')
+{
     echo "$line\n";
 }
 
-printLn('starting fetchTrackHistory');
+$factory = new Factory();
+$crawlers = $factory->getActiveCrawlers();
+$crawlerCount = count($crawlers);
 
-$files = glob(SessionHandler::BASE_FILEPATH  . '/*' . SessionHandler::SESSION_FILE_SUFFIX);
-$fileCount = count($files);
-
-printLn("found $fileCount user(s)");
+printLine("found $crawlerCount active service(s): " . implode(', ', array_keys($crawlers)));
 
 printSpacer();
 
-if ($fileCount === 0) {
-    printLn('done');
+if ($crawlerCount === 0) {
+    printLine('done');
     exit;
 }
 
-foreach ($files as $filename) {
+foreach ($crawlers as $service => $crawler) {
+    $sessionFiles = glob(
+        SessionHandler::BASE_FILEPATH . DIRECTORY_SEPARATOR . $service . DIRECTORY_SEPARATOR . '*' . SessionHandler::SESSION_FILE_SUFFIX
+    );
+    $sessionFileCount = count($sessionFiles);
 
-    $username = basename($filename, SessionHandler::SESSION_FILE_SUFFIX);
+    printLine("found $sessionFileCount $service session(s)");
 
-    println("user $username");
+    foreach ($sessionFiles as $index => $sessionFile) {
+        $username = basename($sessionFile, SessionHandler::SESSION_FILE_SUFFIX);
 
-    $factory = new Factory();
-    $sessionHandler = $factory->getSessionHandler();
+        // show index +1 in outputs
+        $index++;
 
-    $session = $sessionHandler->loadSession($username);
+        try {
+            printLine("$index/$sessionFileCount: crawling user \"$username\"");
+            $crawler->crawlAll($username);
 
-    $trackHistoryCrawler = $factory->getTrackHistoryCrawler($session);
-
-    try {
-        println('TrackHistoryCrawler start');
-        $trackHistoryCrawler->crawl($username);
-        println('TrackHistoryCrawler end');
-    } catch (Exception $exception) {
-        println($exception->getMessage());
+        } catch (Exception $exception) {
+            printLine("$index/$sessionFileCount: exception while crawling $username, message: " . $exception->getMessage());
+        }
     }
 
-    $session = $sessionHandler->saveSession($session, $username);
-
-    println("user $username crawled successfully");
+    printLine('done');
 
     printSpacer();
 }
 
-printLn('done');
+printLine('done');
