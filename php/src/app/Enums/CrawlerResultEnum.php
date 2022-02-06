@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Crawler;
+namespace App\Enums;
 
 enum CrawlerResultEnum: string {
     case SESSION_ALREADY_EXISTS = 'user already exists';

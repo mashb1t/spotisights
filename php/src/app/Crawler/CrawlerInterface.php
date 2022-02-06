@@ -2,6 +2,8 @@
 
 namespace App\Crawler;
 
+use App\Enums\CrawlerResultEnum;
+
 interface CrawlerInterface
 {
     public function crawlAll(string $username): void;

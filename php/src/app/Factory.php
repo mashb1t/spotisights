@@ -4,6 +4,7 @@ namespace App;
 
 use App\Crawler\CrawlerInterface;
 use App\Crawler\SpotifyCrawler;
+use App\Enums\ServiceEnum;
 use App\Session\SessionHandler;
 use App\Session\SessionInterface;
 use App\Session\SpotifySession;
@@ -22,6 +23,24 @@ class Factory
 {
     // must be less than or equal to 50 to prevent spotify api errors
     const BATCH_SIZE = 50;
+
+    /**
+     * @throws Exception
+     */
+    public function getSession(string $serviceName): SessionInterface
+    {
+        return match ($serviceName) {
+            ServiceEnum::SPOTIFY->value => new SpotifySession(
+                new Session(
+                    getenv('SPOTIFY_CLIENT_ID'),
+                    getenv('SPOTIFY_CLIENT_SECRET'),
+                    getenv('SPOTIFY_REDIRECT_URL'),
+                )
+            ),
+            default => throw new Exception("Session could not be created for service $serviceName"),
+        };
+
+    }
 
     public function getSpotifySession(): SessionInterface
     {
@@ -108,9 +127,18 @@ class Factory
      */
     public function getActiveCrawlers(): array
     {
-        return [
-            $this->getSpotifyCrawler(),
+        $crawlers = [
+            ServiceEnum::SPOTIFY->value => $this->getSpotifyCrawler(),
         ];
+
+        $activeCrawlers = [];
+        foreach (explode(',', getenv('ACTIVE_SERVICES')) as $activeService) {
+            if (isset($crawlers[$activeService])) {
+                $activeCrawlers[] = $crawlers[$activeService];
+            }
+        }
+
+        return $activeCrawlers;
     }
 
     protected function getSpotifyCrawler(): SpotifyCrawler

@@ -2,6 +2,8 @@
 
 namespace App\Crawler;
 
+use App\Enums\CrawlerResultEnum;
+use App\Enums\ServiceEnum;
 use App\Factory;
 use App\Session\SessionHandler;
 use Exception;
@@ -12,8 +14,6 @@ use SpotifyWebAPI\SpotifyWebAPIException;
 
 class SpotifyCrawler implements CrawlerInterface
 {
-    const TYPE = 'spotify';
-
     public function __construct(
         protected WriteApi $writeApi,
         protected SessionHandler $sessionHandler,
@@ -39,9 +39,6 @@ class SpotifyCrawler implements CrawlerInterface
         } finally {
             if (!$accessTokenCreated) {
                 return CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR;
-                // todo return specific state from enum
-//                header('refresh:5;url=index.php');
-//                die('Access token could not be created, redirecting to login...');
             }
         }
 
@@ -61,7 +58,7 @@ class SpotifyCrawler implements CrawlerInterface
      */
     public function crawlAll(string $username): void
     {
-        $spotifySession = $this->sessionHandler->loadSession($username);
+        $spotifySession = $this->sessionHandler->loadSession(ServiceEnum::SPOTIFY, $username);
 
         /** @var Session $session */
         $session = $spotifySession->getUnderlyingObject();
@@ -101,6 +98,6 @@ class SpotifyCrawler implements CrawlerInterface
 
     public function getType(): string
     {
-        return static::TYPE;
+        return ServiceEnum::SPOTIFY->value;
     }
 }

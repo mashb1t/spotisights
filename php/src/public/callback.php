@@ -1,7 +1,6 @@
 <?php
 
-use App\Crawler\CrawlerResultEnum;
-use App\Crawler\SpotifyCrawler;
+use App\Enums\CrawlerResultEnum;
 use App\Factory;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -20,8 +19,6 @@ if (!$state || $state !== $sessionState || !$code) {
 }
 
 $factory = new Factory();
-$dashboardUrl = getenv('GRAFANA_DASHBOARD_URL');
-
 $crawlers = $factory->getActiveCrawlers();
 
 $crawlerInitialSetup = [];
@@ -35,31 +32,21 @@ foreach ($crawlers as $crawler) {
     $crawlerInitialSetup[$crawler->getType()] = $initialSetupResult;
 
     if ($initialSetupResult == CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR) {
+        $_SESSION['logged_in'][$crawler->getType()] = false;
         header('refresh:5;url=index.php');
-        die('Access token could not be created, redirecting to login...');
+        die(CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR->value);
     } else if ($crawlerInitialSetup == CrawlerResultEnum::SESSION_SETUP_SUCCESS) {
         try {
             // read new username from session if now set by initial setup
             $crawler->crawlAll($_SESSION[$crawler->getType() . '_username']);
             $crawlerResult[$crawler->getType()] = true;
-        } catch (Exception $e) {
-            $crawlerResult[$crawler::class] = CrawlerResultEnum::CRAWL_FAILED;
+        } catch (Exception $exception) {
+            $crawlerResult[$crawler->getType()] = CrawlerResultEnum::CRAWL_FAILED;
+            die($exception->getMessage());
         }
     }
+
+    $_SESSION['logged_in'][$crawler->getType()] = true;
 }
-
-// TODO use unspecific code here
-// check if every initial setup went fine
-if ($crawlerInitialSetup[SpotifyCrawler::TYPE] == CrawlerResultEnum::SESSION_SETUP_SUCCESS) {
-    // todo idea: create new grafana user via API https://grafana.com/docs/grafana/latest/http_api/admin/#global-users and display password once?
-
-    header("refresh:5;url=$dashboardUrl");
-    die('All set up for user ' . $_SESSION['spotify_username'] . ', redirecting to dashboard...');
-}
-
-if (!$dashboardUrl) {
-    die('All set up for user ' . $_SESSION['spotify_username'] . ', let the cronjob do the rest!');
-}
-
-header("refresh:5;url=$dashboardUrl");
-die('All set up for user ' . $_SESSION['spotify_username'] . ', let the cronjob do the rest! Redirecting to dashboard...');
+header('Location: index.php');
+die();
