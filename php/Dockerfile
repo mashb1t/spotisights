@@ -8,8 +8,6 @@ RUN crontab /cronjobs/docker-cron
 
 USER application
 
-RUN mkdir /app/sessions
-
 WORKDIR /app
 
 COPY ./src/composer.json /app/composer.json

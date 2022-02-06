@@ -2,8 +2,12 @@
 
 namespace App;
 
-use App\Crawler\TrackHistoryCrawler;
+use App\Crawler\CrawlerInterface;
+use App\Crawler\SpotifyCrawler;
+use App\Enums\ServiceEnum;
 use App\Session\SessionHandler;
+use App\Session\SessionInterface;
+use App\Session\SpotifySession;
 use DateTime;
 use Exception;
 use InfluxDB2\Client;
@@ -20,12 +24,32 @@ class Factory
     // must be less than or equal to 50 to prevent spotify api errors
     const BATCH_SIZE = 50;
 
-    public function getSession(): Session
+    /**
+     * @throws Exception
+     */
+    public function getSession(string $serviceName): SessionInterface
     {
-        return new Session(
-            getenv('SPOTIFY_CLIENT_ID'),
-            getenv('SPOTIFY_CLIENT_SECRET'),
-            getenv('SPOTIFY_REDIRECT_URL'),
+        return match ($serviceName) {
+            ServiceEnum::SPOTIFY->value => new SpotifySession(
+                new Session(
+                    getenv('SPOTIFY_CLIENT_ID'),
+                    getenv('SPOTIFY_CLIENT_SECRET'),
+                    getenv('SPOTIFY_REDIRECT_URL'),
+                )
+            ),
+            default => throw new Exception("Session could not be created for service $serviceName"),
+        };
+
+    }
+
+    public function getSpotifySession(): SessionInterface
+    {
+        return new SpotifySession(
+            new Session(
+                getenv('SPOTIFY_CLIENT_ID'),
+                getenv('SPOTIFY_CLIENT_SECRET'),
+                getenv('SPOTIFY_REDIRECT_URL'),
+            )
         );
     }
 
@@ -39,15 +63,11 @@ class Factory
     }
 
     /**
-     * @param mixed $username
-     * @param mixed $audioFeature
-     * @param mixed $recentTrack
-     *
-     * @return Point
      * @throws Exception
      */
     public function getTrackHistoryPoint(
-        mixed $username,
+        string $username,
+        string $service,
         mixed $audioFeature,
         mixed $recentTrack
     ): Point {
@@ -60,6 +80,7 @@ class Factory
         return Point::measurement('track_history')
             ->addTag('user', $username)
             ->addTag('artists', $artists)
+            ->addTag('service', $service)
             ->addField('track', $recentTrack->track->name)
             ->addField('duration_ms', (int)$recentTrack->track->duration_ms)
             ->addField('danceability', (float)$audioFeature->danceability)
@@ -72,6 +93,33 @@ class Factory
             ->addField('valence', (float)$audioFeature->valence)
             ->addField('tempo', round((float)$audioFeature->tempo))
             ->time((new DateTime($recentTrack->played_at)));
+    }
+
+    /**
+     * @return CrawlerInterface[]
+     */
+    public function getActiveCrawlers(): array
+    {
+        $crawlers = [
+            ServiceEnum::SPOTIFY->value => $this->getSpotifyCrawler(),
+        ];
+
+        $activeCrawlers = [];
+        foreach (explode(',', getenv('ACTIVE_SERVICES')) as $activeService) {
+            if (isset($crawlers[$activeService])) {
+                $activeCrawlers[$activeService] = $crawlers[$activeService];
+            }
+        }
+
+        return $activeCrawlers;
+    }
+
+    protected function getSpotifyCrawler(): SpotifyCrawler
+    {
+        $writeApi = $this->getInfluxDBWriteApi();
+        $sessionHandler = $this->getSessionHandler();
+
+        return new SpotifyCrawler($writeApi, $sessionHandler, $this);
     }
 
     /**
@@ -91,14 +139,6 @@ class Factory
             'writeType' => WriteType::BATCHING,
             'batchSize' => static::BATCH_SIZE,
         ]);
-    }
-
-    public function getTrackHistoryCrawler(Session $session): TrackHistoryCrawler
-    {
-        $writeApi = $this->getInfluxDBWriteApi();
-        $spotifyWebApi = $this->getSpotifyWebAPI($session);
-
-        return new TrackHistoryCrawler($writeApi, $spotifyWebApi, $this);
     }
 
     #[Pure] public function getSessionHandler(): SessionHandler
