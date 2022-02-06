@@ -52,7 +52,7 @@ session_start();
         /*}*/
 
         .col-md-4 {
-            padding-bottom: 3rem;
+            padding-bottom: 1.5rem;
         }
 
         p {
