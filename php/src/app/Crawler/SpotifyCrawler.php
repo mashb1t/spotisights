@@ -86,7 +86,7 @@ class SpotifyCrawler implements CrawlerInterface
     protected function crawlTrackHistoryAndAudioFeatures(string $username, SpotifyWebAPI $spotifyWebApi): void
     {
         // TODO add "after" instead of limit if last crawl was last hour
-        $recentTracks = $spotifyWebApi->getMyRecentTracks(['limit' => Factory::BATCH_SIZE])->items;
+        $recentTracks = $spotifyWebApi->getMyRecentTracks(['limit' => getenv('SPOTIFY_CRAWL_BULK_LIMIT')])->items;
 
         $trackIds = [];
         foreach ($recentTracks as $recentTrack) {
