@@ -96,6 +96,23 @@ class Factory
     }
 
     /**
+     * @throws Exception
+     */
+    public function getGenreHistoryPoint(
+        string $username,
+        string $service,
+        mixed $genre,
+        mixed $recentTrack
+    ): Point {
+        return Point::measurement('genre_history')
+            ->addTag('user', $username)
+            ->addTag('service', $service)
+            ->addTag('genre', $genre)
+            ->addField('value', 1)
+            ->time((new DateTime($recentTrack->played_at)));
+    }
+
+    /**
      * @return CrawlerInterface[]
      */
     public function getActiveCrawlers(): array

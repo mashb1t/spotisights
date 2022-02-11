@@ -89,11 +89,13 @@ class SpotifyCrawler implements CrawlerInterface
         $recentTracks = $spotifyWebApi->getMyRecentTracks(['limit' => getenv('SPOTIFY_CRAWL_BULK_LIMIT')])->items;
 
         $trackIds = [];
-        foreach ($recentTracks as $recentTrack) {
-            $trackIds[] = $recentTrack->track->id;
+        $artistsByTrack = [];
+        foreach ($recentTracks as $index => $recentTrack) {
+            $trackIds[$index] = $recentTrack->track->id;
+            $artistsByTrack[$index] = $recentTrack->track->artists;
         }
 
-        // todo cache audio features for a track (e.g. redis for a month)
+        // TODO cache audio features for a track (e.g. redis for a month or even longer)
         $audioFeatures = $spotifyWebApi->getMultipleAudioFeatures($trackIds);
 
         foreach ($recentTracks as $index => $recentTrack) {
@@ -102,6 +104,26 @@ class SpotifyCrawler implements CrawlerInterface
 
             $point = $this->factory->getTrackHistoryPoint($username, ServiceEnum::SPOTIFY->value, $audioFeature, $recentTrack);
             $this->writeApi->write($point);
+
+            $artistIds = [];
+            foreach ($artistsByTrack[$index] as $artist) {
+                $artistIds[] = $artist->id;
+            }
+
+            // TODO cache artists (e.g. redis for a month or even longer)
+            $artistsFromAPI = $spotifyWebApi->getArtists($artistIds);
+
+            $genres = [];
+            foreach ($artistsFromAPI->artists as $artistFromAPI) {
+                foreach ($artistFromAPI->genres as $genre) {
+                    $genres[$genre] = $genre;
+                }
+            }
+
+            foreach ($genres as $genre) {
+                $point = $this->factory->getGenreHistoryPoint($username, ServiceEnum::SPOTIFY->value, $genre, $recentTrack);
+                $this->writeApi->write($point);
+            }
         }
 
         $this->writeApi->close();
