@@ -22,17 +22,211 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1644186530415,
+    "iteration": 1644620058771,
     "links": [],
     "liveNow": false,
     "panels": [
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "axisSoftMin": 0,
+                        "fillOpacity": 80,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineWidth": 1
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 6,
+                "x": 0,
+                "y": 0
+            },
+            "id": 48,
+            "options": {
+                "barWidth": 0.97,
+                "groupWidth": 0.7,
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "hidden",
+                    "placement": "right"
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                    "mode": "single"
+                },
+                "xTickLabelRotation": -90
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "query": "\nSELECT top(\"value_sum\", 10) as \"count\", \"genre\" from (\nSELECT sum(\"value\") AS \"value_sum\" FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\"\n)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "table"
+                }
+            ],
+            "title": "top 10 artist genres by time period",
+            "type": "barchart"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "smooth",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 18,
+                "x": 6,
+                "y": 0
+            },
+            "id": 46,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [
+                        {
+                            "params": [
+                                "$__interval"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "0"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "measurement": "genre_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT sum(\"value\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\", time(30m) fill(0)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "value"
+                                ],
+                                "type": "field"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "title": "artist genres by time period",
+            "transformations": [
+                {
+                    "id": "labelsToFields",
+                    "options": {
+                        "valueLabel": "genre"
+                    }
+                }
+            ],
+            "type": "timeseries"
+        },
         {
             "collapsed": false,
             "gridPos": {
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 0
+                "y": 8
             },
             "id": 39,
             "panels": [],
@@ -63,7 +257,7 @@
                 "h": 3,
                 "w": 3,
                 "x": 0,
-                "y": 1
+                "y": 9
             },
             "id": 40,
             "options": {
@@ -146,7 +340,7 @@
                 "h": 3,
                 "w": 3,
                 "x": 3,
-                "y": 1
+                "y": 9
             },
             "id": 41,
             "options": {
@@ -265,7 +459,7 @@
                 "h": 6,
                 "w": 18,
                 "x": 6,
-                "y": 1
+                "y": 9
             },
             "id": 42,
             "options": {
@@ -374,7 +568,7 @@
                 "h": 3,
                 "w": 3,
                 "x": 0,
-                "y": 4
+                "y": 12
             },
             "id": 32,
             "options": {
@@ -457,7 +651,7 @@
                 "h": 3,
                 "w": 3,
                 "x": 3,
-                "y": 4
+                "y": 12
             },
             "id": 33,
             "options": {
@@ -527,7 +721,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 7
+                "y": 15
             },
             "id": 22,
             "panels": [],
@@ -562,7 +756,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 0,
-                "y": 8
+                "y": 16
             },
             "id": 8,
             "options": {
@@ -651,7 +845,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 2,
-                "y": 8
+                "y": 16
             },
             "id": 11,
             "options": {
@@ -734,7 +928,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 4,
-                "y": 8
+                "y": 16
             },
             "id": 14,
             "options": {
@@ -817,7 +1011,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 6,
-                "y": 8
+                "y": 16
             },
             "id": 15,
             "options": {
@@ -904,7 +1098,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 8,
-                "y": 8
+                "y": 16
             },
             "id": 12,
             "options": {
@@ -987,7 +1181,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 10,
-                "y": 8
+                "y": 16
             },
             "id": 17,
             "options": {
@@ -1070,7 +1264,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 12,
-                "y": 8
+                "y": 16
             },
             "id": 16,
             "options": {
@@ -1153,7 +1347,7 @@
                 "h": 4,
                 "w": 2,
                 "x": 14,
-                "y": 8
+                "y": 16
             },
             "id": 18,
             "options": {
@@ -1235,7 +1429,7 @@
                 "h": 4,
                 "w": 8,
                 "x": 16,
-                "y": 8
+                "y": 16
             },
             "id": 25,
             "options": {
@@ -1420,7 +1614,7 @@
                 "h": 8,
                 "w": 24,
                 "x": 0,
-                "y": 12
+                "y": 20
             },
             "heatmap": {},
             "hideZeroBuckets": false,
@@ -1487,7 +1681,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 20
+                "y": 28
             },
             "id": 20,
             "panels": [],
@@ -1522,7 +1716,7 @@
                 "h": 10,
                 "w": 6,
                 "x": 0,
-                "y": 21
+                "y": 29
             },
             "id": 27,
             "maxDataPoints": 10,
@@ -1658,7 +1852,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 6,
-                "y": 21
+                "y": 29
             },
             "id": 34,
             "maxDataPoints": 10,
@@ -1763,7 +1957,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 15,
-                "y": 21
+                "y": 29
             },
             "id": 37,
             "maxDataPoints": 10,
@@ -1940,7 +2134,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 31
+                "y": 39
             },
             "id": 44,
             "panels": [],
@@ -1991,7 +2185,7 @@
                 "h": 14,
                 "w": 24,
                 "x": 0,
-                "y": 32
+                "y": 40
             },
             "id": 6,
             "options": {
@@ -2153,6 +2347,6 @@
     "timezone": "",
     "title": "Current User",
     "uid": "spotisights",
-    "version": 11,
+    "version": 3,
     "weekStart": ""
 }
