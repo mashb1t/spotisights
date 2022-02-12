@@ -61,6 +61,9 @@ services:
 #      - XDEBUG_MAX_NESTING_LEVEL=1000
 
 volumes:
-  grafana_data: { }
-  influxdb_data: { }
-  mysql_data: { }
+  grafana_data:
+    driver: local
+  influxdb_data:
+    driver: local
+  mysql_data:
+    driver: local
