@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1644186530415,
+    "iteration": 1644625585559,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1406,80 +1406,94 @@
             "type": "bargauge"
         },
         {
-            "cards": {},
-            "color": {
-                "cardColor": "#FA6400",
-                "colorScale": "linear",
-                "colorScheme": "interpolateOranges",
-                "exponent": 0.5,
-                "mode": "opacity"
-            },
-            "dataFormat": "timeseries",
-            "description": "",
+            "collapsed": true,
             "gridPos": {
-                "h": 8,
+                "h": 1,
                 "w": 24,
                 "x": 0,
                 "y": 12
             },
-            "heatmap": {},
-            "hideZeroBuckets": false,
-            "highlightCards": true,
-            "id": 9,
-            "legend": {
-                "show": false
-            },
-            "pluginVersion": "8.3.4",
-            "reverseYBuckets": false,
-            "targets": [
+            "id": 52,
+            "panels": [
                 {
-                    "datasource": {
-                        "type": "influxdb",
-                        "uid": "P951FEA4DE68E13C5"
+                    "cards": {},
+                    "color": {
+                        "cardColor": "#FA6400",
+                        "colorScale": "linear",
+                        "colorScheme": "interpolateOranges",
+                        "exponent": 0.5,
+                        "mode": "opacity"
                     },
-                    "groupBy": [],
-                    "measurement": "track_history",
-                    "orderByTime": "ASC",
-                    "policy": "default",
-                    "query": "SELECT \"tempo\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
-                    "rawQuery": true,
-                    "refId": "A",
-                    "resultFormat": "time_series",
-                    "select": [
-                        [
-                            {
-                                "params": [
-                                    "tempo"
-                                ],
-                                "type": "field"
-                            }
-                        ]
-                    ],
-                    "tags": [
+                    "dataFormat": "timeseries",
+                    "description": "",
+                    "gridPos": {
+                        "h": 7,
+                        "w": 24,
+                        "x": 0,
+                        "y": 13
+                    },
+                    "heatmap": {},
+                    "hideZeroBuckets": false,
+                    "highlightCards": true,
+                    "id": 9,
+                    "legend": {
+                        "show": false
+                    },
+                    "pluginVersion": "8.3.4",
+                    "reverseYBuckets": false,
+                    "targets": [
                         {
-                            "key": "user",
-                            "operator": "=~",
-                            "value": "/^$user$/"
+                            "datasource": {
+                                "type": "influxdb",
+                                "uid": "P951FEA4DE68E13C5"
+                            },
+                            "groupBy": [],
+                            "measurement": "track_history",
+                            "orderByTime": "ASC",
+                            "policy": "default",
+                            "query": "SELECT \"tempo\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter",
+                            "rawQuery": true,
+                            "refId": "A",
+                            "resultFormat": "time_series",
+                            "select": [
+                                [
+                                    {
+                                        "params": [
+                                            "tempo"
+                                        ],
+                                        "type": "field"
+                                    }
+                                ]
+                            ],
+                            "tags": [
+                                {
+                                    "key": "user",
+                                    "operator": "=~",
+                                    "value": "/^$user$/"
+                                }
+                            ]
                         }
-                    ]
+                    ],
+                    "title": "BPM by time",
+                    "tooltip": {
+                        "show": true,
+                        "showHistogram": false
+                    },
+                    "type": "heatmap",
+                    "xAxis": {
+                        "show": true
+                    },
+                    "yAxis": {
+                        "format": "short",
+                        "logBase": 1,
+                        "show": true
+                    },
+                    "yBucketBound": "auto",
+                    "yBucketSize": 10
                 }
             ],
-            "title": "BPM by time",
-            "tooltip": {
-                "show": true,
-                "showHistogram": false
-            },
-            "type": "heatmap",
-            "xAxis": {
-                "show": true
-            },
-            "yAxis": {
-                "format": "short",
-                "logBase": 1,
-                "show": true
-            },
-            "yBucketBound": "auto",
-            "yBucketSize": 10
+            "title": "bpm",
+            "type": "row"
         },
         {
             "collapsed": false,
@@ -1487,11 +1501,218 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 20
+                "y": 13
+            },
+            "id": 50,
+            "panels": [],
+            "title": "genres",
+            "type": "row"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "axisSoftMin": 0,
+                        "fillOpacity": 80,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineWidth": 1
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 9,
+                "x": 0,
+                "y": 14
+            },
+            "id": 48,
+            "options": {
+                "barWidth": 0.97,
+                "groupWidth": 0.7,
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "hidden",
+                    "placement": "right"
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                    "mode": "single"
+                },
+                "xTickLabelRotation": -90
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "query": "\nSELECT top(\"value_sum\", 10) as \"count\", \"genre\" from (\nSELECT sum(\"value\") AS \"value_sum\" FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\"\n)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "table"
+                }
+            ],
+            "title": "top 10 artist genres",
+            "type": "barchart"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "smooth",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 15,
+                "x": 9,
+                "y": 14
+            },
+            "id": 46,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "right"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [
+                        {
+                            "params": [
+                                "$__interval"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "0"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "measurement": "genre_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT sum(\"value\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\", time(30m) fill(0)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "value"
+                                ],
+                                "type": "field"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "title": "artist genres",
+            "transformations": [
+                {
+                    "id": "labelsToFields",
+                    "options": {
+                        "valueLabel": "genre"
+                    }
+                }
+            ],
+            "type": "timeseries"
+        },
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 24
             },
             "id": 20,
             "panels": [],
-            "title": "top lists",
+            "title": "artists",
             "type": "row"
         },
         {
@@ -1522,7 +1743,7 @@
                 "h": 10,
                 "w": 6,
                 "x": 0,
-                "y": 21
+                "y": 25
             },
             "id": 27,
             "maxDataPoints": 10,
@@ -1658,7 +1879,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 6,
-                "y": 21
+                "y": 25
             },
             "id": 34,
             "maxDataPoints": 10,
@@ -1763,7 +1984,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 15,
-                "y": 21
+                "y": 25
             },
             "id": 37,
             "maxDataPoints": 10,
@@ -1940,7 +2161,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 31
+                "y": 35
             },
             "id": 44,
             "panels": [],
@@ -1991,7 +2212,7 @@
                 "h": 14,
                 "w": 24,
                 "x": 0,
-                "y": 32
+                "y": 36
             },
             "id": 6,
             "options": {
@@ -2153,6 +2374,6 @@
     "timezone": "",
     "title": "Current User",
     "uid": "spotisights",
-    "version": 11,
+    "version": 3,
     "weekStart": ""
 }

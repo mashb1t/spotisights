@@ -86,14 +86,23 @@ class SpotifyCrawler implements CrawlerInterface
     protected function crawlTrackHistoryAndAudioFeatures(string $username, SpotifyWebAPI $spotifyWebApi): void
     {
         // TODO add "after" instead of limit if last crawl was last hour
-        $recentTracks = $spotifyWebApi->getMyRecentTracks(['limit' => Factory::BATCH_SIZE])->items;
+        $recentTracks = $spotifyWebApi->getMyRecentTracks([
+            'limit' => min(getenv('SPOTIFY_CRAWL_BULK_LIMIT'), Factory::BATCH_SIZE)
+        ])->items;
 
         $trackIds = [];
-        foreach ($recentTracks as $recentTrack) {
-            $trackIds[] = $recentTrack->track->id;
+        $artistIds = [];
+        foreach ($recentTracks as $index => $recentTrack) {
+            $trackIds[$index] = $recentTrack->track->id;
+
+            foreach ($recentTrack->track->artists as $artist) {
+                $artistIds[$artist->id] = $artist->id;
+            }
         }
 
-        // todo cache audio features for a track (e.g. redis for a month)
+        $artistsById = $this->getArtistsById($artistIds, $spotifyWebApi);
+
+        // TODO cache audio features for a track (e.g. redis for a month or even longer)
         $audioFeatures = $spotifyWebApi->getMultipleAudioFeatures($trackIds);
 
         foreach ($recentTracks as $index => $recentTrack) {
@@ -102,8 +111,46 @@ class SpotifyCrawler implements CrawlerInterface
 
             $point = $this->factory->getTrackHistoryPoint($username, ServiceEnum::SPOTIFY->value, $audioFeature, $recentTrack);
             $this->writeApi->write($point);
+
+            $genres = [];
+            foreach ($recentTrack->track->artists as $artist) {
+                foreach ($artistsById[$artist->id]->genres as $genre) {
+                    $genres[$genre] = $genre;
+                }
+            }
+
+            foreach ($genres as $genre) {
+                $point = $this->factory->getGenreHistoryPoint($username, ServiceEnum::SPOTIFY->value, $genre, $recentTrack);
+                $this->writeApi->write($point);
+            }
         }
 
         $this->writeApi->close();
+    }
+
+    /**
+     * @param array         $artistIds
+     * @param SpotifyWebAPI $spotifyWebApi
+     *
+     * @return \stdClass[]
+     */
+    protected function getArtistsById(array $artistIds, SpotifyWebAPI $spotifyWebApi): array
+    {
+        // artistIds count could be more than Factory::BATCH_SIZE
+        $artistIdsChunks = array_chunk($artistIds, Factory::BATCH_SIZE);
+
+        $artistsFromAPI = [];
+        foreach ($artistIdsChunks as $artistIdsChunk) {
+            // TODO cache artists (e.g. redis for a month or even longer)
+            $response = $spotifyWebApi->getArtists($artistIdsChunk);
+            array_push($artistsFromAPI, ...$response->artists);
+        }
+
+        $artistsById = [];
+        foreach ($artistsFromAPI as $artistFromAPI) {
+            $artistsById[$artistFromAPI->id] = $artistFromAPI;
+        }
+
+        return $artistsById;
     }
 }
