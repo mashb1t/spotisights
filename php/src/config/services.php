@@ -30,4 +30,23 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Music provider services
+    |--------------------------------------------------------------------------
+    |
+    | This section is used for storing music provider access keys or equivalent
+    | authorization data to crawl data from them
+    |
+    */
+
+    'spotify' => [
+        'client_id' => env('SPOTIFY_CLIENT_ID'),
+        'client_secret' => env('SPOTIFY_CLIENT_SECRET'),
+        'redirect_url' => env('SPOTIFY_REDIRECT_URL'),
+
+        // must be <= 50 to prevent spotify api errors
+        'crawl_bulk_limit' => min(env('SPOTIFY_CRAWL_BULK_LIMIT', 50), 50),
+    ],
+
 ];

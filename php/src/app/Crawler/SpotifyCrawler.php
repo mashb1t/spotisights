@@ -35,7 +35,7 @@ class SpotifyCrawler implements CrawlerInterface
         /** @var Session $session */
         $session = $spotifySession->getUnderlyingObject();
 
-        if ($username && $this->sessionHandler->sessionExists(ServiceEnum::SPOTIFY, $username)) {
+        if ($username && $this->sessionHandler->sessionExists(ServiceEnum::Spotify, $username)) {
             return CrawlerResultEnum::SESSION_ALREADY_EXISTS;
         }
 
@@ -62,7 +62,7 @@ class SpotifyCrawler implements CrawlerInterface
 
     public function getType(): string
     {
-        return ServiceEnum::SPOTIFY->value;
+        return ServiceEnum::Spotify->value;
     }
 
     /**
@@ -70,7 +70,7 @@ class SpotifyCrawler implements CrawlerInterface
      */
     public function crawlAll(string $username): void
     {
-        $spotifySession = $this->sessionHandler->loadSession(ServiceEnum::SPOTIFY, $username);
+        $spotifySession = $this->sessionHandler->loadSession(ServiceEnum::Spotify, $username);
 
         /** @var Session $session */
         $session = $spotifySession->getUnderlyingObject();
@@ -88,7 +88,7 @@ class SpotifyCrawler implements CrawlerInterface
     {
         // TODO add "after" instead of limit if last crawl was last hour
         $recentTracks = $spotifyWebApi->getMyRecentTracks([
-            'limit' => min(getenv('SPOTIFY_CRAWL_BULK_LIMIT'), Factory::BATCH_SIZE),
+            'limit' => config('services.spotify.crawl_bulk_limit'),
         ])->items;
 
         $trackIds = [];
@@ -110,7 +110,7 @@ class SpotifyCrawler implements CrawlerInterface
             // order of $audioFeatures matches order of $recentTrack
             $audioFeature = $audioFeatures->audio_features[$index];
 
-            $point = $this->factory->getTrackHistoryPoint($username, ServiceEnum::SPOTIFY->value, $audioFeature, $recentTrack);
+            $point = $this->factory->getTrackHistoryPoint($username, ServiceEnum::Spotify->value, $audioFeature, $recentTrack);
             $this->writeApi->write($point);
 
             $genres = [];
@@ -121,7 +121,7 @@ class SpotifyCrawler implements CrawlerInterface
             }
 
             foreach ($genres as $genre) {
-                $point = $this->factory->getGenreHistoryPoint($username, ServiceEnum::SPOTIFY->value, $genre, $recentTrack);
+                $point = $this->factory->getGenreHistoryPoint($username, ServiceEnum::Spotify->value, $genre, $recentTrack);
                 $this->writeApi->write($point);
             }
         }
@@ -138,7 +138,7 @@ class SpotifyCrawler implements CrawlerInterface
     protected function getArtistsById(array $artistIds, SpotifyWebAPI $spotifyWebApi): array
     {
         // artistIds count could be more than Factory::BATCH_SIZE
-        $artistIdsChunks = array_chunk($artistIds, Factory::BATCH_SIZE);
+        $artistIdsChunks = array_chunk($artistIds, config('services.spotify.crawl_bulk_limit'));
 
         $artistsFromAPI = [];
         foreach ($artistIdsChunks as $artistIdsChunk) {

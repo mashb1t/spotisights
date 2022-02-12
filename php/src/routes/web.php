@@ -46,7 +46,7 @@ Route::get('/callback', function () {
     $factory = new Factory();
     $crawlers = $factory->getActiveCrawlers();
 
-    $serviceNameSpotify = ServiceEnum::SPOTIFY->value;
+    $serviceNameSpotify = ServiceEnum::Spotify->value;
     if (!isset($crawlers[$serviceNameSpotify])) {
         abort(Response::HTTP_BAD_REQUEST, "Service $serviceNameSpotify is not active!");
     }

@@ -60,6 +60,6 @@ class SpotifySession implements SessionInterface
 
     public function getType(): string
     {
-        return ServiceEnum::SPOTIFY->value;
+        return ServiceEnum::Spotify->value;
     }
 }

@@ -21,21 +21,14 @@ use SpotifyWebAPI\SpotifyWebAPI;
 
 class Factory
 {
-    // must be less than or equal to 50 to prevent spotify api errors
-    const BATCH_SIZE = 50;
-
     /**
      * @throws Exception
      */
     public function getSession(string $serviceName): SessionInterface
     {
         return match ($serviceName) {
-            ServiceEnum::SPOTIFY->value => new SpotifySession(
-                new Session(
-                    getenv('SPOTIFY_CLIENT_ID'),
-                    getenv('SPOTIFY_CLIENT_SECRET'),
-                    getenv('SPOTIFY_REDIRECT_URL'),
-                )
+            ServiceEnum::Spotify->value => new SpotifySession(
+                $this->getSpotifyWebApiSession()
             ),
             default => throw new Exception("Session could not be created for service $serviceName"),
         };
@@ -45,11 +38,7 @@ class Factory
     public function getSpotifySession(): SessionInterface
     {
         return new SpotifySession(
-            new Session(
-                getenv('SPOTIFY_CLIENT_ID'),
-                getenv('SPOTIFY_CLIENT_SECRET'),
-                getenv('SPOTIFY_REDIRECT_URL'),
-            )
+            $this->getSpotifyWebApiSession()
         );
     }
 
@@ -118,11 +107,11 @@ class Factory
     public function getActiveCrawlers(): array
     {
         $crawlers = [
-            ServiceEnum::SPOTIFY->value => $this->getSpotifyCrawler(),
+            ServiceEnum::Spotify->value => $this->getSpotifyCrawler(),
         ];
 
         $activeCrawlers = [];
-        foreach (explode(',', getenv('ACTIVE_SERVICES')) as $activeService) {
+        foreach (config('spotisights.services.active') as $activeService) {
             if (isset($crawlers[$activeService])) {
                 $activeCrawlers[$activeService] = $crawlers[$activeService];
             }
@@ -145,21 +134,33 @@ class Factory
     public function getInfluxDBWriteApi(): WriteApi
     {
         $client = new Client([
-            'url' => getenv('INFLUXDB_URL'),
-            'token' => getenv('INFLUXDB_TOKEN'),
-            'bucket' => getenv('INFLUXDB_BUCKET'),
-            'org' => getenv('INFLUXDB_ORG'),
-            'precision' => WritePrecision::NS,
+            'url' => config('database.connections.influx.url'),
+            'token' => config('database.connections.influx.token'),
+            'bucket' => config('database.connections.influx.bucket'),
+            'org' => config('database.connections.influx.org'),
+            'precision' => config('database.connections.influx.precision'),
         ]);
 
         return $client->createWriteApi([
             'writeType' => WriteType::BATCHING,
-            'batchSize' => static::BATCH_SIZE,
+            'batchSize' => config('database.connections.influx.batch_size'),
         ]);
     }
 
     #[Pure] public function getSessionHandler(): SessionHandler
     {
         return new SessionHandler($this);
+    }
+
+    /**
+     * @return Session
+     */
+    protected function getSpotifyWebApiSession(): Session
+    {
+        return new Session(
+            config('services.spotify.client_id'),
+            config('services.spotify.client_secret'),
+            config('services.spotify.redirect_url'),
+        );
     }
 }

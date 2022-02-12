@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use InfluxDB2\Model\WritePrecision;
 
 return [
 
@@ -91,6 +92,14 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'influx' => [
+            'url' => env('INFLUXDB_URL'),
+            'token' => env('INFLUXDB_TOKEN'),
+            'bucket' => env('INFLUXDB_BUCKET', 'influx'),
+            'org' => env('INFLUXDB_ORG', 'my-org'),
+            'precision' => env('INFLUXDB_PRECISION', WritePrecision::NS),
+            'batch_size' => env('INFLUXDB_BATCH_SIZE', 50),
+        ],
     ],
 
     /*
