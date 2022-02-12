@@ -10,7 +10,7 @@ services:
       - '8086:8086'
 
   grafana:
-    image: grafana/grafana:8.3.4
+    image: grafana/grafana:8.3.6
     depends_on:
       - influxdb
     env_file: config/grafana.env
