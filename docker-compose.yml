@@ -6,6 +6,8 @@ services:
     env_file: config/influxdb.env
     volumes:
       - influxdb_data:/var/lib/influxdb:rw,delegated
+    ports:
+      - '8086:8086'
 
   grafana:
     image: grafana/grafana:8.3.4
@@ -21,29 +23,29 @@ services:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
 
-  php:
-    build:
-      context: ./php
-    depends_on:
-      - influxdb
-    links:
-      - influxdb
-    env_file: config/php.env
-    ports:
-      - '8080:80'
-    # - '8443:443'
-    volumes:
-      - ./php/src:/app:rw,cached
-    environment:
-      - WEB_DOCUMENT_ROOT=/app/public
-      - PHP_DISPLAY_ERRORS=1
-      - PHP_MEMORY_LIMIT=2048M
-#      - PHP_MAX_EXECUTION_TIME=-1
-#      - XDEBUG_MODE=debug
-#      - XDEBUG_START_WITH_REQUEST=yes
-#      - XDEBUG_CLIENT_PORT=9000
-#      - XDEBUG_CLIENT_HOST=docker.local
-#      - XDEBUG_MAX_NESTING_LEVEL=1000
+#  php:
+#    build:
+#      context: ./php
+#    depends_on:
+#      - influxdb
+#    links:
+#      - influxdb
+#    env_file: config/php.env
+#    ports:
+#      - '8080:80'
+#    # - '8443:443'
+#    volumes:
+#      - ./php/src:/app:rw,cached
+#    environment:
+#      - WEB_DOCUMENT_ROOT=/app/public
+#      - PHP_DISPLAY_ERRORS=1
+#      - PHP_MEMORY_LIMIT=2048M
+##      - PHP_MAX_EXECUTION_TIME=-1
+##      - XDEBUG_MODE=debug
+##      - XDEBUG_START_WITH_REQUEST=yes
+##      - XDEBUG_CLIENT_PORT=9000
+##      - XDEBUG_CLIENT_HOST=docker.local
+##      - XDEBUG_MAX_NESTING_LEVEL=1000
 
 volumes:
   grafana_data: { }

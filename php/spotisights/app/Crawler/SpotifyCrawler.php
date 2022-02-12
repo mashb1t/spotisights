@@ -51,7 +51,7 @@ class SpotifyCrawler implements CrawlerInterface
         if (!$username) {
             $spotifyWebAPI = $this->factory->getSpotifyWebAPI($session);
             $username = $spotifyWebAPI->me()->id;
-            $_SESSION[$this->getType() . '_username'] = $username;
+            \Illuminate\Support\Facades\Session::put($this->getType() . '_username', $username);
         }
 
         $this->sessionHandler->saveSession($spotifySession, $username);

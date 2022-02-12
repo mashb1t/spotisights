@@ -2,6 +2,8 @@ FROM webdevops/php-nginx-dev:8.1
 
 COPY ./entrypoint.d /entrypoint.d
 
+# TODO refactor mounts
+
 # keep in mind: cron service runs as root but delegates jobs to application user
 COPY ./cronjobs /cronjobs
 RUN crontab /cronjobs/docker-cron
