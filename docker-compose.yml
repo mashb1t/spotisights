@@ -14,8 +14,6 @@ services:
     depends_on:
       - influxdb
     env_file: config/grafana.env
-    links:
-      - influxdb
     ports:
       - '3000:3000'
     volumes:
@@ -23,30 +21,46 @@ services:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
 
-#  php:
-#    build:
-#      context: ./php
-#    depends_on:
-#      - influxdb
-#    links:
-#      - influxdb
-#    env_file: config/php.env
-#    ports:
-#      - '8080:80'
-#    # - '8443:443'
-#    volumes:
-#      - ./php/src:/app:rw,cached
-#    environment:
-#      - WEB_DOCUMENT_ROOT=/app/public
-#      - PHP_DISPLAY_ERRORS=1
-#      - PHP_MEMORY_LIMIT=2048M
-##      - PHP_MAX_EXECUTION_TIME=-1
-##      - XDEBUG_MODE=debug
-##      - XDEBUG_START_WITH_REQUEST=yes
-##      - XDEBUG_CLIENT_PORT=9000
-##      - XDEBUG_CLIENT_HOST=docker.local
-##      - XDEBUG_MAX_NESTING_LEVEL=1000
+  mysql:
+    restart: unless-stopped
+    image: mysql:8.0
+    env_file: config/mysql.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "33006:3306"
+
+  redis:
+    image: redis:6
+    restart: always
+
+  php:
+    build:
+      context: ./php
+    depends_on:
+      - influxdb
+      - mysql
+      - redis
+    env_file:
+      - config/mysql.env
+      - config/php.env
+    ports:
+      - '8080:80'
+    # - '8443:443'
+    volumes:
+      - ./php/src:/app:rw,cached
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+      - PHP_DISPLAY_ERRORS=1
+      - PHP_MEMORY_LIMIT=2048M
+#      - PHP_MAX_EXECUTION_TIME=-1
+#      - XDEBUG_MODE=debug
+#      - XDEBUG_START_WITH_REQUEST=yes
+#      - XDEBUG_CLIENT_PORT=9000
+#      - XDEBUG_CLIENT_HOST=docker.local
+#      - XDEBUG_MAX_NESTING_LEVEL=1000
 
 volumes:
   grafana_data: { }
   influxdb_data: { }
+  mysql_data: { }
