@@ -51,6 +51,7 @@ class CrawlActiveServices extends Command
 
         if ($crawlerCount === 0) {
             $this->info('done');
+
             return 0;
         }
 

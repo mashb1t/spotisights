@@ -11,6 +11,7 @@ use InfluxDB2\WriteApi;
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
 use SpotifyWebAPI\SpotifyWebAPIException;
+use stdClass;
 
 class SpotifyCrawler implements CrawlerInterface
 {
@@ -51,7 +52,7 @@ class SpotifyCrawler implements CrawlerInterface
         if (!$username) {
             $spotifyWebAPI = $this->factory->getSpotifyWebAPI($session);
             $username = $spotifyWebAPI->me()->id;
-            \Illuminate\Support\Facades\Session::put($this->getType() . '_username', $username);
+            session([$this->getType() . '_username' => $username]);
         }
 
         $this->sessionHandler->saveSession($spotifySession, $username);
@@ -87,7 +88,7 @@ class SpotifyCrawler implements CrawlerInterface
     {
         // TODO add "after" instead of limit if last crawl was last hour
         $recentTracks = $spotifyWebApi->getMyRecentTracks([
-            'limit' => min(getenv('SPOTIFY_CRAWL_BULK_LIMIT'), Factory::BATCH_SIZE)
+            'limit' => min(getenv('SPOTIFY_CRAWL_BULK_LIMIT'), Factory::BATCH_SIZE),
         ])->items;
 
         $trackIds = [];
@@ -129,10 +130,10 @@ class SpotifyCrawler implements CrawlerInterface
     }
 
     /**
-     * @param array         $artistIds
+     * @param array $artistIds
      * @param SpotifyWebAPI $spotifyWebApi
      *
-     * @return \stdClass[]
+     * @return stdClass[]
      */
     protected function getArtistsById(array $artistIds, SpotifyWebAPI $spotifyWebApi): array
     {

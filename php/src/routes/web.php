@@ -4,7 +4,6 @@ use App\Enums\CrawlerResultEnum;
 use App\Enums\ServiceEnum;
 use App\Factory;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
 /*
@@ -33,10 +32,9 @@ Route::get('/', function () {
     ]);
 })->name('dashboard');
 
-
 Route::get('/callback', function () {
     $state = request('state');
-    $sessionState = Session::get('state');
+    $sessionState = session('state');
 
     $code = request('code');
 
@@ -55,7 +53,7 @@ Route::get('/callback', function () {
 
     $crawler = $crawlers[$serviceNameSpotify];
 
-    $username = Session::get($crawler->getType() . '_username');
+    $username = session($crawler->getType() . '_username');
 
     // do initial crawl
     // TODO extract to separate method/class
@@ -66,13 +64,13 @@ Route::get('/callback', function () {
     } else if ($initialSetupResult === CrawlerResultEnum::SESSION_SETUP_SUCCESS) {
         try {
             // read new username from session if now set by initial setup
-            $crawler->crawlAll(Session::get($crawler->getType() . '_username'));
+            $crawler->crawlAll(session($crawler->getType() . '_username'));
         } catch (Exception $exception) {
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, $exception->getMessage());
         }
     }
 
-    Session::put('logged_in' . $crawler->getType(), true);
+    session(['logged_in_' . $crawler->getType() => true]);
 
     return redirect()->route('dashboard');
 });
