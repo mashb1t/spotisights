@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1644625395526,
+    "iteration": 1644628771867,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -268,6 +268,8 @@
                 "y": 1
             },
             "id": 42,
+            "interval": "5m",
+            "maxDataPoints": 40,
             "options": {
                 "legend": {
                     "calcs": [],
@@ -302,7 +304,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000/60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY time(30m) fill(0)",
+                    "query": "SELECT sum(\"duration_ms\") /1000/60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY time($interval) fill(0)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -1641,6 +1643,8 @@
                 "y": 14
             },
             "id": 46,
+            "interval": "30m",
+            "maxDataPoints": 20,
             "options": {
                 "legend": {
                     "calcs": [],
@@ -1674,7 +1678,7 @@
                     "measurement": "genre_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"value\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\", time(30m) fill(0)",
+                    "query": "SELECT sum(\"value\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\", time($interval) fill(0)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -2379,6 +2383,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 3,
+    "version": 8,
     "weekStart": ""
 }
