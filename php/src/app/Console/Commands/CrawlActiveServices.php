@@ -42,7 +42,7 @@ class CrawlActiveServices extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $crawlers = $this->factory->getActiveCrawlers();
         $crawlerCount = count($crawlers);
@@ -63,24 +63,18 @@ class CrawlActiveServices extends Command
 
             $this->info("found $sessionFileCount $service session(s)");
 
-            foreach ($sessionFiles as $index => $sessionFile) {
+            $sessionFileIterator = $this->getOutput()->progressIterate($sessionFiles);
+            foreach ($sessionFileIterator as $sessionFile) {
                 $username = basename($sessionFile, SessionHandler::SESSION_FILE_SUFFIX);
 
-                // show index +1 in outputs
-                $index++;
-
-//                try {
-                    $this->info("$index/$sessionFileCount: crawling user \"$username\"");
+                try {
                     $crawler->crawlAll($username);
-
-//                } catch (Exception $exception) {
-//                    $this->error("$index/$sessionFileCount: exception while crawling $username, message: " . $exception->getMessage());
-//                }
+                } catch (Exception $exception) {
+                    $this->error("exception while crawling $username, message: " . $exception->getMessage());
+                }
             }
+            $this->info("done crawling $service");
 
-            $this->info('done');
-
-            $this->newLine();
         }
 
         $this->info('done');
