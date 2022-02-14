@@ -1,3 +1,3 @@
 #!/bin/bash
 
-0 * * * * application . /etc/environment; /usr/local/bin/php -d memory_limit=256M /app/artisan crawl:active >> /docker.stdout 2>&1
+* * * * * application . /etc/environment; /usr/local/bin/php /app/artisan schedule:run

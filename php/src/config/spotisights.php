@@ -17,7 +17,7 @@ return [
     */
 
     'services' => [
-        'active' => explode(',', env('ACTIVE_SERVICES', [])),
+        'active' => explode(',', env('ACTIVE_SERVICES', '')),
     ],
 
     'grafana_dashboard_url' => env('GRAFANA_DASHBOARD_URL')
