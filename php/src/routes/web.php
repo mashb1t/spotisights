@@ -32,7 +32,6 @@ Route::get('/', function () {
     ]);
 })->name('dashboard');
 
-// TODO rename spotify callback
 Route::get('/callback', function () {
     $state = request('state');
     $sessionState = session('state');
