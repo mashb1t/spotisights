@@ -26,19 +26,19 @@ COPY src/routes/ ./routes/
 COPY src/storage/ ./storage/
 COPY src/artisan ./artisan
 
+# permissions
+USER root
+
 RUN composer dump-autoload --optimize && \
     composer clear-cache
 
 # laravel
-# ---
 RUN php artisan storage:link
-
-# permissions
-# ---
-USER root
 
 RUN chown -R application:application /app \
     && chown -R application:application /app/storage \
     && chmod -R 775 /app/storage \
     && chmod -R 775 /app/public \
     && chmod -R 775 /app/bootstrap/cache
+
+USER application
