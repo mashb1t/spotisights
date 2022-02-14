@@ -2,11 +2,14 @@
 
 namespace App\Crawler;
 
+use App\Enums\CacheKeyEnum;
 use App\Enums\CrawlerResultEnum;
 use App\Enums\ServiceEnum;
 use App\Factory;
 use App\Session\SessionHandler;
 use Exception;
+use Illuminate\Console\Concerns\InteractsWithIO;
+use Illuminate\Support\Facades\Cache;
 use InfluxDB2\WriteApi;
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
@@ -15,6 +18,8 @@ use stdClass;
 
 class SpotifyCrawler implements CrawlerInterface
 {
+    use InteractsWithIO;
+
     public function __construct(
         protected WriteApi $writeApi,
         protected SessionHandler $sessionHandler,
@@ -76,7 +81,9 @@ class SpotifyCrawler implements CrawlerInterface
         $session = $spotifySession->getUnderlyingObject();
         $spotifyWebApi = $this->factory->getSpotifyWebAPI($session);
 
+        logs('crawler')->debug("starting spotify crawler for username $username");
         $this->crawlTrackHistoryAndAudioFeatures($username, $spotifyWebApi);
+        logs('crawler')->debug("finished spotify crawler for username $username");
 
         $this->sessionHandler->saveSession($spotifySession, $username);
     }
@@ -90,27 +97,31 @@ class SpotifyCrawler implements CrawlerInterface
         $recentTracks = $spotifyWebApi->getMyRecentTracks([
             'limit' => config('services.spotify.crawl_bulk_limit'),
         ])->items;
+        logs('crawler')->debug("retrieved recent logs for user $username");
 
-        $trackIds = [];
+        $recentTracksIds = [];
+        foreach ($recentTracks as $recentTrack) {
+            // automatic deduplication by key
+            $recentTracksIds[$recentTrack->track->id] = $recentTrack->track->id;
+        }
+
         $artistIds = [];
-        foreach ($recentTracks as $index => $recentTrack) {
-            $trackIds[$index] = $recentTrack->track->id;
-
+        foreach ($recentTracks as $recentTrack) {
             foreach ($recentTrack->track->artists as $artist) {
+                // automatic deduplication by key
                 $artistIds[$artist->id] = $artist->id;
             }
         }
 
-        $artistsById = $this->getArtistsById($artistIds, $spotifyWebApi);
+        $artistsById = $this->getArtistsById($spotifyWebApi, $artistIds);
+        $audioFeatures = $this->getAudioFeatures($spotifyWebApi, $recentTracksIds);
 
-        // TODO cache audio features for a track (e.g. redis for a month or even longer)
-        $audioFeatures = $spotifyWebApi->getMultipleAudioFeatures($trackIds);
+        foreach ($recentTracks as $recentTrack) {
+            $audioFeature = $audioFeatures[$recentTrack->track->id];
 
-        foreach ($recentTracks as $index => $recentTrack) {
-            // order of $audioFeatures matches order of $recentTrack
-            $audioFeature = $audioFeatures->audio_features[$index];
-
-            $point = $this->factory->getTrackHistoryPoint($username, ServiceEnum::Spotify->value, $audioFeature, $recentTrack);
+            $point = $this->factory->getTrackHistoryPoint(
+                $username, ServiceEnum::Spotify->value, $audioFeature, $recentTrack
+            );
             $this->writeApi->write($point);
 
             $genres = [];
@@ -121,7 +132,9 @@ class SpotifyCrawler implements CrawlerInterface
             }
 
             foreach ($genres as $genre) {
-                $point = $this->factory->getGenreHistoryPoint($username, ServiceEnum::Spotify->value, $genre, $recentTrack);
+                $point = $this->factory->getGenreHistoryPoint(
+                    $username, ServiceEnum::Spotify->value, $genre, $recentTrack
+                );
                 $this->writeApi->write($point);
             }
         }
@@ -130,21 +143,37 @@ class SpotifyCrawler implements CrawlerInterface
     }
 
     /**
-     * @param array $artistIds
-     * @param SpotifyWebAPI $spotifyWebApi
+     * @param SpotifyWebAPI         $spotifyWebApi
+     * @param array<string, string> $artistIds
      *
-     * @return stdClass[]
+     * @return array<string, stdClass>
      */
-    protected function getArtistsById(array $artistIds, SpotifyWebAPI $spotifyWebApi): array
+    protected function getArtistsById(SpotifyWebAPI $spotifyWebApi, array $artistIds): array
     {
-        // artistIds count could be more than Factory::BATCH_SIZE
-        $artistIdsChunks = array_chunk($artistIds, config('services.spotify.crawl_bulk_limit'));
-
         $artistsFromAPI = [];
-        foreach ($artistIdsChunks as $artistIdsChunk) {
-            // TODO cache artists (e.g. redis for a month or even longer)
-            $response = $spotifyWebApi->getArtists($artistIdsChunk);
-            array_push($artistsFromAPI, ...$response->artists);
+        foreach ($artistIds as $artistId) {
+            $cacheKeyArtist = $this->getCacheKey(CacheKeyEnum::Artist, $artistId);
+            if (Cache::has($cacheKeyArtist)) {
+                $artistsFromAPI[] = Cache::get($cacheKeyArtist);
+                unset($artistIds[$artistId]);
+                logs('crawler')->debug("found artist $artistId in cache");
+            }
+        }
+
+        if (count($artistIds) > 0) {
+            // artistIds count could be more than crawl_bulk_limit
+            $artistIdsChunks = array_chunk($artistIds, config('services.spotify.crawl_bulk_limit'));
+
+            foreach ($artistIdsChunks as $artistIdsChunk) {
+                $response = $spotifyWebApi->getArtists($artistIdsChunk);
+
+                foreach ($response->artists as $artist) {
+                    $cacheKeyArtist = $this->getCacheKey(CacheKeyEnum::Artist, $artist->id);
+                    Cache::put($cacheKeyArtist, $artist, config('services.spotify.cache_ttl'));
+                    $artistsFromAPI[] = $artist;
+                    logs('crawler')->debug("set artist $artist->id to cache");
+                }
+            }
         }
 
         $artistsById = [];
@@ -153,5 +182,47 @@ class SpotifyCrawler implements CrawlerInterface
         }
 
         return $artistsById;
+    }
+
+    /**
+     * @param SpotifyWebAPI         $spotifyWebApi
+     * @param array<string, string> $trackIds
+     *
+     * @return array<string, stdClass>
+     */
+    protected function getAudioFeatures(SpotifyWebAPI $spotifyWebApi, array $trackIds): array
+    {
+        $audioFeatures = [];
+        foreach ($trackIds as $index => $trackId) {
+            $cacheKeyAudioFeature = $this->getCacheKey(CacheKeyEnum::AudioFeature, $trackId);
+            if (Cache::has($cacheKeyAudioFeature)) {
+                $audioFeatures[$trackId] = Cache::get($cacheKeyAudioFeature);
+                unset($trackIds[$index]);
+                logs('crawler')->debug("found audio feature for $trackId in cache");
+            }
+        }
+
+        if (count($trackIds) > 0) {
+            $response = $spotifyWebApi->getMultipleAudioFeatures(array_values($trackIds));
+            foreach ($response->audio_features as $audioFeature) {
+                $cacheKeyAudioFeature = $this->getCacheKey(CacheKeyEnum::AudioFeature, $audioFeature->id);
+                Cache::put($cacheKeyAudioFeature, $audioFeature, config('services.spotify.cache_ttl'));
+                $audioFeatures[$audioFeature->id] = $audioFeature;
+                logs('crawler')->debug("set audio feature for $audioFeature->id to cache");
+            }
+        }
+
+        return $audioFeatures;
+    }
+
+    protected function getCacheKey(CacheKeyEnum $cacheKey, string $id): string
+    {
+        return implode(
+            static::CACHE_KEY_SEPARATOR, [
+                ServiceEnum::Spotify->value,
+                $cacheKey->value,
+                $id,
+            ]
+        );
     }
 }

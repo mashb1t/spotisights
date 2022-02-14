@@ -40,5 +40,3 @@ RUN chown -R application:application /app \
     && chmod -R 775 /app/storage \
     && chmod -R 775 /app/public \
     && chmod -R 775 /app/bootstrap/cache
-
-USER application

@@ -69,13 +69,13 @@ class CrawlActiveServices extends Command
                 // show index +1 in outputs
                 $index++;
 
-                try {
+//                try {
                     $this->info("$index/$sessionFileCount: crawling user \"$username\"");
                     $crawler->crawlAll($username);
 
-                } catch (Exception $exception) {
-                    $this->error("$index/$sessionFileCount: exception while crawling $username, message: " . $exception->getMessage());
-                }
+//                } catch (Exception $exception) {
+//                    $this->error("$index/$sessionFileCount: exception while crawling $username, message: " . $exception->getMessage());
+//                }
             }
 
             $this->info('done');

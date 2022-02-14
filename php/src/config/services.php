@@ -47,6 +47,8 @@ return [
 
         // must be <= 50 to prevent spotify api errors
         'crawl_bulk_limit' => min(env('SPOTIFY_CRAWL_BULK_LIMIT', 50), 50),
+
+        'cache_ttl' => env('SPOTIFY_CACHE_TTL', 60*60*24*30),
     ],
 
 ];
