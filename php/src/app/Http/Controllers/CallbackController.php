@@ -9,14 +9,14 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class SpotifyCallbackController extends Controller
+class CallbackController extends Controller
 {
     public function __construct(
         protected Factory $factory
     ) {
     }
 
-    public function callback(): RedirectResponse
+    public function spotifyCallback(): RedirectResponse
     {
         $state = request('state');
         $sessionState = session('state');
@@ -28,19 +28,25 @@ class SpotifyCallbackController extends Controller
             abort(Response::HTTP_FORBIDDEN, 'State mismatch or not authenticated');
         }
 
+        $this->initializeAndCrawl(ServiceEnum::Spotify->value, ['code' => $code]);
+
+        return redirect()->route('connect');
+    }
+
+    protected function initializeAndCrawl(string $service, array $parameters): void
+    {
         $crawlers = $this->factory->getActiveCrawlers();
 
-        $serviceNameSpotify = ServiceEnum::Spotify->value;
-        if (!isset($crawlers[$serviceNameSpotify])) {
-            abort(Response::HTTP_BAD_REQUEST, "Service $serviceNameSpotify is not active!");
+        if (!isset($crawlers[$service])) {
+            abort(Response::HTTP_BAD_REQUEST, "Service $service is not active!");
         }
 
-        $crawler = $crawlers[$serviceNameSpotify];
+        $crawler = $crawlers[$service];
 
         $username = session($crawler->getType() . '_username');
 
         // do initial crawl
-        $initialSetupResult = $crawler->initialSetup($username, ['code' => $code]);
+        $initialSetupResult = $crawler->initialSetup($username, $parameters);
 
         if ($initialSetupResult === CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR) {
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, CrawlerResultEnum::SESSION_ACCESS_TOKEN_ERROR->value);
@@ -54,7 +60,5 @@ class SpotifyCallbackController extends Controller
         }
 
         session(['logged_in_' . $crawler->getType() => true]);
-
-        return redirect()->route('connect');
     }
 }

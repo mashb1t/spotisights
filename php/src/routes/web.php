@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\CallbackController;
 use App\Http\Controllers\ConnectServiceController;
-use App\Http\Controllers\SpotifyCallbackController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [ConnectServiceController::class, 'index'])->name('connect');
-Route::get('/spotify/callback', [SpotifyCallbackController::class, 'callback']);
+
+Route::get('/spotify/callback', [CallbackController::class, 'spotifyCallback']);
