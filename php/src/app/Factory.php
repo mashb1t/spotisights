@@ -18,6 +18,7 @@ use InfluxDB2\WriteType;
 use JetBrains\PhpStorm\Pure;
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
+use stdClass;
 
 class Factory
 {
@@ -57,21 +58,21 @@ class Factory
     public function getTrackHistoryPoint(
         string $username,
         string $service,
-        mixed $audioFeature,
-        mixed $recentTrack
+        stdClass $audioFeature,
+        stdClass $track
     ): Point {
         $artists = [];
-        foreach ($recentTrack->track->artists as $artist) {
+        foreach ($track->track->artists as $artist) {
             $artists[] = $artist->name;
         }
-        $artists = implode(', ', $artists);
+        $artistsImploded = implode(', ', $artists);
 
         return Point::measurement('track_history')
             ->addTag('user', $username)
-            ->addTag('artists', $artists)
+            ->addTag('artists', $artistsImploded)
             ->addTag('service', $service)
-            ->addField('track', $recentTrack->track->name)
-            ->addField('duration_ms', (int)$recentTrack->track->duration_ms)
+            ->addField('track', $track->track->name)
+            ->addField('duration_ms', (int)$track->track->duration_ms)
             ->addField('danceability', (float)$audioFeature->danceability)
             ->addField('energy', (float)$audioFeature->energy)
             ->addField('key', (int)$audioFeature->key)
@@ -81,7 +82,7 @@ class Factory
             ->addField('liveness', (float)$audioFeature->liveness)
             ->addField('valence', (float)$audioFeature->valence)
             ->addField('tempo', round((float)$audioFeature->tempo))
-            ->time((new DateTime($recentTrack->played_at)));
+            ->time((new DateTime($track->played_at)));
     }
 
     /**
