@@ -10,7 +10,7 @@ services:
       - '8086:8086'
 
   grafana:
-    image: grafana/grafana:8.3.6
+    image: grafana/grafana:8.4.1
     depends_on:
       - influxdb
     env_file: config/grafana.env
@@ -31,7 +31,7 @@ services:
       - "33006:3306"
 
   redis:
-    image: redis:6
+    image: redis:6-alpine
     restart: always
 
   php:
