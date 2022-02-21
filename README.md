@@ -5,7 +5,7 @@
 
 This project displays Spotify statistics for multiple users via Grafana.
 
-It uses PHP Scripts for data collection from the Spotify API and InfluxDB as data storage.
+It uses Laravel commands for data collection from the Spotify API and InfluxDB as data storage.
 
 ![](https://raw.githubusercontent.com/mashb1t/spotisights/master/images/spotisights-current-user.png)
 
@@ -17,7 +17,6 @@ It uses PHP Scripts for data collection from the Spotify API and InfluxDB as dat
 4. Log in to the [Spotify Developer] website
 5. Set up a new Spotify App, add the callback URL ``http://localhost:8080/spotify/callback`` and add client id and client secret to ``php.env``
 6. Log in to Grafana and remove the permission "View" on dashboard "Current User" (navigate settings > permissions > click on group "SpotiSights" > remove role "Viewer" from board)
-
 
 ## Data Flow / User setup
 
