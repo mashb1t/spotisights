@@ -4,12 +4,12 @@ namespace App\Session;
 
 use App\Enums\ServiceEnum;
 use JetBrains\PhpStorm\Pure;
-use SpotifyWebAPI\Session;
+use SpotifyWebAPI\Session as SpotifyWebAPISession;
 
 class SpotifySession implements SessionInterface
 {
     public function __construct(
-        protected Session $session
+        protected SpotifyWebAPISession $session
     ) {
     }
 
@@ -37,7 +37,9 @@ class SpotifySession implements SessionInterface
     {
         $session = $this->getUnderlyingObject();
 
-        $_SESSION['state'] = $_SESSION['state'] ?? $session->generateState();
+        if (!session('state')) {
+            session(['state' => $session->generateState()]);
+        }
 
         $options = [
             'scope' => [
@@ -45,19 +47,19 @@ class SpotifySession implements SessionInterface
                 'user-read-private', // used for reading username in me()
                 'user-read-email',  // currently not used, but required for me()
             ],
-            'state' => $_SESSION['state'],
+            'state' => session('state'),
         ];
 
         return $session->getAuthorizeUrl($options);
     }
 
-    public function getUnderlyingObject(): Session
+    public function getUnderlyingObject(): SpotifyWebAPISession
     {
         return $this->session;
     }
 
     public function getType(): string
     {
-        return ServiceEnum::SPOTIFY->value;
+        return ServiceEnum::Spotify->value;
     }
 }

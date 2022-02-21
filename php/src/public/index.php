@@ -1,102 +1,55 @@
 <?php
 
-use App\Factory;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
 
-require __DIR__ . '/../vendor/autoload.php';
+define('LARAVEL_START', microtime(true));
 
-session_start();
-?>
-<!doctype html>
-<html lang="en-us">
-<head>
-    <title>SpotiSights Connect</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style type="text/css">
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            /*font-size: 1rem;*/
-            font-weight: 400;
-            line-height: 1.5;
-            color: #212529;
-            background-color: #fff;
-            -webkit-text-size-adjust: 100%;
-            -webkit-tap-highlight-color: transparent;
-        }
+/*
+|--------------------------------------------------------------------------
+| Check If The Application Is Under Maintenance
+|--------------------------------------------------------------------------
+|
+| If the application is in maintenance / demo mode via the "down" command
+| we will load this file so that any pre-rendered content can be shown
+| instead of starting the framework, which could cause an exception.
+|
+*/
 
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 1px solid rgba(0, 0, 0, .125);
-            border-radius: 0.25rem;
-            padding: 1rem 1rem;
-        }
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
 
-        .card img {
-            max-width: 100%;
-            margin-bottom: 1rem;
-        }
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader for
+| this application. We just need to utilize it! We'll simply require it
+| into the script here so we don't need to manually load our classes.
+|
+*/
 
-        .card-body {
-            flex: 1 1 auto;
-            /*padding: 1rem 1rem;*/
-        }
+require __DIR__.'/../vendor/autoload.php';
 
-        /*.card-title {*/
-        /*    margin-bottom: 0.5rem;*/
-        /*}*/
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can handle the incoming request using
+| the application's HTTP kernel. Then, we will send the response back
+| to this client's browser, allowing them to enjoy our application.
+|
+*/
 
-        .col-md-4 {
-            padding-bottom: 1.5rem;
-        }
+$app = require_once __DIR__.'/../bootstrap/app.php';
 
-        p {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-    </style>
-</head>
+$kernel = $app->make(Kernel::class);
 
-<body>
-<div class="container">
-    <h1>SpotiSights Connect</h1>
-</div>
+$response = $kernel->handle(
+    $request = Request::capture()
+)->send();
 
-<?php $factory = new Factory() ?>
-
-<div class="container">
-    <div class="row">
-        <?php foreach (explode(',', getenv('ACTIVE_SERVICES')) as $serviceName): ?>
-            <?php $session = $factory->getSession($serviceName); ?>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="images/services/<?= $serviceName ?>.png" class="card-img-top" alt="<?= ucfirst($serviceName) ?>">
-                    <div class="card-body">
-                        <p class="card-text">
-                            <?php if (!isset($_SESSION['logged_in'][$serviceName])): ?>
-                                <a href="<?= $session->getLoginUrl(); ?>" class="btn btn-primary">Connect <?= ucfirst($serviceName) ?></a>
-                            <?php else: ?>
-                                Username: <?= $_SESSION[$serviceName . '_username'] ?>
-                            <?php endif; ?>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-
-<?php if (isset($_SESSION['logged_in']) && count($_SESSION['logged_in']) > 0): ?>
-    <div class="container">
-        <button type="button" class="btn btn-primary" onclick="location.href='<?= getenv('GRAFANA_DASHBOARD_URL') ?>';">
-            Show Statistics
-        </button>
-    </div>
-<?php endif; ?>
-</body>
-</html>
+$kernel->terminate($request, $response);

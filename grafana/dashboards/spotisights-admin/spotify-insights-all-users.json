@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1644628771867,
+    "iteration": 1644778596618,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -214,22 +214,22 @@
             "fieldConfig": {
                 "defaults": {
                     "color": {
-                        "mode": "continuous-GrYlRd"
+                        "mode": "palette-classic"
                     },
                     "custom": {
                         "axisLabel": "",
                         "axisPlacement": "auto",
                         "barAlignment": 0,
-                        "drawStyle": "line",
-                        "fillOpacity": 20,
-                        "gradientMode": "scheme",
+                        "drawStyle": "bars",
+                        "fillOpacity": 100,
+                        "gradientMode": "hue",
                         "hideFrom": {
                             "legend": false,
                             "tooltip": false,
                             "viz": false
                         },
-                        "lineInterpolation": "smooth",
-                        "lineWidth": 3,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
                         "pointSize": 5,
                         "scaleDistribution": {
                             "type": "linear"
@@ -238,7 +238,7 @@
                         "spanNulls": false,
                         "stacking": {
                             "group": "A",
-                            "mode": "none"
+                            "mode": "normal"
                         },
                         "thresholdsStyle": {
                             "mode": "off"
@@ -273,7 +273,7 @@
             "options": {
                 "legend": {
                     "calcs": [],
-                    "displayMode": "hidden",
+                    "displayMode": "list",
                     "placement": "bottom"
                 },
                 "tooltip": {
@@ -304,7 +304,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000/60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY time($interval) fill(0)",
+                    "query": "SELECT sum(\"duration_ms\") /1000/60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"user\", time($interval) fill(0)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -340,13 +340,9 @@
             "title": "total minutes listened by period",
             "transformations": [
                 {
-                    "id": "organize",
+                    "id": "labelsToFields",
                     "options": {
-                        "excludeByName": {},
-                        "indexByName": {},
-                        "renameByName": {
-                            "track_history.sum": "minutes"
-                        }
+                        "valueLabel": "user"
                     }
                 }
             ],
@@ -2283,7 +2279,7 @@
             {
                 "allValue": ".*",
                 "current": {
-                    "selected": true,
+                    "selected": false,
                     "text": [
                         "All"
                     ],
@@ -2308,7 +2304,7 @@
             {
                 "allValue": ".*",
                 "current": {
-                    "selected": true,
+                    "selected": false,
                     "text": [
                         "All"
                     ],
@@ -2333,7 +2329,7 @@
             {
                 "allValue": ".*",
                 "current": {
-                    "selected": true,
+                    "selected": false,
                     "text": [
                         "All"
                     ],
@@ -2383,6 +2379,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 8,
+    "version": 9,
     "weekStart": ""
 }
