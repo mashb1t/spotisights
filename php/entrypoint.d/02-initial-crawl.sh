@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/local/bin/php /app/scripts/fetchTrackHistory.php
+/usr/local/bin/php /app/artisan crawl:active
