@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1644778596618,
+    "iteration": 1645824620511,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -80,7 +80,7 @@
                 },
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -163,7 +163,7 @@
                 },
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -207,7 +207,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened",
+            "title": "total duration listened",
             "type": "stat"
         },
         {
@@ -257,7 +257,8 @@
                                 "value": 80
                             }
                         ]
-                    }
+                    },
+                    "unit": "m"
                 },
                 "overrides": []
             },
@@ -277,7 +278,8 @@
                     "placement": "bottom"
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "multi",
+                    "sort": "none"
                 }
             },
             "pluginVersion": "8.3.4",
@@ -304,7 +306,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000/60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"user\", time($interval) fill(0)",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 / 60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"user\", time($interval) fill(0)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -337,7 +339,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened by period",
+            "title": "total duration listened by period",
             "transformations": [
                 {
                     "id": "labelsToFields",
@@ -389,7 +391,7 @@
                 },
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -472,7 +474,7 @@
                 },
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -516,7 +518,7 @@
                     ]
                 }
             ],
-            "title": "total minutes listened by period",
+            "title": "total duration listened by period",
             "type": "stat"
         },
         {
@@ -577,7 +579,7 @@
                 },
                 "textMode": "auto"
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -664,7 +666,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -747,7 +749,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -830,7 +832,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -917,7 +919,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -1000,7 +1002,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -1083,7 +1085,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -1166,7 +1168,7 @@
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -1248,7 +1250,7 @@
                 },
                 "showUnfilled": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -1523,7 +1525,10 @@
                             "tooltip": false,
                             "viz": false
                         },
-                        "lineWidth": 1
+                        "lineWidth": 1,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        }
                     },
                     "mappings": [],
                     "thresholds": {
@@ -1551,6 +1556,7 @@
             },
             "id": 48,
             "options": {
+                "barRadius": 0,
                 "barWidth": 0.97,
                 "groupWidth": 0.7,
                 "legend": {
@@ -1562,9 +1568,12 @@
                 "showValue": "auto",
                 "stacking": "none",
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 },
-                "xTickLabelRotation": -90
+                "xField": "genre",
+                "xTickLabelRotation": -90,
+                "xTickLabelSpacing": 0
             },
             "targets": [
                 {
@@ -1572,13 +1581,28 @@
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
-                    "query": "\nSELECT top(\"value_sum\", 10) as \"count\", \"genre\" from (\nSELECT sum(\"value\") AS \"value_sum\" FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\"\n)",
+                    "query": "\nSELECT top(\"value_sum\", 10) as \"tracks\", \"genre\" from (\nSELECT sum(\"value\") AS \"value_sum\" FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\"\n)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table"
                 }
             ],
             "title": "top 10 artist genres",
+            "transformations": [
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true,
+                            "count": false
+                        },
+                        "indexByName": {},
+                        "renameByName": {
+                            "Time": ""
+                        }
+                    }
+                }
+            ],
             "type": "barchart"
         },
         {
@@ -1648,7 +1672,8 @@
                     "placement": "right"
                 },
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 }
             },
             "targets": [
@@ -1735,7 +1760,8 @@
                                 "value": null
                             }
                         ]
-                    }
+                    },
+                    "unit": "dthms"
                 },
                 "overrides": []
             },
@@ -1757,7 +1783,7 @@
                 },
                 "showHeader": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -1776,7 +1802,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\")  / 1000 / 60 AS \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 AS \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -1824,7 +1850,7 @@
                         "sort": [
                             {
                                 "desc": true,
-                                "field": "minutes"
+                                "field": "duration"
                             }
                         ]
                     }
@@ -1859,7 +1885,10 @@
                             "tooltip": false,
                             "viz": false
                         },
-                        "lineWidth": 1
+                        "lineWidth": 1,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        }
                     },
                     "mappings": [],
                     "thresholds": {
@@ -1871,7 +1900,7 @@
                             }
                         ]
                     },
-                    "unit": "short"
+                    "unit": "m"
                 },
                 "overrides": []
             },
@@ -1884,6 +1913,7 @@
             "id": 34,
             "maxDataPoints": 10,
             "options": {
+                "barRadius": 0,
                 "barWidth": 0.96,
                 "groupWidth": 0.7,
                 "legend": {
@@ -1895,9 +1925,11 @@
                 "showValue": "always",
                 "stacking": "none",
                 "tooltip": {
-                    "mode": "single"
+                    "mode": "single",
+                    "sort": "none"
                 },
-                "xTickLabelRotation": -90
+                "xTickLabelRotation": -90,
+                "xTickLabelSpacing": 0
             },
             "pluginVersion": "8.3.4",
             "targets": [
@@ -1911,7 +1943,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT top(\"minutes\", 10) / 1000 / 60 as \"minutes\", \"artists\" from (\nSELECT sum(\"duration_ms\") AS \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"\n)",
+                    "query": "SELECT top(\"minutes\", 10) / 1000 / 60 as \"duration\", \"artists\" from (\nSELECT sum(\"duration_ms\") AS \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"\n)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -1953,7 +1985,18 @@
                 }
             ],
             "title": "top 10 artists by listened time",
-            "transformations": [],
+            "transformations": [
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true
+                        },
+                        "indexByName": {},
+                        "renameByName": {}
+                    }
+                }
+            ],
             "type": "barchart"
         },
         {
@@ -1998,7 +2041,7 @@
                 },
                 "showHeader": true
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -2191,7 +2234,8 @@
                                 "value": 80
                             }
                         ]
-                    }
+                    },
+                    "unit": "none"
                 },
                 "overrides": [
                     {
@@ -2203,6 +2247,18 @@
                             {
                                 "id": "custom.width",
                                 "value": 255
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "duration"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "dthms"
                             }
                         ]
                     }
@@ -2226,7 +2282,7 @@
                 "showHeader": true,
                 "sortBy": []
             },
-            "pluginVersion": "8.3.4",
+            "pluginVersion": "8.4.1",
             "targets": [
                 {
                     "datasource": {
@@ -2237,7 +2293,7 @@
                     "measurement": "track_history",
                     "orderByTime": "DESC",
                     "policy": "default",
-                    "query": "SELECT \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"seconds\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
+                    "query": "SELECT \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -2271,7 +2327,7 @@
         }
     ],
     "refresh": "",
-    "schemaVersion": 34,
+    "schemaVersion": 35,
     "style": "dark",
     "tags": [],
     "templating": {
@@ -2279,7 +2335,7 @@
             {
                 "allValue": ".*",
                 "current": {
-                    "selected": false,
+                    "selected": true,
                     "text": [
                         "All"
                     ],
@@ -2304,7 +2360,7 @@
             {
                 "allValue": ".*",
                 "current": {
-                    "selected": false,
+                    "selected": true,
                     "text": [
                         "All"
                     ],
@@ -2329,7 +2385,7 @@
             {
                 "allValue": ".*",
                 "current": {
-                    "selected": false,
+                    "selected": true,
                     "text": [
                         "All"
                     ],
@@ -2379,6 +2435,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 9,
+    "version": 14,
     "weekStart": ""
 }

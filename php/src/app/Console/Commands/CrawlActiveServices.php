@@ -44,8 +44,11 @@ class CrawlActiveServices extends Command
      */
     public function handle(): int
     {
+        logs('crawler')->info("running crawl:active");
+
         $crawlers = $this->factory->getActiveCrawlers();
         $crawlerCount = count($crawlers);
+        logs('crawler')->info("found $crawlerCount active crawlers");
 
         $this->info("found $crawlerCount active service(s): " . implode(', ', array_keys($crawlers)));
 
@@ -62,6 +65,7 @@ class CrawlActiveServices extends Command
             $sessionFileCount = count($sessionFiles);
 
             $this->info("found $sessionFileCount $service session(s)");
+            logs('crawler')->info("found $sessionFileCount $service session(s)");
 
             $sessionFileIterator = $this->getOutput()->progressIterate($sessionFiles);
             foreach ($sessionFileIterator as $sessionFile) {
@@ -74,10 +78,12 @@ class CrawlActiveServices extends Command
                 }
             }
             $this->info("done crawling $service");
+            logs('crawler')->info("done crawling $service");
 
         }
 
         $this->info('done');
+        logs('crawler')->info("finished crawl:active");
 
         return 0;
     }
