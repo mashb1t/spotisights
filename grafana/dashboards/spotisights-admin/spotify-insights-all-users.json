@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1645475160174,
+    "iteration": 1645824620511,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -2235,7 +2235,7 @@
                             }
                         ]
                     },
-                    "unit": "dthms"
+                    "unit": "none"
                 },
                 "overrides": [
                     {
@@ -2247,6 +2247,18 @@
                             {
                                 "id": "custom.width",
                                 "value": 255
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "duration"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "dthms"
                             }
                         ]
                     }
@@ -2423,6 +2435,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 11,
+    "version": 14,
     "weekStart": ""
 }
