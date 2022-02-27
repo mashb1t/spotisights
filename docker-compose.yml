@@ -55,11 +55,13 @@ services:
     env_file:
       - config/mysql.env
       - config/php.env
+      - config/influxdb.env
     ports:
       - '8080:80'
     # - '8443:443'
     volumes:
       - ./php/src:/app:rw,cached
+      - ./php/entrypoint.d:/entrypoint.d:rw,cached
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
       - PHP_DISPLAY_ERRORS=1
