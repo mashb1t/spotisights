@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1645997905192,
+    "iteration": 1645998179105,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -2734,6 +2734,10 @@
                             {
                                 "id": "unit",
                                 "value": "dthms"
+                            },
+                            {
+                                "id": "custom.width",
+                                "value": 100
                             }
                         ]
                     }
@@ -2906,6 +2910,6 @@
     "timezone": "",
     "title": "Current User",
     "uid": "spotisights",
-    "version": 6,
+    "version": 7,
     "weekStart": ""
 }
