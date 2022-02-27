@@ -5,6 +5,7 @@ namespace App;
 use App\Crawler\CrawlerInterface;
 use App\Crawler\SpotifyCrawler;
 use App\Enums\ServiceEnum;
+use App\Services\MigrateInfluxDataService;
 use App\Session\SessionHandler;
 use App\Session\SessionInterface;
 use App\Session\SpotifySession;
@@ -166,5 +167,10 @@ class Factory
             config('services.spotify.client_secret'),
             config('services.spotify.redirect_url'),
         );
+    }
+
+    #[Pure] public function getMigrateInfluxDataService(): MigrateInfluxDataService
+    {
+        return new MigrateInfluxDataService();
     }
 }
