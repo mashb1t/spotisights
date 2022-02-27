@@ -70,11 +70,14 @@ class Factory
         $artistsImploded = implode(', ', $artists);
 
         $playedAtDateTime = new Carbon($track->played_at);
+        // use UTC+0 for hour
+        $hourOfDay = $playedAtDateTime->hour;
 
         return Point::measurement('track_history')
             ->addTag('user', $username)
             ->addTag('artists', $artistsImploded)
             ->addTag('service', $service)
+            ->addTag('hour_of_day', (string)$hourOfDay)
             ->addField('track', $track->track->name)
             ->addField('duration_ms', (int)$track->track->duration_ms)
             ->addField('danceability', (float)$audioFeature->danceability)
