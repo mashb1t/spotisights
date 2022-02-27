@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1645827429665,
+    "iteration": 1645995083511,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -306,7 +306,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\") /1000/60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY time($interval) fill(0)",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 / 60 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"user\", time($interval) fill(0)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -1478,7 +1478,7 @@
                             ]
                         }
                     ],
-                    "title": "BPM by time",
+                    "title": "tempo by time",
                     "tooltip": {
                         "show": true,
                         "showHistogram": false
@@ -1496,7 +1496,7 @@
                     "yBucketSize": 10
                 }
             ],
-            "title": "bpm",
+            "title": "tempo",
             "type": "row"
         },
         {
@@ -1506,6 +1506,466 @@
                 "w": 24,
                 "x": 0,
                 "y": 13
+            },
+            "id": 61,
+            "panels": [],
+            "title": "daily statistics",
+            "type": "row"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "continuous-GrYlRd"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 6,
+                "x": 0,
+                "y": 14
+            },
+            "id": 56,
+            "interval": "1h",
+            "options": {
+                "displayMode": "gradient",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.4.1",
+            "targets": [
+                {
+                    "alias": "morning",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^([7-9]|1[0-1])$/)",
+                    "rawQuery": true,
+                    "refId": "B",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "noon",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[2-4])$/)",
+                    "rawQuery": true,
+                    "refId": "C",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "afternoon",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[5-7])$/) ",
+                    "rawQuery": true,
+                    "refId": "D",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "evening",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[8-9]|2[0-1])$/) ",
+                    "rawQuery": true,
+                    "refId": "E",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "night",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(22[0-4]|[0-6])$/) ",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "title": "median tempo by time of day",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        }
+                    },
+                    "mappings": [],
+                    "min": 0,
+                    "unit": "dtdhms"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 4,
+                "x": 6,
+                "y": 14
+            },
+            "id": 57,
+            "interval": "1h",
+            "options": {
+                "displayLabels": [
+                    "percent"
+                ],
+                "legend": {
+                    "displayMode": "list",
+                    "placement": "right",
+                    "values": []
+                },
+                "pieType": "pie",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "8.4.1",
+            "targets": [
+                {
+                    "alias": "morning",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^([7-9]|1[0-1])$/)",
+                    "rawQuery": true,
+                    "refId": "B",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "noon",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[2-4])$/)",
+                    "rawQuery": true,
+                    "refId": "C",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "afternoon",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[5-7])$/) ",
+                    "rawQuery": true,
+                    "refId": "D",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "evening",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[8-9]|2[0-1])$/) ",
+                    "rawQuery": true,
+                    "refId": "E",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "alias": "night",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "hide": false,
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(22[0-4]|[0-6])$/) ",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "title": "duration by time of day",
+            "transformations": [],
+            "type": "piechart"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": "auto",
+                        "displayMode": "auto"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "dthms"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 4,
+                "x": 10,
+                "y": 14
+            },
+            "id": 59,
+            "options": {
+                "footer": {
+                    "fields": "",
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": false
+                },
+                "showHeader": true
+            },
+            "pluginVersion": "8.4.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [
+                        {
+                            "params": [
+                                "1d"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "0"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 AS \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY time(1d) fill(0)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "table",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "duration_ms"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "sum"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "duration by day",
+            "transformations": [
+                {
+                    "id": "sortBy",
+                    "options": {
+                        "fields": {},
+                        "sort": [
+                            {
+                                "desc": true,
+                                "field": "duration"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "type": "table"
+        },
+        {
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": "auto",
+                        "displayMode": "auto"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 10,
+                "x": 14,
+                "y": 14
+            },
+            "id": 62,
+            "interval": "1d",
+            "options": {
+                "footer": {
+                    "fields": "",
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": false
+                },
+                "showHeader": true
+            },
+            "pluginVersion": "8.4.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P951FEA4DE68E13C5"
+                    },
+                    "groupBy": [
+                        {
+                            "params": [
+                                "1d"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "0"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "measurement": "track_history",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "\nSELECT \"genre\", top(\"value_sum\",1) as \"tracks\" from (\nSELECT sum(\"value\") AS \"value_sum\", min(\"genre\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter) GROUP BY \"genre\"\n) GROUP BY time($__interval)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "table",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "duration_ms"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "sum"
+                            }
+                        ]
+                    ],
+                    "tags": [
+                        {
+                            "key": "user",
+                            "operator": "=~",
+                            "value": "/^$user$/"
+                        }
+                    ]
+                }
+            ],
+            "title": "top genre by day",
+            "transformations": [
+                {
+                    "id": "sortBy",
+                    "options": {
+                        "fields": {},
+                        "sort": [
+                            {
+                                "desc": true,
+                                "field": "Time"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "type": "table"
+        },
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 20
             },
             "id": 50,
             "panels": [],
@@ -1556,7 +2016,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 0,
-                "y": 14
+                "y": 21
             },
             "id": 48,
             "options": {
@@ -1584,7 +2044,7 @@
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
-                    "query": "\nSELECT top(\"value_sum\", 10) as \"tracks\", \"genre\" from (\nSELECT sum(\"value\") AS \"value_sum\" FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\"\n)",
+                    "query": "\nSELECT top(\"value_sum\", 10) as \"tracks\", \"genre\" from (\nSELECT sum(\"value\") AS \"value_sum\" FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter) GROUP BY \"genre\"\n)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table"
@@ -1596,11 +2056,12 @@
                     "id": "organize",
                     "options": {
                         "excludeByName": {
-                            "Time": true
+                            "Time": true,
+                            "count": false
                         },
                         "indexByName": {},
                         "renameByName": {
-                            "count": ""
+                            "Time": ""
                         }
                     }
                 }
@@ -1662,7 +2123,7 @@
                 "h": 10,
                 "w": 15,
                 "x": 9,
-                "y": 14
+                "y": 21
             },
             "id": 46,
             "interval": "30m",
@@ -1701,7 +2162,7 @@
                     "measurement": "genre_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"value\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/) AND $timeFilter GROUP BY \"genre\", time($interval) fill(0)",
+                    "query": "SELECT sum(\"value\") FROM \"genre_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter) GROUP BY \"genre\", time($interval) fill(0)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series",
@@ -1735,7 +2196,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 24
+                "y": 31
             },
             "id": 20,
             "panels": [],
@@ -1771,7 +2232,7 @@
                 "h": 10,
                 "w": 6,
                 "x": 0,
-                "y": 25
+                "y": 32
             },
             "id": 27,
             "maxDataPoints": 10,
@@ -1804,7 +2265,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT sum(\"duration_ms\")  / 1000 AS \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 AS \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -1910,7 +2371,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 6,
-                "y": 25
+                "y": 32
             },
             "id": 34,
             "maxDataPoints": 10,
@@ -1945,7 +2406,7 @@
                     "measurement": "track_history",
                     "orderByTime": "ASC",
                     "policy": "default",
-                    "query": "SELECT top(\"minutes\", 10) / 1000 / 60 as \"minutes\", \"artists\" from (\nSELECT sum(\"duration_ms\") AS \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"\n)",
+                    "query": "SELECT top(\"minutes\", 10) / 1000 / 60 as \"duration\", \"artists\" from (\nSELECT sum(\"duration_ms\") AS \"minutes\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter GROUP BY \"artists\"\n)",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -2029,7 +2490,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 15,
-                "y": 25
+                "y": 32
             },
             "id": 37,
             "maxDataPoints": 10,
@@ -2206,7 +2667,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 35
+                "y": 42
             },
             "id": 44,
             "panels": [],
@@ -2255,12 +2716,12 @@
                     {
                         "matcher": {
                             "id": "byName",
-                            "options": "duration"
+                            "options": "hour of day (UTC)"
                         },
                         "properties": [
                             {
-                                "id": "unit",
-                                "value": "dthms"
+                                "id": "custom.width",
+                                "value": 130
                             }
                         ]
                     }
@@ -2270,7 +2731,7 @@
                 "h": 14,
                 "w": 24,
                 "x": 0,
-                "y": 36
+                "y": 43
             },
             "id": 6,
             "options": {
@@ -2295,7 +2756,7 @@
                     "measurement": "track_history",
                     "orderByTime": "DESC",
                     "policy": "default",
-                    "query": "SELECT \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
+                    "query": "SELECT \"hour_of_day\" as \"hour of day (UTC)\", \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",

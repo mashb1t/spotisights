@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
 
   influxdb:
@@ -23,32 +23,45 @@ services:
 
   mysql:
     restart: unless-stopped
-    image: mysql:8.0
+    image: mysql/mysql-server:8.0
     env_file: config/mysql.env
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
     ports:
       - "33006:3306"
 
   redis:
     image: redis:6-alpine
     restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
 
   php:
     build:
       context: ./php
     depends_on:
-      - influxdb
-      - mysql
-      - redis
+      influxdb:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     env_file:
       - config/mysql.env
       - config/php.env
+      - config/influxdb.env
     ports:
       - '8080:80'
     # - '8443:443'
     volumes:
       - ./php/src:/app:rw,cached
+      - ./php/entrypoint.d:/entrypoint.d:rw,cached
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
       - PHP_DISPLAY_ERRORS=1

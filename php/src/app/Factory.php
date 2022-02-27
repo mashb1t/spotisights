@@ -5,9 +5,11 @@ namespace App;
 use App\Crawler\CrawlerInterface;
 use App\Crawler\SpotifyCrawler;
 use App\Enums\ServiceEnum;
+use App\Services\MigrateInfluxDataService;
 use App\Session\SessionHandler;
 use App\Session\SessionInterface;
 use App\Session\SpotifySession;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use InfluxDB2\Client;
@@ -67,10 +69,15 @@ class Factory
         }
         $artistsImploded = implode(', ', $artists);
 
+        $playedAtDateTime = new Carbon($track->played_at);
+        // use UTC+0 for hour
+        $hourOfDay = $playedAtDateTime->hour;
+
         return Point::measurement('track_history')
             ->addTag('user', $username)
             ->addTag('artists', $artistsImploded)
             ->addTag('service', $service)
+            ->addTag('hour_of_day', (string)$hourOfDay)
             ->addField('track', $track->track->name)
             ->addField('duration_ms', (int)$track->track->duration_ms)
             ->addField('danceability', (float)$audioFeature->danceability)
@@ -82,7 +89,7 @@ class Factory
             ->addField('liveness', (float)$audioFeature->liveness)
             ->addField('valence', (float)$audioFeature->valence)
             ->addField('tempo', round((float)$audioFeature->tempo))
-            ->time((new DateTime($track->played_at)));
+            ->time($playedAtDateTime);
     }
 
     /**
@@ -163,5 +170,10 @@ class Factory
             config('services.spotify.client_secret'),
             config('services.spotify.redirect_url'),
         );
+    }
+
+    #[Pure] public function getMigrateInfluxDataService(): MigrateInfluxDataService
+    {
+        return new MigrateInfluxDataService();
     }
 }

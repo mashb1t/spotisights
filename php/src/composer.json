@@ -9,6 +9,7 @@
         "fruitcake/laravel-cors": "^3.0.0",
         "guzzlehttp/guzzle": "^7.2",
         "influxdata/influxdb-client-php": "^2.5",
+        "influxdb/influxdb-php": "^1.15",
         "jwilsson/spotify-web-api-php": "^5.0",
         "laravel/framework": "^9.0",
         "laravel/tinker": "^2.7"
