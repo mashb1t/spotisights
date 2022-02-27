@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1645993559068,
+    "iteration": 1645997782035,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -2717,20 +2717,14 @@
                     {
                         "matcher": {
                             "id": "byName",
-                            "options": "hour of day (UTC)"
+                            "options": "duration"
                         },
                         "properties": [
                             {
-                                "id": "custom.width",
-                                "value": 130
+                                "id": "unit",
+                                "value": "dthms"
                             }
                         ]
-                    },
-                    {
-                        "matcher": {
-                            "id": "byName"
-                        },
-                        "properties": []
                     }
                 ]
             },
@@ -2763,7 +2757,7 @@
                     "measurement": "track_history",
                     "orderByTime": "DESC",
                     "policy": "default",
-                    "query": "SELECT \"hour_of_day\" as \"hour of day (UTC)\", \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
+                    "query": "SELECT \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -2905,6 +2899,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 2,
+    "version": 17,
     "weekStart": ""
 }
