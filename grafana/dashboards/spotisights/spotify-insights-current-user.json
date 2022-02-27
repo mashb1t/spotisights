@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1645995083511,
+    "iteration": 1645998179105,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -2709,19 +2709,35 @@
                         "properties": [
                             {
                                 "id": "custom.width",
-                                "value": 255
+                                "value": 200
                             }
                         ]
                     },
                     {
                         "matcher": {
                             "id": "byName",
-                            "options": "hour of day (UTC)"
+                            "options": "service"
                         },
                         "properties": [
                             {
                                 "id": "custom.width",
-                                "value": 130
+                                "value": 100
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "duration"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "dthms"
+                            },
+                            {
+                                "id": "custom.width",
+                                "value": 100
                             }
                         ]
                     }
@@ -2756,7 +2772,7 @@
                     "measurement": "track_history",
                     "orderByTime": "DESC",
                     "policy": "default",
-                    "query": "SELECT \"hour_of_day\" as \"hour of day (UTC)\", \"user\",\"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
+                    "query": "SELECT \"service\",\"artists\",\"track\",\"duration_ms\" / 1000 as \"duration\" FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/) AND $timeFilter ORDER BY time DESC LIMIT 1000",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "table",
@@ -2894,6 +2910,6 @@
     "timezone": "",
     "title": "Current User",
     "uid": "spotisights",
-    "version": 3,
+    "version": 7,
     "weekStart": ""
 }
