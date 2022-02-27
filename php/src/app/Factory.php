@@ -8,6 +8,7 @@ use App\Enums\ServiceEnum;
 use App\Session\SessionHandler;
 use App\Session\SessionInterface;
 use App\Session\SpotifySession;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use InfluxDB2\Client;
@@ -67,6 +68,8 @@ class Factory
         }
         $artistsImploded = implode(', ', $artists);
 
+        $playedAtDateTime = new Carbon($track->played_at);
+
         return Point::measurement('track_history')
             ->addTag('user', $username)
             ->addTag('artists', $artistsImploded)
@@ -82,7 +85,7 @@ class Factory
             ->addField('liveness', (float)$audioFeature->liveness)
             ->addField('valence', (float)$audioFeature->valence)
             ->addField('tempo', round((float)$audioFeature->tempo))
-            ->time((new DateTime($track->played_at)));
+            ->time($playedAtDateTime);
     }
 
     /**
