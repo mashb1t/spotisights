@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1645998252599,
+    "iteration": 1646004540216,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1536,7 +1536,7 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 6,
+                "h": 7,
                 "w": 6,
                 "x": 0,
                 "y": 14
@@ -1558,61 +1558,61 @@
             "pluginVersion": "8.4.1",
             "targets": [
                 {
-                    "alias": "morning",
+                    "alias": "morning (5-10 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^([7-9]|1[0-1])$/)",
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^([5-9]|1[0])$/)",
                     "rawQuery": true,
                     "refId": "B",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "noon",
+                    "alias": "noon (10-14 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[2-4])$/)",
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[0-3])$/)",
                     "rawQuery": true,
                     "refId": "C",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "afternoon",
+                    "alias": "afternoon (14-17 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[5-7])$/) ",
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[4-6])$/) ",
                     "rawQuery": true,
                     "refId": "D",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "evening",
+                    "alias": "evening (17-21 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[8-9]|2[0-1])$/) ",
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[7-9]|2[0])$/) ",
                     "rawQuery": true,
                     "refId": "E",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "night",
+                    "alias": "night (21-05 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(22[0-4]|[0-6])$/) ",
+                    "query": "SELECT median(\"tempo\") FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(2[1-4]|[0-4])$/) ",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series"
@@ -1642,8 +1642,8 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 6,
-                "w": 4,
+                "h": 7,
+                "w": 5,
                 "x": 6,
                 "y": 14
             },
@@ -1674,61 +1674,61 @@
             "pluginVersion": "8.4.1",
             "targets": [
                 {
-                    "alias": "morning",
+                    "alias": "morning (5-10 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^([7-9]|1[0-1])$/)",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^([5-9])$/)",
                     "rawQuery": true,
                     "refId": "B",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "noon",
+                    "alias": "noon (10-14 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[2-4])$/)",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[0-3])$/)",
                     "rawQuery": true,
                     "refId": "C",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "afternoon",
+                    "alias": "afternoon (14-17 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[5-7])$/) ",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[4-6])$/) ",
                     "rawQuery": true,
                     "refId": "D",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "evening",
+                    "alias": "evening (17-21 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[8-9]|2[0-1])$/) ",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(1[7-9]|2[0])$/) ",
                     "rawQuery": true,
                     "refId": "E",
                     "resultFormat": "time_series"
                 },
                 {
-                    "alias": "night",
+                    "alias": "night (21-05 UTC)",
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P951FEA4DE68E13C5"
                     },
                     "hide": false,
-                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(22[0-4]|[0-6])$/) ",
+                    "query": "SELECT sum(\"duration_ms\") / 1000 FROM \"track_history\" WHERE (\"user\" =~ /^$user$/ AND \"service\" =~ /^$service$/ AND \"artists\" =~ /$artist/ AND $timeFilter AND \"hour_of_day\" =~ /^(2[1-4]|[0-4])$/) ",
                     "rawQuery": true,
                     "refId": "A",
                     "resultFormat": "time_series"
@@ -1764,9 +1764,9 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 6,
-                "w": 4,
-                "x": 10,
+                "h": 7,
+                "w": 5,
+                "x": 11,
                 "y": 14
             },
             "id": 59,
@@ -1874,9 +1874,9 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 6,
-                "w": 10,
-                "x": 14,
+                "h": 7,
+                "w": 8,
+                "x": 16,
                 "y": 14
             },
             "id": 62,
@@ -1965,7 +1965,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 20
+                "y": 21
             },
             "id": 50,
             "panels": [],
@@ -2016,7 +2016,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 0,
-                "y": 21
+                "y": 22
             },
             "id": 48,
             "options": {
@@ -2035,7 +2035,6 @@
                     "mode": "single",
                     "sort": "none"
                 },
-                "xField": "genre",
                 "xTickLabelRotation": -90,
                 "xTickLabelSpacing": 0
             },
@@ -2124,7 +2123,7 @@
                 "h": 10,
                 "w": 15,
                 "x": 9,
-                "y": 21
+                "y": 22
             },
             "id": 46,
             "interval": "30m",
@@ -2197,7 +2196,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 31
+                "y": 32
             },
             "id": 20,
             "panels": [],
@@ -2233,7 +2232,7 @@
                 "h": 10,
                 "w": 6,
                 "x": 0,
-                "y": 32
+                "y": 33
             },
             "id": 27,
             "maxDataPoints": 10,
@@ -2372,7 +2371,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 6,
-                "y": 32
+                "y": 33
             },
             "id": 34,
             "maxDataPoints": 10,
@@ -2491,7 +2490,7 @@
                 "h": 10,
                 "w": 9,
                 "x": 15,
-                "y": 32
+                "y": 33
             },
             "id": 37,
             "maxDataPoints": 10,
@@ -2668,7 +2667,7 @@
                 "h": 1,
                 "w": 24,
                 "x": 0,
-                "y": 42
+                "y": 43
             },
             "id": 44,
             "panels": [],
@@ -2717,6 +2716,18 @@
                     {
                         "matcher": {
                             "id": "byName",
+                            "options": "service"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.width",
+                                "value": 100
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
                             "options": "duration"
                         },
                         "properties": [
@@ -2729,18 +2740,6 @@
                                 "value": 100
                             }
                         ]
-                    },
-                    {
-                        "matcher": {
-                            "id": "byName",
-                            "options": "service"
-                        },
-                        "properties": [
-                            {
-                                "id": "custom.width",
-                                "value": 100
-                            }
-                        ]
                     }
                 ]
             },
@@ -2748,7 +2747,7 @@
                 "h": 14,
                 "w": 24,
                 "x": 0,
-                "y": 43
+                "y": 44
             },
             "id": 6,
             "options": {
@@ -2915,6 +2914,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 18,
+    "version": 19,
     "weekStart": ""
 }
