@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1646004540216,
+    "iteration": 1646411549896,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -342,13 +342,9 @@
             "title": "total duration listened by period",
             "transformations": [
                 {
-                    "id": "organize",
+                    "id": "labelsToFields",
                     "options": {
-                        "excludeByName": {},
-                        "indexByName": {},
-                        "renameByName": {
-                            "track_history.sum": "minutes"
-                        }
+                        "valueLabel": "user"
                     }
                 }
             ],
@@ -621,7 +617,7 @@
                     ]
                 }
             ],
-            "title": "median BPM",
+            "title": "median tempo",
             "type": "stat"
         },
         {
@@ -2914,6 +2910,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 19,
+    "version": 20,
     "weekStart": ""
 }
