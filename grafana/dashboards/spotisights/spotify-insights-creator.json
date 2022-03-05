@@ -1,0 +1,145 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "iteration": 1646517947639,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "gridPos": {
+                "h": 2,
+                "w": 3,
+                "x": 0,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "contentType": "application/json",
+                "icon": "play",
+                "isAuth": false,
+                "method": "POST",
+                "orientation": "center",
+                "payload": "{\"limit\":\"$limit\",\"user\": \"$user\",\"genres\": \"$genre\"}",
+                "text": "create playlist",
+                "type": "header",
+                "url": "http://localhost:8080/api/spotify/create-playlist",
+                "variant": "primary"
+            },
+            "transparent": true,
+            "type": "cloudspout-button-panel"
+        }
+    ],
+    "schemaVersion": 35,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "mash1t",
+                    "value": "mash1t"
+                },
+                "definition": "SHOW TAG VALUES WITH KEY = \"user\" WHERE \"user\" =~ /^${__user.login}$/ ",
+                "hide": 2,
+                "includeAll": false,
+                "multi": false,
+                "name": "user",
+                "options": [],
+                "query": "SHOW TAG VALUES WITH KEY = \"user\" WHERE \"user\" =~ /^${__user.login}$/ ",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": true,
+                    "text": "10",
+                    "value": "10"
+                },
+                "hide": 0,
+                "includeAll": false,
+                "label": "track amount",
+                "multi": false,
+                "name": "limit",
+                "options": [
+                    {
+                        "selected": true,
+                        "text": "10",
+                        "value": "10"
+                    },
+                    {
+                        "selected": false,
+                        "text": "20",
+                        "value": "20"
+                    },
+                    {
+                        "selected": false,
+                        "text": "50",
+                        "value": "50"
+                    },
+                    {
+                        "selected": false,
+                        "text": "100",
+                        "value": "100"
+                    }
+                ],
+                "query": "10,20,50,100",
+                "queryValue": "",
+                "skipUrlSync": false,
+                "type": "custom"
+            },
+            {
+                "current": {
+                    "selected": true,
+                    "text": [],
+                    "value": []
+                },
+                "definition": "SHOW TAG VALUES WITH KEY = \"genre\" WHERE \"user\" =~ /^${__user.login}$/ ",
+                "hide": 0,
+                "includeAll": false,
+                "multi": true,
+                "name": "genre",
+                "options": [],
+                "query": "SHOW TAG VALUES WITH KEY = \"genre\" WHERE \"user\" =~ /^${__user.login}$/ ",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            }
+        ]
+    },
+    "time": {
+        "from": "now-6h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Creator",
+    "uid": "B9ZrQ0Ynz",
+    "version": 2,
+    "weekStart": ""
+}

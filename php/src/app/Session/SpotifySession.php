@@ -46,6 +46,8 @@ class SpotifySession implements SessionInterface
                 'user-read-recently-played', // used for statistic collection in getMyRecentTracks()
                 'user-read-private', // used for reading username in me()
                 'user-read-email',  // currently not used, but required for me()
+                'playlist-modify-public', // create playlist based on input parameters
+                'playlist-modify-private', // create playlist based on input parameters
             ],
             'state' => session('state'),
         ];
