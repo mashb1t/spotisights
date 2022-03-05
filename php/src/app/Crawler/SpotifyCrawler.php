@@ -133,6 +133,10 @@ class SpotifyCrawler implements CrawlerInterface
     protected function getArtistsById(SpotifyWebAPI $spotifyWebApi, array $artistIds): array
     {
         $artistsFromAPI = $this->getCachedArtistsAndCleanupIds($artistIds);
+        $cache = Cache::tags([
+            ServiceEnum::Spotify->value,
+            ServiceEnum::Spotify->value . CacheKeyEnum::CACHE_KEY_SEPARATOR .  CacheKeyEnum::Artist->value
+        ]);
 
         if (count($artistIds) > 0) {
             // artistIds count could be more than crawl_bulk_limit
@@ -142,8 +146,7 @@ class SpotifyCrawler implements CrawlerInterface
                 $response = $spotifyWebApi->getArtists($artistIdsChunk);
 
                 foreach ($response->artists as $artist) {
-                    $cacheKeyArtist = $this->getCacheKey(CacheKeyEnum::Artist, $artist->id);
-                    Cache::put($cacheKeyArtist, $artist, config('services.spotify.cache_ttl'));
+                    $cache->put($artist->id, $artist, config('services.spotify.cache_ttl'));
                     logs('crawler')->debug("set artist $artist->id to cache");
                     $artistsFromAPI[] = $artist;
                 }
@@ -160,11 +163,15 @@ class SpotifyCrawler implements CrawlerInterface
 
     protected function getCachedArtistsAndCleanupIds(array &$artistIds): array
     {
+        $cache = Cache::tags([
+            ServiceEnum::Spotify->value,
+            ServiceEnum::Spotify->value . CacheKeyEnum::CACHE_KEY_SEPARATOR .  CacheKeyEnum::Artist->value
+        ]);
+
         $cachedArtists = [];
         foreach ($artistIds as $artistId) {
-            $cacheKeyArtist = $this->getCacheKey(CacheKeyEnum::Artist, $artistId);
-            if (Cache::has($cacheKeyArtist)) {
-                $cachedArtists[] = Cache::get($cacheKeyArtist);
+            if ($cache->has($artistId)) {
+                $cachedArtists[] = $cache->get($artistId);
                 unset($artistIds[$artistId]);
                 logs('crawler')->debug("found artist $artistId in cache");
             }
@@ -177,7 +184,6 @@ class SpotifyCrawler implements CrawlerInterface
     {
         return implode(
             CacheKeyEnum::CACHE_KEY_SEPARATOR, [
-                ServiceEnum::Spotify->value,
                 $cacheKey->value,
                 $id,
             ]
@@ -192,11 +198,15 @@ class SpotifyCrawler implements CrawlerInterface
      */
     protected function getAudioFeatures(SpotifyWebAPI $spotifyWebApi, array $trackIds): array
     {
+        $cache = Cache::tags([
+            ServiceEnum::Spotify->value,
+            ServiceEnum::Spotify->value . CacheKeyEnum::CACHE_KEY_SEPARATOR .  CacheKeyEnum::AudioFeature->value
+        ]);
+
         $audioFeatures = [];
         foreach ($trackIds as $index => $trackId) {
-            $cacheKeyAudioFeature = $this->getCacheKey(CacheKeyEnum::AudioFeature, $trackId);
-            if (Cache::has($cacheKeyAudioFeature)) {
-                $audioFeatures[$trackId] = Cache::get($cacheKeyAudioFeature);
+            if ($cache->has($trackId)) {
+                $audioFeatures[$trackId] = $cache->get($trackId);
                 unset($trackIds[$index]);
                 logs('crawler')->debug("found audio feature for $trackId in cache");
             }
@@ -205,8 +215,7 @@ class SpotifyCrawler implements CrawlerInterface
         if (count($trackIds) > 0) {
             $response = $spotifyWebApi->getMultipleAudioFeatures(array_values($trackIds));
             foreach ($response->audio_features as $audioFeature) {
-                $cacheKeyAudioFeature = $this->getCacheKey(CacheKeyEnum::AudioFeature, $audioFeature->id);
-                Cache::put($cacheKeyAudioFeature, $audioFeature, config('services.spotify.cache_ttl'));
+                $cache->put($audioFeature->id, $audioFeature, config('services.spotify.cache_ttl'));
                 $audioFeatures[$audioFeature->id] = $audioFeature;
                 logs('crawler')->debug("set audio feature for $audioFeature->id to cache");
             }
