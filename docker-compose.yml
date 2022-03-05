@@ -13,6 +13,8 @@ services:
     image: grafana/grafana:8.4.1
     depends_on:
       - influxdb
+    links:
+      - redis
     env_file: config/grafana.env
     ports:
       - '3000:3000'
