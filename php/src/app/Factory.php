@@ -79,6 +79,7 @@ class Factory
             ->addTag('service', $service)
             ->addTag('hour_of_day', (string)$hourOfDay)
             ->addField('track', $track->track->name)
+            ->addField('track_id', $track->track->id)
             ->addField('duration_ms', (int)$track->track->duration_ms)
             ->addField('danceability', (float)$audioFeature->danceability)
             ->addField('energy', (float)$audioFeature->energy)
