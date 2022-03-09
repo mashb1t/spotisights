@@ -763,13 +763,13 @@
         ]
     },
     "time": {
-        "from": "now-6h",
+        "from": "now-7d",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Creator",
-    "uid": "B9ZrQ0Ynz",
+    "uid": "spotisights-creator",
     "version": 1,
     "weekStart": ""
 }
