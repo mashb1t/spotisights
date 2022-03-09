@@ -21,7 +21,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1646859192291,
+    "iteration": 1646859192305,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -76,8 +76,8 @@
             {
                 "current": {
                     "selected": true,
-                    "text": "10",
-                    "value": "10"
+                    "text": "20",
+                    "value": "20"
                 },
                 "hide": 0,
                 "includeAll": false,
@@ -86,12 +86,12 @@
                 "name": "limit",
                 "options": [
                     {
-                        "selected": true,
+                        "selected": false,
                         "text": "10",
                         "value": "10"
                     },
                     {
-                        "selected": false,
+                        "selected": true,
                         "text": "20",
                         "value": "20"
                     },
@@ -113,7 +113,7 @@
             },
             {
                 "current": {
-                    "selected": true,
+                    "selected": false,
                     "text": [],
                     "value": []
                 },
