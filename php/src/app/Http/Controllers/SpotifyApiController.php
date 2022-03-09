@@ -60,7 +60,7 @@ class SpotifyApiController
         Log::debug($trackIds);
 
         $newPlaylist = $spotifyApi->createPlaylist([
-            'name' => "SpotiSights Playlist $implodedPlaylistTitle",
+            'name' => "SpotiSights $implodedPlaylistTitle",
             'description' => "SpotiSights recommendations based on $implodedPlaylistTitle",
             'public' => false,
         ]);

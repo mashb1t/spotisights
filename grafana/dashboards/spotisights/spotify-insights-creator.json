@@ -21,14 +21,14 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1646859192305,
+    "iteration": 1646863993893,
     "links": [],
     "liveNow": false,
     "panels": [
         {
             "gridPos": {
                 "h": 2,
-                "w": 3,
+                "w": 4,
                 "x": 0,
                 "y": 0
             },
@@ -40,9 +40,9 @@
                 "method": "POST",
                 "orientation": "center",
                 "payload": "{\"limit\":\"$limit\",\"user\": \"$user\",\"genres\": \"$genre\"}",
-                "text": "create playlist",
+                "text": "create playlist by genres",
                 "type": "header",
-                "url": "http://localhost:8080/api/spotify/create-playlist",
+                "url": "https://spotisights.mashb1t.de/api/spotify/create-playlist",
                 "variant": "primary"
             },
             "transparent": true,
@@ -763,13 +763,13 @@
         ]
     },
     "time": {
-        "from": "now-6h",
+        "from": "now-7d",
         "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Creator",
-    "uid": "B9ZrQ0Ynz",
+    "uid": "spotisights-creator",
     "version": 1,
     "weekStart": ""
 }
