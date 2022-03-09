@@ -58,7 +58,7 @@
                     <div class="text-center text-lg text-gray-600 dark:text-gray-400 sm:text-left">
                         <div class="flex items-center">
                             @if (session('logged_in_spotify'))
-                                <a href="{{ config('spotisights.grafana_dashboard_url') }}">Show Statistics</a>
+                                <a href="{{ config('spotisights.grafana.dashboard_url') }}">Show Statistics</a>
                             @endif
                         </div>
                     </div>
