@@ -35,11 +35,13 @@ This app implements the [Authorization Code Flow] of Spotify with [Refresh Token
 
 ### API Scopes
 
-| scope                     | reason                           | api endpoint         |
-|---------------------------|----------------------------------|----------------------|
-| user-read-recently-played | used for statistic collection    | getMyRecentTracks()  |
-| user-read-private         | used for reading username        | me()                 |
-| user-read-email           | currently not used, but required | me()                 |
+| scope                     | reason                                    | api endpoint        |
+|---------------------------|-------------------------------------------|---------------------|
+| user-read-recently-played | used for statistic collection             | getMyRecentTracks() |
+| user-read-private         | used for reading username                 | me()                |
+| user-read-email           | currently not used, but required          | me()                |
+| playlist-modify-public    | create playlist based on input parameters | createPlaylist()    |
+| playlist-modify-public    | create playlist based on input parameters | createPlaylist()    |
 
 
 ## Disclaimer ARM CPUs (code: see branch "arm")

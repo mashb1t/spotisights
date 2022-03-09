@@ -1,0 +1,775 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "iteration": 1646863993893,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "gridPos": {
+                "h": 2,
+                "w": 4,
+                "x": 0,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "contentType": "application/json",
+                "icon": "play",
+                "isAuth": false,
+                "method": "POST",
+                "orientation": "center",
+                "payload": "{\"limit\":\"$limit\",\"user\": \"$user\",\"genres\": \"$genre\"}",
+                "text": "create playlist by genres",
+                "type": "header",
+                "url": "https://spotisights.mashb1t.de/api/spotify/create-playlist",
+                "variant": "primary"
+            },
+            "transparent": true,
+            "type": "cloudspout-button-panel"
+        }
+    ],
+    "schemaVersion": 35,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "mash1t",
+                    "value": "mash1t"
+                },
+                "definition": "SHOW TAG VALUES WITH KEY = \"user\" WHERE \"user\" =~ /^${__user.login}$/ ",
+                "hide": 2,
+                "includeAll": false,
+                "multi": false,
+                "name": "user",
+                "options": [],
+                "query": "SHOW TAG VALUES WITH KEY = \"user\" WHERE \"user\" =~ /^${__user.login}$/ ",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": true,
+                    "text": "20",
+                    "value": "20"
+                },
+                "hide": 0,
+                "includeAll": false,
+                "label": "track amount",
+                "multi": false,
+                "name": "limit",
+                "options": [
+                    {
+                        "selected": false,
+                        "text": "10",
+                        "value": "10"
+                    },
+                    {
+                        "selected": true,
+                        "text": "20",
+                        "value": "20"
+                    },
+                    {
+                        "selected": false,
+                        "text": "50",
+                        "value": "50"
+                    },
+                    {
+                        "selected": false,
+                        "text": "100",
+                        "value": "100"
+                    }
+                ],
+                "query": "10,20,50,100",
+                "queryValue": "",
+                "skipUrlSync": false,
+                "type": "custom"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": [],
+                    "value": []
+                },
+                "description": "select max. 5 genres at a time",
+                "hide": 0,
+                "includeAll": false,
+                "label": "",
+                "multi": true,
+                "name": "genre",
+                "options": [
+                    {
+                        "selected": false,
+                        "text": "acoustic",
+                        "value": "acoustic"
+                    },
+                    {
+                        "selected": false,
+                        "text": "afrobeat",
+                        "value": "afrobeat"
+                    },
+                    {
+                        "selected": false,
+                        "text": "alt-rock",
+                        "value": "alt-rock"
+                    },
+                    {
+                        "selected": false,
+                        "text": "alternative",
+                        "value": "alternative"
+                    },
+                    {
+                        "selected": false,
+                        "text": "ambient",
+                        "value": "ambient"
+                    },
+                    {
+                        "selected": false,
+                        "text": "anime",
+                        "value": "anime"
+                    },
+                    {
+                        "selected": false,
+                        "text": "black-metal",
+                        "value": "black-metal"
+                    },
+                    {
+                        "selected": false,
+                        "text": "bluegrass",
+                        "value": "bluegrass"
+                    },
+                    {
+                        "selected": false,
+                        "text": "blues",
+                        "value": "blues"
+                    },
+                    {
+                        "selected": false,
+                        "text": "bossanova",
+                        "value": "bossanova"
+                    },
+                    {
+                        "selected": false,
+                        "text": "brazil",
+                        "value": "brazil"
+                    },
+                    {
+                        "selected": false,
+                        "text": "breakbeat",
+                        "value": "breakbeat"
+                    },
+                    {
+                        "selected": false,
+                        "text": "british",
+                        "value": "british"
+                    },
+                    {
+                        "selected": false,
+                        "text": "cantopop",
+                        "value": "cantopop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "chicago-house",
+                        "value": "chicago-house"
+                    },
+                    {
+                        "selected": false,
+                        "text": "children",
+                        "value": "children"
+                    },
+                    {
+                        "selected": false,
+                        "text": "chill",
+                        "value": "chill"
+                    },
+                    {
+                        "selected": false,
+                        "text": "classical",
+                        "value": "classical"
+                    },
+                    {
+                        "selected": false,
+                        "text": "club",
+                        "value": "club"
+                    },
+                    {
+                        "selected": false,
+                        "text": "comedy",
+                        "value": "comedy"
+                    },
+                    {
+                        "selected": false,
+                        "text": "country",
+                        "value": "country"
+                    },
+                    {
+                        "selected": false,
+                        "text": "dance",
+                        "value": "dance"
+                    },
+                    {
+                        "selected": false,
+                        "text": "dancehall",
+                        "value": "dancehall"
+                    },
+                    {
+                        "selected": false,
+                        "text": "death-metal",
+                        "value": "death-metal"
+                    },
+                    {
+                        "selected": false,
+                        "text": "deep-house",
+                        "value": "deep-house"
+                    },
+                    {
+                        "selected": false,
+                        "text": "detroit-techno",
+                        "value": "detroit-techno"
+                    },
+                    {
+                        "selected": false,
+                        "text": "disco",
+                        "value": "disco"
+                    },
+                    {
+                        "selected": false,
+                        "text": "disney",
+                        "value": "disney"
+                    },
+                    {
+                        "selected": false,
+                        "text": "drum-and-bass",
+                        "value": "drum-and-bass"
+                    },
+                    {
+                        "selected": false,
+                        "text": "dub",
+                        "value": "dub"
+                    },
+                    {
+                        "selected": false,
+                        "text": "dubstep",
+                        "value": "dubstep"
+                    },
+                    {
+                        "selected": false,
+                        "text": "edm",
+                        "value": "edm"
+                    },
+                    {
+                        "selected": false,
+                        "text": "electro",
+                        "value": "electro"
+                    },
+                    {
+                        "selected": false,
+                        "text": "electronic",
+                        "value": "electronic"
+                    },
+                    {
+                        "selected": false,
+                        "text": "emo",
+                        "value": "emo"
+                    },
+                    {
+                        "selected": false,
+                        "text": "folk",
+                        "value": "folk"
+                    },
+                    {
+                        "selected": false,
+                        "text": "forro",
+                        "value": "forro"
+                    },
+                    {
+                        "selected": false,
+                        "text": "french",
+                        "value": "french"
+                    },
+                    {
+                        "selected": false,
+                        "text": "funk",
+                        "value": "funk"
+                    },
+                    {
+                        "selected": false,
+                        "text": "garage",
+                        "value": "garage"
+                    },
+                    {
+                        "selected": false,
+                        "text": "german",
+                        "value": "german"
+                    },
+                    {
+                        "selected": false,
+                        "text": "gospel",
+                        "value": "gospel"
+                    },
+                    {
+                        "selected": false,
+                        "text": "goth",
+                        "value": "goth"
+                    },
+                    {
+                        "selected": false,
+                        "text": "grindcore",
+                        "value": "grindcore"
+                    },
+                    {
+                        "selected": false,
+                        "text": "groove",
+                        "value": "groove"
+                    },
+                    {
+                        "selected": false,
+                        "text": "grunge",
+                        "value": "grunge"
+                    },
+                    {
+                        "selected": false,
+                        "text": "guitar",
+                        "value": "guitar"
+                    },
+                    {
+                        "selected": false,
+                        "text": "happy",
+                        "value": "happy"
+                    },
+                    {
+                        "selected": false,
+                        "text": "hard-rock",
+                        "value": "hard-rock"
+                    },
+                    {
+                        "selected": false,
+                        "text": "hardcore",
+                        "value": "hardcore"
+                    },
+                    {
+                        "selected": false,
+                        "text": "hardstyle",
+                        "value": "hardstyle"
+                    },
+                    {
+                        "selected": false,
+                        "text": "heavy-metal",
+                        "value": "heavy-metal"
+                    },
+                    {
+                        "selected": false,
+                        "text": "hip-hop",
+                        "value": "hip-hop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "holidays",
+                        "value": "holidays"
+                    },
+                    {
+                        "selected": false,
+                        "text": "honky-tonk",
+                        "value": "honky-tonk"
+                    },
+                    {
+                        "selected": false,
+                        "text": "house",
+                        "value": "house"
+                    },
+                    {
+                        "selected": false,
+                        "text": "idm",
+                        "value": "idm"
+                    },
+                    {
+                        "selected": false,
+                        "text": "indian",
+                        "value": "indian"
+                    },
+                    {
+                        "selected": false,
+                        "text": "indie",
+                        "value": "indie"
+                    },
+                    {
+                        "selected": false,
+                        "text": "indie-pop",
+                        "value": "indie-pop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "industrial",
+                        "value": "industrial"
+                    },
+                    {
+                        "selected": false,
+                        "text": "iranian",
+                        "value": "iranian"
+                    },
+                    {
+                        "selected": false,
+                        "text": "j-dance",
+                        "value": "j-dance"
+                    },
+                    {
+                        "selected": false,
+                        "text": "j-idol",
+                        "value": "j-idol"
+                    },
+                    {
+                        "selected": false,
+                        "text": "j-pop",
+                        "value": "j-pop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "j-rock",
+                        "value": "j-rock"
+                    },
+                    {
+                        "selected": false,
+                        "text": "jazz",
+                        "value": "jazz"
+                    },
+                    {
+                        "selected": false,
+                        "text": "k-pop",
+                        "value": "k-pop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "kids",
+                        "value": "kids"
+                    },
+                    {
+                        "selected": false,
+                        "text": "latin",
+                        "value": "latin"
+                    },
+                    {
+                        "selected": false,
+                        "text": "latino",
+                        "value": "latino"
+                    },
+                    {
+                        "selected": false,
+                        "text": "malay",
+                        "value": "malay"
+                    },
+                    {
+                        "selected": false,
+                        "text": "mandopop",
+                        "value": "mandopop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "metal",
+                        "value": "metal"
+                    },
+                    {
+                        "selected": false,
+                        "text": "metal-misc",
+                        "value": "metal-misc"
+                    },
+                    {
+                        "selected": false,
+                        "text": "metalcore",
+                        "value": "metalcore"
+                    },
+                    {
+                        "selected": false,
+                        "text": "minimal-techno",
+                        "value": "minimal-techno"
+                    },
+                    {
+                        "selected": false,
+                        "text": "movies",
+                        "value": "movies"
+                    },
+                    {
+                        "selected": false,
+                        "text": "mpb",
+                        "value": "mpb"
+                    },
+                    {
+                        "selected": false,
+                        "text": "new-age",
+                        "value": "new-age"
+                    },
+                    {
+                        "selected": false,
+                        "text": "new-release",
+                        "value": "new-release"
+                    },
+                    {
+                        "selected": false,
+                        "text": "opera",
+                        "value": "opera"
+                    },
+                    {
+                        "selected": false,
+                        "text": "pagode",
+                        "value": "pagode"
+                    },
+                    {
+                        "selected": false,
+                        "text": "party",
+                        "value": "party"
+                    },
+                    {
+                        "selected": false,
+                        "text": "philippines-opm",
+                        "value": "philippines-opm"
+                    },
+                    {
+                        "selected": false,
+                        "text": "piano",
+                        "value": "piano"
+                    },
+                    {
+                        "selected": false,
+                        "text": "pop",
+                        "value": "pop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "pop-film",
+                        "value": "pop-film"
+                    },
+                    {
+                        "selected": false,
+                        "text": "post-dubstep",
+                        "value": "post-dubstep"
+                    },
+                    {
+                        "selected": false,
+                        "text": "power-pop",
+                        "value": "power-pop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "progressive-house",
+                        "value": "progressive-house"
+                    },
+                    {
+                        "selected": false,
+                        "text": "psych-rock",
+                        "value": "psych-rock"
+                    },
+                    {
+                        "selected": false,
+                        "text": "punk",
+                        "value": "punk"
+                    },
+                    {
+                        "selected": false,
+                        "text": "punk-rock",
+                        "value": "punk-rock"
+                    },
+                    {
+                        "selected": false,
+                        "text": "r-n-b",
+                        "value": "r-n-b"
+                    },
+                    {
+                        "selected": false,
+                        "text": "rainy-day",
+                        "value": "rainy-day"
+                    },
+                    {
+                        "selected": false,
+                        "text": "reggae",
+                        "value": "reggae"
+                    },
+                    {
+                        "selected": false,
+                        "text": "reggaeton",
+                        "value": "reggaeton"
+                    },
+                    {
+                        "selected": false,
+                        "text": "road-trip",
+                        "value": "road-trip"
+                    },
+                    {
+                        "selected": false,
+                        "text": "rock",
+                        "value": "rock"
+                    },
+                    {
+                        "selected": false,
+                        "text": "rock-n-roll",
+                        "value": "rock-n-roll"
+                    },
+                    {
+                        "selected": false,
+                        "text": "rockabilly",
+                        "value": "rockabilly"
+                    },
+                    {
+                        "selected": false,
+                        "text": "romance",
+                        "value": "romance"
+                    },
+                    {
+                        "selected": false,
+                        "text": "sad",
+                        "value": "sad"
+                    },
+                    {
+                        "selected": false,
+                        "text": "salsa",
+                        "value": "salsa"
+                    },
+                    {
+                        "selected": false,
+                        "text": "samba",
+                        "value": "samba"
+                    },
+                    {
+                        "selected": false,
+                        "text": "sertanejo",
+                        "value": "sertanejo"
+                    },
+                    {
+                        "selected": false,
+                        "text": "show-tunes",
+                        "value": "show-tunes"
+                    },
+                    {
+                        "selected": false,
+                        "text": "singer-songwriter",
+                        "value": "singer-songwriter"
+                    },
+                    {
+                        "selected": false,
+                        "text": "ska",
+                        "value": "ska"
+                    },
+                    {
+                        "selected": false,
+                        "text": "sleep",
+                        "value": "sleep"
+                    },
+                    {
+                        "selected": false,
+                        "text": "songwriter",
+                        "value": "songwriter"
+                    },
+                    {
+                        "selected": false,
+                        "text": "soul",
+                        "value": "soul"
+                    },
+                    {
+                        "selected": false,
+                        "text": "soundtracks",
+                        "value": "soundtracks"
+                    },
+                    {
+                        "selected": false,
+                        "text": "spanish",
+                        "value": "spanish"
+                    },
+                    {
+                        "selected": false,
+                        "text": "study",
+                        "value": "study"
+                    },
+                    {
+                        "selected": false,
+                        "text": "summer",
+                        "value": "summer"
+                    },
+                    {
+                        "selected": false,
+                        "text": "swedish",
+                        "value": "swedish"
+                    },
+                    {
+                        "selected": false,
+                        "text": "synth-pop",
+                        "value": "synth-pop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "tango",
+                        "value": "tango"
+                    },
+                    {
+                        "selected": false,
+                        "text": "techno",
+                        "value": "techno"
+                    },
+                    {
+                        "selected": false,
+                        "text": "trance",
+                        "value": "trance"
+                    },
+                    {
+                        "selected": false,
+                        "text": "trip-hop",
+                        "value": "trip-hop"
+                    },
+                    {
+                        "selected": false,
+                        "text": "turkish",
+                        "value": "turkish"
+                    },
+                    {
+                        "selected": false,
+                        "text": "work-out",
+                        "value": "work-out"
+                    },
+                    {
+                        "selected": false,
+                        "text": "world-music",
+                        "value": "world-music"
+                    }
+                ],
+                "query": "acoustic,\nafrobeat,\nalt-rock,\nalternative,\nambient,\nanime,\nblack-metal,\nbluegrass,\nblues,\nbossanova,\nbrazil,\nbreakbeat,\nbritish,\ncantopop,\nchicago-house,\nchildren,\nchill,\nclassical,\nclub,\ncomedy,\ncountry,\ndance,\ndancehall,\ndeath-metal,\ndeep-house,\ndetroit-techno,\ndisco,\ndisney,\ndrum-and-bass,\ndub,\ndubstep,\nedm,\nelectro,\nelectronic,\nemo,\nfolk,\nforro,\nfrench,\nfunk,\ngarage,\ngerman,\ngospel,\ngoth,\ngrindcore,\ngroove,\ngrunge,\nguitar,\nhappy,\nhard-rock,\nhardcore,\nhardstyle,\nheavy-metal,\nhip-hop,\nholidays,\nhonky-tonk,\nhouse,\nidm,\nindian,\nindie,\nindie-pop,\nindustrial,\niranian,\nj-dance,\nj-idol,\nj-pop,\nj-rock,\njazz,\nk-pop,\nkids,\nlatin,\nlatino,\nmalay,\nmandopop,\nmetal,\nmetal-misc,\nmetalcore,\nminimal-techno,\nmovies,\nmpb,\nnew-age,\nnew-release,\nopera,\npagode,\nparty,\nphilippines-opm,\npiano,\npop,\npop-film,\npost-dubstep,\npower-pop,\nprogressive-house,\npsych-rock,\npunk,\npunk-rock,\nr-n-b,\nrainy-day,\nreggae,\nreggaeton,\nroad-trip,\nrock,\nrock-n-roll,\nrockabilly,\nromance,\nsad,\nsalsa,\nsamba,\nsertanejo,\nshow-tunes,\nsinger-songwriter,\nska,\nsleep,\nsongwriter,\nsoul,\nsoundtracks,\nspanish,\nstudy,\nsummer,\nswedish,\nsynth-pop,\ntango,\ntechno,\ntrance,\ntrip-hop,\nturkish,\nwork-out,\nworld-music",
+                "queryValue": "",
+                "skipUrlSync": false,
+                "type": "custom"
+            }
+        ]
+    },
+    "time": {
+        "from": "now-7d",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Creator",
+    "uid": "spotisights-creator",
+    "version": 1,
+    "weekStart": ""
+}
