@@ -974,16 +974,16 @@
         },
         {
             "name": "influxdata/influxdb-client-php",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/influxdata/influxdb-client-php.git",
-                "reference": "a352b2beaca08e72b09bfd6f9e4c2a4817dd9483"
+                "reference": "f1e73b6da87c4dfff797922e3ea4d3c6daaf922a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/influxdata/influxdb-client-php/zipball/a352b2beaca08e72b09bfd6f9e4c2a4817dd9483",
-                "reference": "a352b2beaca08e72b09bfd6f9e4c2a4817dd9483",
+                "url": "https://api.github.com/repos/influxdata/influxdb-client-php/zipball/f1e73b6da87c4dfff797922e3ea4d3c6daaf922a",
+                "reference": "f1e73b6da87c4dfff797922e3ea4d3c6daaf922a",
                 "shasum": ""
             },
             "require": {
@@ -1015,9 +1015,9 @@
             ],
             "support": {
                 "issues": "https://github.com/influxdata/influxdb-client-php/issues",
-                "source": "https://github.com/influxdata/influxdb-client-php/tree/2.6.0"
+                "source": "https://github.com/influxdata/influxdb-client-php/tree/2.7.0"
             },
-            "time": "2022-02-18T07:49:19+00:00"
+            "time": "2022-04-19T07:13:08+00:00"
         },
         {
             "name": "influxdb/influxdb-php",
