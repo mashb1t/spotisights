@@ -60,7 +60,7 @@ class Factory
     public function getTrackHistoryPoint(
         string $username,
         string $service,
-        stdClass $audioFeature,
+        ?stdClass $audioFeature,
         stdClass $track
     ): Point {
         $artists = [];
@@ -81,15 +81,15 @@ class Factory
             ->addField('track', $track->track->name)
             ->addField('track_id', $track->track->id)
             ->addField('duration_ms', (int)$track->track->duration_ms)
-            ->addField('danceability', (float)$audioFeature->danceability)
-            ->addField('energy', (float)$audioFeature->energy)
-            ->addField('key', (int)$audioFeature->key)
-            ->addField('speechiness', (float)$audioFeature->speechiness)
-            ->addField('acousticness', (float)$audioFeature->acousticness)
-            ->addField('instrumentalness', (float)$audioFeature->instrumentalness)
-            ->addField('liveness', (float)$audioFeature->liveness)
-            ->addField('valence', (float)$audioFeature->valence)
-            ->addField('tempo', round((float)$audioFeature->tempo))
+            #->addField('danceability', (float)$audioFeature->danceability)
+            #->addField('energy', (float)$audioFeature->energy)
+            #->addField('key', (int)$audioFeature->key)
+            #->addField('speechiness', (float)$audioFeature->speechiness)
+            #->addField('acousticness', (float)$audioFeature->acousticness)
+            #->addField('instrumentalness', (float)$audioFeature->instrumentalness)
+            #->addField('liveness', (float)$audioFeature->liveness)
+            #->addField('valence', (float)$audioFeature->valence)
+            #->addField('tempo', round((float)$audioFeature->tempo))
             ->time($playedAtDateTime);
     }
 
