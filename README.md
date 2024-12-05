@@ -16,7 +16,7 @@ It uses Laravel commands for data collection from the Spotify API and InfluxDB a
 3. Run ``docker-compose up -d`` to provision Grafana, InfluxDB and PHP+Nginx
 4. Log in to the [Spotify Developer] website
 5. Set up a new Spotify App, add the callback URL ``http://localhost:8080/spotify/callback`` and add client id and client secret to ``php.env``
-6. Log in to Grafana and remove the permission "View" on dashboard "Current User" (navigate settings > permissions > click on group "SpotiSights" > remove role "Viewer" from board)
+6. Log in to Grafana and remove the permission "View" on dashboard "All Users" (navigate settings > permissions > click on group "SpotiSights" > remove role "Viewer" from board)
 
 ## Data Flow / User setup
 
