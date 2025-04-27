@@ -1,4 +1,4 @@
-# SpotiSights - Spotify Insights
+[Spotisights.json](https://github.com/user-attachments/files/19931113/Spotisights.json)# SpotiSights - Spotify Insights
 
 [![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fspotisights.mashb1t.de)](https://spotisights.mashb1t.de)
 [![License](https://img.shields.io/github/license/mashb1t/spotisights)](https://github.com/mashb1t/spotisights/blob/master/LICENSE)
@@ -17,6 +17,15 @@ It uses Laravel commands for data collection from the Spotify API and InfluxDB a
 4. Log in to the [Spotify Developer] website
 5. Set up a new Spotify App, add the callback URL ``http://localhost:8080/spotify/callback`` and add client id and client secret to ``php.env``
 6. Log in to Grafana and remove the permission "View" on dashboard "All Users" (navigate settings > permissions > click on group "SpotiSights" > remove role "Viewer" from board)
+
+## n8n workflow
+
+If this sounds too colmplicated, feel free to use this n8n workflow resembling spotisight.
+The only thing remaining: save the data to a database of your choosing. Please find guidance on how to set up the Spotify permissions in your app below.
+
+[spotisights-n8n.json](https://github.com/user-attachments/files/19931114/Spotisights.json)
+
+<img width="1398" alt="437980071-1f463642-9098-45d9-b306-6b2400a38ee5" src="https://github.com/user-attachments/assets/4ea0c503-db49-489c-b6b2-5ccffb2b70a7" />
 
 ## Data Flow / User setup
 
