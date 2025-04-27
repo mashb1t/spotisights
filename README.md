@@ -1,4 +1,4 @@
-[Spotisights.json](https://github.com/user-attachments/files/19931113/Spotisights.json)# SpotiSights - Spotify Insights
+# SpotiSights - Spotify Insights
 
 [![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fspotisights.mashb1t.de)](https://spotisights.mashb1t.de)
 [![License](https://img.shields.io/github/license/mashb1t/spotisights)](https://github.com/mashb1t/spotisights/blob/master/LICENSE)
