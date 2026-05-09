@@ -178,3 +178,4 @@ class Factory
         return new MigrateInfluxDataService();
     }
 }
+
