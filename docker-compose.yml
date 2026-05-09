@@ -31,7 +31,7 @@ services:
       - "traefik.http.routers.spotisights-stats.tls.certresolver=letsencrypt"
       - "traefik.http.services.spotisights-stats.loadbalancer.server.port=3000"
       - "traefik.http.routers.spotisights-stats.middlewares=cloudflare-ips@file"
-      - 'kuma.__web="https://spotisights-stats.mashb1t.de", "others"'
+      - 'kuma.__web="https://spotisights-stats.mashb1t.de", "spotisights"'
   
   mysql:
     restart: unless-stopped
@@ -76,7 +76,7 @@ services:
       - "traefik.http.routers.spotisights.tls.certresolver=letsencrypt"
       - "traefik.http.services.spotisights.loadbalancer.server.port=80"
       - "traefik.http.routers.spotisights.middlewares=cloudflare-ips@file"
-      - 'kuma.__web="https://spotisights.mashb1t.de", "others"'
+      - 'kuma.__web="https://spotisights.mashb1t.de", "spotisights"'
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
       - PHP_DISPLAY_ERRORS=0
