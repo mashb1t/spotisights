@@ -113,7 +113,7 @@ class SpotifyCrawler implements CrawlerInterface
             }
         }
         logs('crawler')->debug("getting artists for user $username");
-        $artistsById = $this->getArtistsById($spotifyWebApi, $artistIds);
+        $artistsById = $this->getArtistsById($spotifyWebApi, $artistIds, $username);
         logs('crawler')->debug("getting audio features for user $username");
         $audioFeatures = $this->getAudioFeatures($spotifyWebApi, $recentTracksIds);
         logs('crawler')->debug("writing history for user $username");
@@ -131,7 +131,7 @@ class SpotifyCrawler implements CrawlerInterface
      *
      * @return array<string, stdClass>
      */
-    protected function getArtistsById(SpotifyWebAPI $spotifyWebApi, array $artistIds): array
+    protected function getArtistsById(SpotifyWebAPI $spotifyWebApi, array $artistIds, string $username = ''): array
     {
         logs('crawler')->debug("getting artists for user $username");
         $artistsFromAPI = $this->getCachedArtistsAndCleanupIds($artistIds);
@@ -142,7 +142,7 @@ class SpotifyCrawler implements CrawlerInterface
         ]);
 
         $newArtistIdCount = count($artistIds);
-        if (newArtistIdCount > 0) {
+        if ($newArtistIdCount > 0) {
             logs('crawler')->debug("retrieving uncached data for $newArtistIdCount artists");
             // artistIds count could be more than crawl_bulk_limit
             $artistIdsChunks = array_chunk($artistIds, config('services.spotify.crawl_bulk_limit'));
