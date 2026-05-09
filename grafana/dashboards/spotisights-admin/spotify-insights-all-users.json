@@ -22,7 +22,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "iteration": 1653581109794,
+    "iteration": 1646411549896,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -2619,16 +2619,32 @@
                     }
                 },
                 {
+                    "id": "calculateField",
+                    "options": {
+                        "alias": "track, artist",
+                        "mode": "reduceRow",
+                        "reduce": {
+                            "include": [
+                                "track",
+                                "artists"
+                            ],
+                            "reducer": "allValues"
+                        },
+                        "replaceFields": false
+                    }
+                },
+                {
                     "id": "organize",
                     "options": {
                         "excludeByName": {
-                            "artists": false,
-                            "track": false
+                            "artists": true,
+                            "track": true
                         },
                         "indexByName": {
-                            "artists": 0,
-                            "duration_ms (count)": 2,
-                            "track": 1
+                            "artists": 1,
+                            "duration_ms (count)": 3,
+                            "track": 0,
+                            "track, artist": 2
                         },
                         "renameByName": {
                             "artists": "",
@@ -2894,6 +2910,6 @@
     "timezone": "",
     "title": "All Users",
     "uid": "spotisights-admin",
-    "version": 21,
+    "version": 20,
     "weekStart": ""
 }

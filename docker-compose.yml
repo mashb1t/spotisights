@@ -1,84 +1,82 @@
-version: '3.8'
 services:
-
   influxdb:
     image: influxdb:1.8-alpine
+    networks:
+      - spotisights
+    restart: unless-stopped
     env_file: config/influxdb.env
     volumes:
-      - influxdb_data:/var/lib/influxdb:rw,delegated
-    ports:
-      - '8086:8086'
-
+      - ./volumes/influxdb:/var/lib/influxdb:rw,delegated
+  
   grafana:
     image: grafana/grafana:8.4.1
+    networks:
+      - nginx_proxy
+      - spotisights
+    restart: unless-stopped
+    hostname: mashb1t-spotisights-grafana
+    container_name: mashb1t-spotisights-grafana
+    env_file: config/grafana.env
     depends_on:
       - influxdb
-    links:
       - redis
-    env_file: config/grafana.env
-    ports:
-      - '3000:3000'
     volumes:
-      - grafana_data:/var/lib/grafana:rw,delegated
+      - ./volumes/grafana:/var/lib/grafana:rw,delegated
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
-
+  
   mysql:
     restart: unless-stopped
     image: mysql/mysql-server:8.0
+    networks:
+      - spotisights
     env_file: config/mysql.env
     volumes:
       - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
-      retries: 3
-      timeout: 5s
-    ports:
-      - "33006:3306"
-
+  
   redis:
-    image: redis:6-alpine
+    image: redis:7-alpine
     restart: always
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      retries: 3
-      timeout: 5s
-
+    networks:
+      - spotisights
+  
   php:
-    build:
-      context: ./php
+    build: ./php
+    restart: unless-stopped
+    hostname: mashb1t-spotisights-php
+    container_name: mashb1t-spotisights-php
     depends_on:
-      influxdb:
-        condition: service_started
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - influxdb
+      - mysql
+      - redis
     env_file:
       - config/mysql.env
       - config/php.env
       - config/influxdb.env
-    ports:
-      - '8080:80'
-    # - '8443:443'
+    #  ports:
+    #    - '8080:80'
+    #    - '8443:443'
     volumes:
-      - ./php/src:/app:rw,cached
-      - ./php/entrypoint.d:/entrypoint.d:rw,cached
+      - ./volumes/php/sessions:/app/sessions:rw,cached
+    networks:
+      - nginx_proxy
+      - spotisights
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
-      - PHP_DISPLAY_ERRORS=1
+      - PHP_DISPLAY_ERRORS=0
       - PHP_MEMORY_LIMIT=2048M
-#      - PHP_MAX_EXECUTION_TIME=-1
-#      - XDEBUG_MODE=debug
-#      - XDEBUG_START_WITH_REQUEST=yes
-#      - XDEBUG_CLIENT_PORT=9000
-#      - XDEBUG_CLIENT_HOST=docker.local
-#      - XDEBUG_MAX_NESTING_LEVEL=1000
+  #      - PHP_MAX_EXECUTION_TIME=-1
+  #      - XDEBUG_MODE=debug
+  #      - XDEBUG_START_WITH_REQUEST=yes
+  #      - XDEBUG_CLIENT_PORT=9000
+  #      - XDEBUG_CLIENT_HOST=docker.local
+  #      - XDEBUG_MAX_NESTING_LEVEL=1000
 
 volumes:
-  grafana_data:
-    driver: local
-  influxdb_data:
-    driver: local
   mysql_data:
-    driver: local
+
+networks:
+  nginx_proxy:
+    name: nginx_proxy
+    external: true
+  spotisights:
