@@ -253,4 +253,3 @@ class SpotifyCrawler implements CrawlerInterface
         }
     }
 }
-
