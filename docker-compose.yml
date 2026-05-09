@@ -11,7 +11,7 @@ services:
   grafana:
     image: grafana/grafana:8.4.1
     networks:
-      - nginx_proxy
+      - proxy
       - spotisights
     restart: unless-stopped
     hostname: mashb1t-spotisights-grafana
@@ -24,6 +24,14 @@ services:
       - ./volumes/grafana:/var/lib/grafana:rw,delegated
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spotisights.rule=Host(`spotisights.mashb1t.de`)"
+      - "traefik.http.routers.spotisights.entrypoints=websecure"
+      - "traefik.http.routers.spotisights.tls.certresolver=letsencrypt"
+      - "traefik.http.services.spotisights.loadbalancer.server.port=3000"
+      - "traefik.http.routers.spotisights.middlewares=cloudflare-ips@file"
+      - 'kuma.__web="https://spotisights.mashb1t.de", "others"'
   
   mysql:
     restart: unless-stopped
@@ -59,8 +67,15 @@ services:
     volumes:
       - ./volumes/php/sessions:/app/sessions:rw,cached
     networks:
-      - nginx_proxy
+      - proxy
       - spotisights
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spotisights-php.rule=Host(`spotisights-php.mashb1t.de`)"
+      - "traefik.http.routers.spotisights-php.entrypoints=websecure"
+      - "traefik.http.routers.spotisights-php.tls.certresolver=letsencrypt"
+      - "traefik.http.services.spotisights-php.loadbalancer.server.port=80"
+      - "traefik.http.routers.spotisights-php.middlewares=cloudflare-ips@file"
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
       - PHP_DISPLAY_ERRORS=0
@@ -76,7 +91,7 @@ volumes:
   mysql_data:
 
 networks:
-  nginx_proxy:
-    name: nginx_proxy
+  proxy:
+    name: proxy
     external: true
   spotisights:
