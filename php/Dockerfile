@@ -29,11 +29,8 @@ COPY src/artisan ./artisan
 # permissions
 USER root
 
-RUN composer dump-autoload --optimize && \
+RUN composer dump-autoload --optimize --no-scripts && \
     composer clear-cache
-
-# laravel
-RUN php artisan storage:link
 
 RUN chown -R application:application /app \
     && chown -R application:application /app/storage \
