@@ -81,9 +81,9 @@ class SpotifyCrawler implements CrawlerInterface
         $session = $spotifySession->getUnderlyingObject();
         $spotifyWebApi = $this->factory->getSpotifyWebAPI($session);
 
-        logs('crawler')->debug("starting spotify crawler for username $username");
+        logs('crawler')->info("starting spotify crawler for username $username");
         $this->crawlTrackHistoryAndAudioFeatures($username, $spotifyWebApi);
-        logs('crawler')->debug("finished spotify crawler for username $username");
+        logs('crawler')->info("finished spotify crawler for username $username");
 
         $this->sessionHandler->saveSession($spotifySession, $username);
     }
@@ -94,10 +94,10 @@ class SpotifyCrawler implements CrawlerInterface
     protected function crawlTrackHistoryAndAudioFeatures(string $username, SpotifyWebAPI $spotifyWebApi): void
     {
         // TODO add "after" instead of limit if last crawl was last hour
-        $recentTracks = $spotifyWebApi->getMyRecentTracks([
+	    $recentTracks = $spotifyWebApi->getMyRecentTracks([
             'limit' => config('services.spotify.crawl_bulk_limit'),
         ])->items;
-        logs('crawler')->debug("retrieved recent logs for user $username");
+        logs('crawler')->info("retrieved recent logs for user $username");
 
         $recentTracksIds = [];
         foreach ($recentTracks as $recentTrack) {
@@ -112,12 +112,13 @@ class SpotifyCrawler implements CrawlerInterface
                 $artistIds[$artist->id] = $artist->id;
             }
         }
-
+        logs('crawler')->debug("getting artists for user $username");
         $artistsById = $this->getArtistsById($spotifyWebApi, $artistIds);
+        logs('crawler')->debug("getting audio features for user $username");
         $audioFeatures = $this->getAudioFeatures($spotifyWebApi, $recentTracksIds);
-
+        logs('crawler')->debug("writing history for user $username");
         foreach ($recentTracks as $recentTrack) {
-            $this->writeTrackHistoryPoint($audioFeatures[$recentTrack->track->id], $recentTrack, $username);
+            $this->writeTrackHistoryPoint($audioFeatures[$recentTrack->track->id] ?? null, $recentTrack, $username);
             $this->writeGenreHistoryPoints($recentTrack, $artistsById, $username);
         }
 
@@ -132,13 +133,17 @@ class SpotifyCrawler implements CrawlerInterface
      */
     protected function getArtistsById(SpotifyWebAPI $spotifyWebApi, array $artistIds): array
     {
+        logs('crawler')->debug("getting artists for user $username");
         $artistsFromAPI = $this->getCachedArtistsAndCleanupIds($artistIds);
+
         $cache = Cache::tags([
             ServiceEnum::Spotify->value,
             ServiceEnum::Spotify->value . CacheKeyEnum::CACHE_KEY_SEPARATOR .  CacheKeyEnum::Artist->value
         ]);
 
-        if (count($artistIds) > 0) {
+        $newArtistIdCount = count($artistIds);
+        if (newArtistIdCount > 0) {
+            logs('crawler')->debug("retrieving uncached data for $newArtistIdCount artists");
             // artistIds count could be more than crawl_bulk_limit
             $artistIdsChunks = array_chunk($artistIds, config('services.spotify.crawl_bulk_limit'));
 
@@ -211,13 +216,16 @@ class SpotifyCrawler implements CrawlerInterface
                 logs('crawler')->debug("found audio feature for $trackId in cache");
             }
         }
-
         if (count($trackIds) > 0) {
-            $response = $spotifyWebApi->getMultipleAudioFeatures(array_values($trackIds));
-            foreach ($response->audio_features as $audioFeature) {
-                $cache->put($audioFeature->id, $audioFeature, config('services.spotify.cache_ttl'));
-                $audioFeatures[$audioFeature->id] = $audioFeature;
-                logs('crawler')->debug("set audio feature for $audioFeature->id to cache");
+            try {
+                $response = $spotifyWebApi->getMultipleAudioFeatures(array_values($trackIds));
+                foreach ($response->audio_features as $audioFeature) {
+                    $cache->put($audioFeature->id, $audioFeature, config('services.spotify.cache_ttl'));
+                    $audioFeatures[$audioFeature->id] = $audioFeature;
+                    logs('crawler')->debug("set audio feature for $audioFeature->id to cache");
+                }
+            } catch (Exception $e) {
+                logs('crawler')->warning('error while fetching audio feature, skipping. Exception: ' . $e->getMessage());
             }
         }
 
@@ -227,7 +235,7 @@ class SpotifyCrawler implements CrawlerInterface
     /**
      * @throws Exception
      */
-    protected function writeTrackHistoryPoint(stdClass $audioFeature, stdClass $track, string $username): void
+    protected function writeTrackHistoryPoint(?stdClass $audioFeature, stdClass $track, string $username): void
     {
         $point = $this->factory->getTrackHistoryPoint(
             $username, ServiceEnum::Spotify->value, $audioFeature, $track
