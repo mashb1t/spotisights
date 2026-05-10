@@ -7,6 +7,12 @@ services:
     env_file: config/influxdb.env
     volumes:
       - ./volumes/influxdb:/var/lib/influxdb:rw,delegated
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8086/ping > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
   
   grafana:
     image: grafana/grafana:8.4.1
@@ -24,6 +30,12 @@ services:
       - ./volumes/grafana:/var/lib/grafana:rw,delegated
       - ./grafana/provisioning/:/etc/grafana/provisioning/
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.spotisights-stats.rule=Host(`spotisights-stats.mashb1t.de`)"
@@ -41,12 +53,24 @@ services:
     env_file: config/mysql.env
     volumes:
       - mysql_data:/var/lib/mysql
-  
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$$MYSQL_USER -p$$MYSQL_PASSWORD"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
   redis:
     image: redis:7-alpine
     restart: always
     networks:
       - spotisights
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
   
   php:
     build: ./php
@@ -69,6 +93,12 @@ services:
     networks:
       - proxy
       - spotisights
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.spotisights.rule=Host(`spotisights.mashb1t.de`)"
