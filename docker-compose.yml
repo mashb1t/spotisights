@@ -14,7 +14,6 @@ services:
       retries: 3
       start_period: 30s
     labels:
-      # Backups: file-level only (script doesn't handle influx dumps)
       - "backup.enable=true"
   
   grafana:
@@ -47,7 +46,6 @@ services:
       - "traefik.http.services.spotisights-stats.loadbalancer.server.port=3000"
       - "traefik.http.routers.spotisights-stats.middlewares=cloudflare-ips@file"
       - 'kuma.__web="https://spotisights-stats.mashb1t.de", "spotisights"'
-      # Backups
       - "backup.enable=true"
       - "backup.db.type=sqlite"
       - "backup.db.path=/var/lib/grafana/grafana.db"
@@ -67,7 +65,6 @@ services:
       retries: 3
       start_period: 30s
     labels:
-      # Backups: file-level only (Oracle MySQL — script uses mariadb-dump)
       - "backup.enable=true"
 
   redis:
@@ -117,7 +114,6 @@ services:
       - "traefik.http.services.spotisights.loadbalancer.server.port=80"
       - "traefik.http.routers.spotisights.middlewares=cloudflare-ips@file"
       - 'kuma.__web="https://spotisights.mashb1t.de", "spotisights"'
-      # Backups (bind: php sessions)
       - "backup.enable=true"
     environment:
       - WEB_DOCUMENT_ROOT=/app/public
