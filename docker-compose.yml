@@ -15,7 +15,9 @@ services:
       start_period: 30s
     labels:
       - "resq.enable=true"
+      - "resq.stop=true"
       - 'wud.tag.include=^\d+\.\d+-alpine$$'
+      - 'wud.tag.exclude=^\d+(\.\d+){0,2}$$'
       - 'wud.link.template=https://github.com/influxdata/influxdb/releases/tag/v$${major}.$${minor}'
 
   grafana:
@@ -86,6 +88,7 @@ services:
       start_period: 10s
     labels:
       - 'wud.tag.include=^\d+\.\d+\.\d+-alpine$$'
+      - 'wud.tag.exclude=^\d+(\.\d+){0,2}$$'
       - 'wud.link.template=https://github.com/redis/redis/releases/tag/$${major}.$${minor}.$${patch}'
 
   php:
