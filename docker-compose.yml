@@ -16,8 +16,7 @@ services:
     labels:
       - "resq.enable=true"
       - 'wud.tag.include=^\d+\.\d+-alpine$$'
-      - 'wud.tag.transform=^(\d+\.\d+)-alpine$$ => $$1'
-      - 'wud.link.template=https://github.com/influxdata/influxdb/releases/tag/v$${transformed}'
+      - 'wud.link.template=https://github.com/influxdata/influxdb/releases/tag/v$${major}.$${minor}'
 
   grafana:
     image: grafana/grafana:8.4.1@sha256:c97cdf5f24c6a8a618ec416c7c9d3568f92e2b196f89e8c656e646c06d45975e
@@ -87,8 +86,7 @@ services:
       start_period: 10s
     labels:
       - 'wud.tag.include=^\d+\.\d+\.\d+-alpine$$'
-      - 'wud.tag.transform=^(\d+\.\d+\.\d+)-alpine$$ => $$1'
-      - 'wud.link.template=https://github.com/redis/redis/releases/tag/$${transformed}'
+      - 'wud.link.template=https://github.com/redis/redis/releases/tag/$${major}.$${minor}.$${patch}'
 
   php:
     build: ./php
