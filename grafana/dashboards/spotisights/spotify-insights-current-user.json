@@ -348,6 +348,7 @@
                     }
                 }
             ],
+            "transparent": true,
             "type": "timeseries"
         },
         {
