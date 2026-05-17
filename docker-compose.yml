@@ -1,6 +1,6 @@
 services:
   influxdb:
-    image: influxdb:1.8-alpine
+    image: influxdb:1.8-alpine@sha256:2601e27d6b7eac276017d7ea48d2685d52639cea974744b5877924376283a4cd
     networks:
       - spotisights
     restart: unless-stopped
@@ -15,9 +15,12 @@ services:
       start_period: 30s
     labels:
       - "resq.enable=true"
-  
+      - 'wud.tag.include=^\d+\.\d+-alpine$$'
+      - 'wud.tag.transform=^(\d+\.\d+)-alpine$$ => $$1'
+      - 'wud.link.template=https://github.com/influxdata/influxdb/releases/tag/v$${transformed}'
+
   grafana:
-    image: grafana/grafana:8.4.1
+    image: grafana/grafana:8.4.1@sha256:c97cdf5f24c6a8a618ec416c7c9d3568f92e2b196f89e8c656e646c06d45975e
     networks:
       - proxy
       - spotisights
@@ -49,10 +52,12 @@ services:
       - "resq.enable=true"
       - "backup.db.type=sqlite"
       - "backup.db.path=/var/lib/grafana/grafana.db"
+      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.link.template=https://github.com/grafana/grafana/releases/tag/v$${original}'
   
   mysql:
     restart: unless-stopped
-    image: mysql/mysql-server:8.0
+    image: mysql/mysql-server:8.0.32@sha256:5b40d96b11333570143d98d3a74100fefadb9abb17b27a95dbc9ad33544ec142
     networks:
       - spotisights
     env_file: config/mysql.env
@@ -66,9 +71,11 @@ services:
       start_period: 30s
     labels:
       - "resq.enable=true"
+      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.link.template=https://github.com/mysql/mysql-server/releases/tag/mysql-$${original}'
 
   redis:
-    image: redis:7-alpine
+    image: redis:8.6.3-alpine@sha256:d146f83b1e0f02fc27c26a50cee39338c736674c5959db84363e6ae3cd9e02d2
     restart: always
     networks:
       - spotisights
@@ -78,7 +85,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-  
+    labels:
+      - 'wud.tag.include=^\d+\.\d+\.\d+-alpine$$'
+      - 'wud.tag.transform=^(\d+\.\d+\.\d+)-alpine$$ => $$1'
+      - 'wud.link.template=https://github.com/redis/redis/releases/tag/$${transformed}'
+
   php:
     build: ./php
     restart: unless-stopped
