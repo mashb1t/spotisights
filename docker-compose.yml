@@ -48,7 +48,7 @@ services:
       - "traefik.http.routers.spotisights-stats.entrypoints=websecure"
       - "traefik.http.routers.spotisights-stats.tls.certresolver=letsencrypt"
       - "traefik.http.services.spotisights-stats.loadbalancer.server.port=3000"
-      - "traefik.http.routers.spotisights-stats.middlewares=cloudflare-ips@file"
+      - "traefik.http.routers.spotisights-stats.middlewares=cloudflare-ips@file,grafana-frame-ancestors@file"
       - 'kuma.__web="https://spotisights-stats.mashb1t.de", "spotisights"'
       - "resq.enable=true"
       - "backup.db.type=sqlite"
