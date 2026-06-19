@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx-dev:8.1
+FROM webdevops/php-nginx-dev:8.2
 
 COPY ./entrypoint.d /entrypoint.d
 
