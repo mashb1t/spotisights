@@ -9,6 +9,7 @@ use App\Services\MigrateInfluxDataService;
 use App\Session\SessionHandler;
 use App\Session\SessionInterface;
 use App\Session\SpotifySession;
+use App\Spotify\SpotifyRequest;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
@@ -51,7 +52,7 @@ class Factory
             'auto_refresh' => true,
         ];
 
-        return new SpotifyWebAPI($options, $session);
+        return new SpotifyWebAPI($options, $session, new SpotifyRequest());
     }
 
     /**
