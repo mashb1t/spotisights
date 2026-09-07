@@ -2,9 +2,12 @@ FROM webdevops/php-nginx-dev:8.1
 
 COPY ./entrypoint.d /entrypoint.d
 
-# keep in mind: cron service runs as root but delegates jobs to application user
-COPY cronjobs /cronjobs
-RUN crontab /cronjobs/docker-cron
+# cron service runs as root but delegates jobs to the application user via the
+# username field in the crontab. The file must be installed as a *system* crontab
+# (/etc/cron.d, populated from /opt/docker/etc/cron by the base image) — using
+# `crontab <file>` installs it as root's personal crontab, which ignores the
+# username field and runs every job as root.
+COPY cronjobs/docker-cron /opt/docker/etc/cron/spotisights
 
 USER application
 
