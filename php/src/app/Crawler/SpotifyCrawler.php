@@ -79,6 +79,19 @@ class SpotifyCrawler implements CrawlerInterface
 
         /** @var Session $session */
         $session = $spotifySession->getUnderlyingObject();
+
+        // Proactively refresh the short-lived (~1h) access token via the
+        // long-lived refresh token rather than relying on the library's reactive
+        // auto_refresh: that only triggers on the exact error "The access token
+        // expired", but Spotify also returns "Missing/invalid/expired access
+        // token", which it does not match - leaving the session broken until a
+        // manual web re-login. Persist right away so a rotated refresh token is
+        // not lost if the crawl below fails.
+        if (!$session->refreshAccessToken()) {
+            logs('crawler')->warning("could not refresh access token for $username, re-authentication via web UI required");
+        }
+        $this->sessionHandler->saveSession($spotifySession, $username);
+
         $spotifyWebApi = $this->factory->getSpotifyWebAPI($session);
 
         logs('crawler')->info("starting spotify crawler for username $username");
